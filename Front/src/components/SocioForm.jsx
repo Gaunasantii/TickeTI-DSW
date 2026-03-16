@@ -55,6 +55,16 @@ const SocioForm = () => {
             required
           />
         </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Email</label>
+          <input 
+            type="email" 
+            className="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm"
+            value={formData.email}
+            onChange={(e) => setFormData({...formData, email: e.target.value})}
+            required
+          />
+        </div>
         <button 
           type="submit" 
           className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300"

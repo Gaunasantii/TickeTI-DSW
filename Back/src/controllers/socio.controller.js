@@ -1,4 +1,4 @@
-const Socio = require('../models/Socio');
+const Socio = require('../models/socio');
 
 const socioController = {
     // Crear un nuevo socio

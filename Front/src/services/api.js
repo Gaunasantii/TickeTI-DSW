@@ -12,7 +12,10 @@ export const socioService = {
     });
     
     if (!response.ok) {
-      throw new Error('Error al guardar el socio');
+      // Intentamos obtener el detalle del error que manda el Back (Sequelize)
+      const errorData = await response.json();
+      console.log("Detalle del error desde el Back:", errorData);
+      throw new Error(errorData.details || 'Error al guardar el socio');
     }
     
     return await response.json();
