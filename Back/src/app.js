@@ -4,7 +4,7 @@ require('dotenv').config();
 const { connectDB } = require('./config/db'); // Importamos la conexión que hicimos antes
 
 // Importar Rutas
-const socioRoutes = require('./routes/socio.routes');
+const ticketRoutes = require('./routes/ticket.routes');
 
 const app = express();
 
@@ -16,7 +16,7 @@ app.use(cors());
 app.use(express.json());
 
 // Usar Rutas
-app.use('/api', socioRoutes);
+app.use('/api', ticketRoutes);
 
 // Ruta de prueba (la podés dejar o sacar)
 app.get('/api/status', (req, res) => {
