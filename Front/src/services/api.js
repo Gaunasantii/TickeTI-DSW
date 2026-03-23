@@ -1,8 +1,8 @@
 const API_URL = 'http://localhost:3000/api';
 
-export const socioService = {
+export const ticketService = {
   // Función para guardar un ticket en la DB
-  crearSocio: async (ticketData) => {
+  crearTicket: async (ticketData) => {
     const response = await fetch(`${API_URL}/tickets`, {
       method: 'POST',
       headers: {

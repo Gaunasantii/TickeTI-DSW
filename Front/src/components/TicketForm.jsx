@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { socioService } from '../services/api';
+import { ticketService } from '../services/api';
 
 const TicketForm = () => {
   const [formData, setFormData] = useState({
@@ -15,7 +15,7 @@ const TicketForm = () => {
     e.preventDefault();
     try {
       // Mandamos el formData que ahora incluye DNI y no pide Email
-      const resultado = await socioService.crearTicket(formData);
+      const resultado = await ticketService.crearTicket(formData);
       alert('Ticket guardado con éxito: ' + resultado.titulo);
       
       // Limpiar formulario dejando los valores por defecto
@@ -59,6 +59,21 @@ const TicketForm = () => {
             onChange={(e) => setFormData({...formData, descripcion: e.target.value})}
             required
           />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Categoría</label>
+          <select
+            className="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white"
+            value={formData.categoria}
+            onChange={(e) => setFormData({...formData, categoria: e.target.value})}
+            required
+  >
+    <       option value="Hardware">Hardware</option>
+            <option value="Software">Software</option>
+            <option value="Redes">Redes</option>
+            <option value="Accesos">Accesos</option>
+          </select>
         </div>
 
         {/* Prioridad - SOLUCIONADO: Agregamos las opciones */}
