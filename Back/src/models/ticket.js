@@ -15,7 +15,7 @@ const Ticket = sequelize.define('Ticket', {
         defaultValue: 'Baja' 
     },
     categoria: { 
-        type: DataTypes.ENUM('Hardware', 'Software', 'Redes', 'Accesos'), 
+        type: DataTypes.ENUM('', 'Hardware', 'Software', 'Redes', 'Accesos'), 
         allowNull: false 
     },
     estado: { 
@@ -23,7 +23,7 @@ const Ticket = sequelize.define('Ticket', {
         defaultValue: 'Abierto' 
     },
     dni: { 
-        type: DataTypes.STRING(20), // Usamos STRING por si algún DNI tiene puntos o para otros países
+        type: DataTypes.INTEGER,
         allowNull: false 
     }
 });

@@ -6,7 +6,7 @@ const TicketForm = () => {
     titulo: '',
     descripcion: '',
     prioridad: 'Baja', // Valor por defecto
-    categoria: 'Hardware',
+    categoria: '',
     estado: 'Abierto',
     dni: '' // Agregamos DNI al estado inicial
   });
@@ -14,7 +14,6 @@ const TicketForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Mandamos el formData que ahora incluye DNI y no pide Email
       const resultado = await ticketService.crearTicket(formData);
       alert('Ticket guardado con éxito: ' + resultado.titulo);
       
@@ -23,7 +22,7 @@ const TicketForm = () => {
         titulo: '', 
         descripcion: '', 
         prioridad: 'Baja', 
-        categoria: 'Hardware', 
+        categoria: '', 
         estado: 'Abierto',
         dni: '' 
       });
@@ -61,6 +60,7 @@ const TicketForm = () => {
           />
         </div>
 
+        {/* Categoria */}
         <div>
           <label className="block text-sm font-medium text-gray-700">Categoría</label>
           <select
@@ -69,26 +69,11 @@ const TicketForm = () => {
             onChange={(e) => setFormData({...formData, categoria: e.target.value})}
             required
   >
-    <       option value="Hardware">Hardware</option>
+            <option value="">-</option>
+            <option value="Hardware">Hardware</option>
             <option value="Software">Software</option>
             <option value="Redes">Redes</option>
             <option value="Accesos">Accesos</option>
-          </select>
-        </div>
-
-        {/* Prioridad - SOLUCIONADO: Agregamos las opciones */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Prioridad</label>
-          <select
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white"
-            value={formData.prioridad}
-            onChange={(e) => setFormData({...formData, prioridad: e.target.value})}
-            required
-          >
-            <option value="Baja">Baja</option>
-            <option value="Media">Media</option>
-            <option value="Alta">Alta</option>
-            <option value="Urgente">Urgente</option>
           </select>
         </div>
 
