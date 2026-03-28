@@ -21,3 +21,25 @@ export const ticketService = {
     return await response.json();
   }
 };
+
+export const usuarioService = {
+  // Función para guardar un usuario en la DB
+  crearUsuario: async (usuarioData) => {
+    const response = await fetch(`${API_URL}/usuarios`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(usuarioData),
+    });
+
+    if (!response.ok) {
+      // Intentamos obtener el detalle del error que manda el Back (Sequelize)
+      const errorData = await response.json();
+      console.log("Detalle del error desde el Back:", errorData);
+      throw new Error(errorData.details || 'Error al guardar el usuario');
+    }
+
+    return await response.json();
+  }
+};

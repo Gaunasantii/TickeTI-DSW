@@ -5,6 +5,7 @@ const { connectDB } = require('./config/db'); // Importamos la conexión que hic
 
 // Importar Rutas
 const ticketRoutes = require('./routes/ticket.routes');
+const usuarioRoutes = require('./routes/usuario.routes');
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(express.json());
 
 // Usar Rutas
 app.use('/api', ticketRoutes);
+app.use('/api', usuarioRoutes);
 
 // Ruta de prueba (la podés dejar o sacar)
 app.get('/api/status', (req, res) => {

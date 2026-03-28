@@ -14,16 +14,19 @@ const Usuario = sequelize.define('Usuario', {
         type: DataTypes.STRING, 
         allowNull: false 
     },
+    user: { 
+        type: DataTypes.STRING, 
+        allowNull: true 
+    },
     email: { 
         type: DataTypes.STRING, 
-        allowNull: false,
-        unique: true
+        allowNull: true
     },
     telefono: { 
         type: DataTypes.INTEGER,
         allowNull: false 
     },
-    password: { 
+    pass: { 
         type: DataTypes.STRING, 
         allowNull: false 
     }    
