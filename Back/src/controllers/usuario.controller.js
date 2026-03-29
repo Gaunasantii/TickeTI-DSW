@@ -41,7 +41,27 @@ const usuarioController = {
         } catch (error) {
             res.status(500).json({ error: 'Error al obtener usuarios' });
         }
-    }
+    },
+
+    login: async (req,res)=>{
+        try{
+            const {email,pass}=req.body;
+            const usuario = await Usuario.findOne({
+                where:{
+                    email:email,
+                    pass:pass,
+                }
+            });
+
+            if (usuario!==null){
+                res.json(usuario)
+            } else {
+                res.status(404).send({message:"usuario no encontrado"})
+            }
+        } catch (error){
+            res.status(500).send({message:"error en el server"})
+        }
+    },
 };
 
 module.exports = usuarioController;
