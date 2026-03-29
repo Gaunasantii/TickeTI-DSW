@@ -43,3 +43,24 @@ export const usuarioService = {
     return await response.json();
   }
 };
+
+export const loginService = {
+  Login: async(loginData)=>{
+    const response = await fetch(`${API_URL}/auth/login`,
+      {method:'POST',
+        headers:{
+          'content-type':'application/json',
+        },
+        body:JSON.stringify(loginData),
+      }
+    );
+
+    
+    if(!response.ok) {
+      const errorData = await response.json();
+      console.log("Detalle del error desde el Back:", errorData);
+      throw new Error(errorData.details || 'Error al iniciar sesion');
+    };
+    return await response.json();
+  }
+}
