@@ -8,7 +8,7 @@ const usuarioController = {
             const nuevoUsuario = await Usuario.create(req.body);
             res.status(201).json(nuevoUsuario);
         } catch (error) {
-            res.status(400).json({ error: 'Error al crear el ticket', details: error.message });
+            res.status(400).json({ error: 'Error al crear el usuario', details: error.message });
         }
     },
 
