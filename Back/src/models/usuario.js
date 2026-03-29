@@ -30,6 +30,14 @@ const Usuario = sequelize.define('Usuario', {
     pass: { 
         type: DataTypes.STRING, 
         allowNull: false 
+    },
+    esAdmin: { 
+        type: DataTypes.BOOLEAN, 
+        defaultValue: false 
+    },
+    esTecnico: { 
+        type: DataTypes.BOOLEAN, 
+        defaultValue: false 
     }}, {
     
     hooks: {

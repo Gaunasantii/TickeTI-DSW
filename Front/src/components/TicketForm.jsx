@@ -86,7 +86,6 @@ const TicketForm = () => {
             value={formData.dni}
             onChange={(e) => setFormData({...formData, dni: e.target.value})}
             required
-            placeholder="Ingrese DNI para vincular sus datos"
           />
           <p className="text-[10px] text-gray-400 mt-1">* Se utilizará para identificar su usuario en el sistema.</p>
         </div>

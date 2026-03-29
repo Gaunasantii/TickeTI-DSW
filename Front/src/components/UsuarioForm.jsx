@@ -43,9 +43,8 @@ const UsuarioForm = () => {
             value={formData.dni}
             onChange={(e) => setFormData({...formData, dni: e.target.value})}
             required
-            placeholder="Ingrese su DNI"
           />
-          <p className="text-[10px] text-gray-400 mt-1">* Se utilizará para identificar su usuario en el sistema.</p>
+          <p className="text-[10px] text-gray-400 mt-1">* Se utilizará para identificar el usuario en el sistema.</p>
         </div>
         
         {/* Nombre */}
@@ -79,7 +78,6 @@ const UsuarioForm = () => {
             value={formData.telefono}
             onChange={(e) => setFormData({...formData, telefono: e.target.value})}
             required
-            placeholder="Ingrese Telefono"
           />
         </div>
 
@@ -87,11 +85,12 @@ const UsuarioForm = () => {
         <div>
           <label className="block text-sm font-medium text-gray-700">Contraseña</label>
           <input
-            type="text"
+            type="password"
             className="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500"
             value={formData.pass}
             onChange={(e) => setFormData({ ...formData, pass: e.target.value })}
             required
+            placeholder="Ingrese una contraseña temporal"
           />
         </div>
 
