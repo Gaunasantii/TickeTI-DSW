@@ -1,5 +1,6 @@
-import TicketForm from './components/TicketForm'
-import UsuarioForm from './components/UsuarioForm'
+//import TicketForm from './components/TicketForm'
+//import UsuarioForm from './components/UsuarioForm'
+import {LoginForm} from './components/LoginForm'
 
 function App() {
   return (
@@ -7,7 +8,7 @@ function App() {
       <h1 className="text-4xl font-extrabold text-center text-gray-900 mb-10">
         TickeTI - Soporte Técnico
       </h1>
-      <UsuarioForm/>      
+      <LoginForm/>      
     </div>
   )
 }
