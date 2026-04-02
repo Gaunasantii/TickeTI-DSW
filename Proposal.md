@@ -2,7 +2,7 @@
 
 ## Grupo
 ### Integrantes
-* legajo - Apellido(s), Nombre(s)
+* 53808 - Villalba, German Agustin
 * legajo - Apellido(s), Nombre(s)
 * legajo - Apellido(s), Nombre(s)
 * legajo - Apellido(s), Nombre(s)
@@ -29,23 +29,22 @@ Regularidad:
 |:-|:-|
 |CRUD simple|1. CRUD Categoria Ticket<br>2. CRUD Prioridad Ticket<br>3. CRUD Oficina<br>4.CRUD Tecnico|
 |CRUD dependiente|1. CRUD USUARIO {depende de} CRUD Oficina<br>2. CRUD Ticket  {depende de} CRUD Usuario, CRUD Ticket Categoria y CRUD Ticket Prioridad|
-|Listado<br>+<br>detalle| 1. Listado de tickets filtrado por categoria, muestra nroTicket, Prioridad,DniUsuario , estado y Descripccion => detalle CRUD Ticket<br> 2. Listado de tickets Filtrado por estado, muestra nro de habitación, fecha inicio y fin estadía, estado y nombre del cliente => detalle muestra datos completos de la reserva y del cliente|
+|Listado<br>+<br>detalle| 1. Listado de tickets filtrado por categoria, muestra nroTicket, Prioridad,DniUsuario , estado y Descripccion => detalle CRUD Ticket<br> 2. Listado de tickets Filtrado por estado, muestra nroTicket, Prioridad,DniUsuario y Descripccion => detalle muestra datos completos del ticket y el usuario que lo creo|
 |CUU/Epic|1. Realizar el alta de un ticket<br>2. Registrar la solucion de un ticket|
 
 
 Adicionales para Aprobación
+*Nota*:si se te ocurre algun otro agregalo
 |Req|Detalle|
 |:-|:-|
-|CRUD |1. CRUD Tipo Habitacion<br>2. CRUD Servicio<br>3. CRUD Localidad<br>4. CRUD Provincia<br>5. CRUD Habitación<br>6. CRUD Empleado<br>7. CRUD Cliente|
-|CUU/Epic|1. Reservar una habitación para la estadía<br>2. Realizar el check-in de una reserva<br>3. Realizar el check-out y facturación de estadía y servicios|
+|CRUD |1. CRUD Categoria Ticket<br>2. CRUD Prioridad Ticket<br>3. CRUD Usuario<br>4. CRUD Tecnico<br>5. CRUD Ticket<br>6. CRUD Oficina|
+|CUU/Epic|1. Realizar el alta de un ticket<br>2. Registrar la solucion de un ticket|
 
 
 ### Alcance Adicional Voluntario
 
-*Nota*: El Alcance Adicional Voluntario es opcional, pero ayuda a que la funcionalidad del sistema esté completa y será considerado en la nota en función de su complejidad y esfuerzo.
-
 |Req|Detalle|
 |:-|:-|
-|Listados |1. Estadía del día filtrado por fecha muestra, cliente, habitaciones y estado <br>2. Reservas filtradas por cliente muestra datos del cliente y de cada reserve fechas, estado cantidad de habitaciones y huespedes|
-|CUU/Epic|1. Consumir servicios<br>2. Cancelación de reserva|
-|Otros|1. Envío de
+|Listados |1. Ticket filtrado por Usuario,muestra nroTicket, Prioridad,  estado y Descripccion <br>2. 1. Ticket filtrado por Prioridad,muestra nroTicket, DniUsuario, estado y Descripccion|
+|CUU/Epic|1. Cancelación de ticket|
+|Otros|1. Envio de notificaciones via telefono a tecnicos cuando un ticket asignado se encuentre proximo a su fecha limite
