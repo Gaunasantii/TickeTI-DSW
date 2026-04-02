@@ -3,7 +3,7 @@
 ## Grupo
 ### Integrantes
 * 53808 - Villalba, German Agustin
-* legajo - Apellido(s), Nombre(s)
+* 51207 - Gauna, Santiago
 * legajo - Apellido(s), Nombre(s)
 * legajo - Apellido(s), Nombre(s)
 
