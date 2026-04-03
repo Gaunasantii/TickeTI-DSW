@@ -4,7 +4,7 @@
 ### Integrantes
 * 53808 - Villalba, German Agustin
 * 51207 - Gauna, Santiago
-* legajo - Apellido(s), Nombre(s)
+* 44971 - Román, Gastón Nicolás
 * legajo - Apellido(s), Nombre(s)
 
 ### Repositorios
@@ -12,13 +12,11 @@
 
 ## Tema
 ### Descripción
-Aplicacion de tipo DeskHelp con sistema de tickets agrupados por categoria y/o Urgencia, donde los mismos son cargados por usuarios
-y posteriormente resueltos o reasignados a otro tecnico por el administrador del sistema.
+Aplicación de tipo Helpdesk con sistema de tickets agrupados por categoría y/o urgencia. Los mismos son generados por los usuarios y posteriormente resueltos o reasignados a otro técnico por el administrador del sistema.
 
 ### Modelo
-![imagen del modelo](https://drive.google.com/file/d/1TTASr6qYMNAaap6kCXzykvyuBbd7hI4a/view?usp=drive_link)
 
-diagramas con [Mermaid](https://mermaid.js.org) en lugar de imágenes.
+<img width="887" height="788" alt="Modelo_usuario_rol drawio" src="https://github.com/user-attachments/assets/2d1e1327-0883-4f7f-afdd-15a55e595b79" />
 
 ## Alcance Funcional 
 
