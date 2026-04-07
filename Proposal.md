@@ -22,7 +22,7 @@ Aplicación de tipo Helpdesk con sistema de tickets agrupados por categoría y/o
 
 ### Alcance Mínimo
 
-Regularidad:
+#### Regularidad:
 |Req|Detalle|
 |:-|:-|
 |CRUD simple|1. CRUD Categoria Ticket<br>2. CRUD Prioridad Ticket<br>3. CRUD Oficina<br>4.CRUD Tecnico|
@@ -31,8 +31,8 @@ Regularidad:
 |CUU/Epic|1. Realizar el alta de un ticket<br>2. Registrar la solucion de un ticket <br> 3. Cancelación de ticket|
 
 
-Adicionales para Aprobación
-*Nota*:si se te ocurre algun otro agregalo
+#### Adicionales para Aprobación
+
 |Req|Detalle|
 |:-|:-|
 |CRUD |1. CRUD Categoria Ticket<br>2. CRUD Prioridad Ticket<br>3. CRUD Usuario<br>4. CRUD Tecnico<br>5. CRUD Ticket<br>6. CRUD Oficina|
