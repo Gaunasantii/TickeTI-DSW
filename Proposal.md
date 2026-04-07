@@ -5,7 +5,7 @@
 * 53808 - Villalba, German Agustin
 * 51207 - Gauna, Santiago
 * 44971 - Román, Gastón Nicolás
-* legajo - Apellido(s), Nombre(s)
+* 51276 - Jordan, Nicolas
 
 ### Repositorios
 *[FullStack app](http://hyperlinkToGihubOrGitlab)
