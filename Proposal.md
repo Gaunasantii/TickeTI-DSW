@@ -28,7 +28,7 @@ Regularidad:
 |CRUD simple|1. CRUD Categoria Ticket<br>2. CRUD Prioridad Ticket<br>3. CRUD Oficina<br>4.CRUD Tecnico|
 |CRUD dependiente|1. CRUD USUARIO {depende de} CRUD Oficina<br>2. CRUD Ticket  {depende de} CRUD Usuario, CRUD Ticket Categoria y CRUD Ticket Prioridad|
 |Listado<br>+<br>detalle| 1. Listado de tickets filtrado por categoria, muestra nroTicket, Prioridad,DniUsuario , estado y Descripccion => detalle CRUD Ticket<br> 2. Listado de tickets Filtrado por estado, muestra nroTicket, Prioridad,DniUsuario y Descripccion => detalle muestra datos completos del ticket y el usuario que lo creo|
-|CUU/Epic|1. Realizar el alta de un ticket<br>2. Registrar la solucion de un ticket <br> 2. Cancelación de ticket|
+|CUU/Epic|1. Realizar el alta de un ticket<br>2. Registrar la solucion de un ticket <br> 3. Cancelación de ticket|
 
 
 Adicionales para Aprobación
