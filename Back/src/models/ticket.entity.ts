@@ -1,6 +1,22 @@
-const { DataTypes } = require('sequelize');
-const { sequelize } = require('../config/db');
+import { orm } from "../config/db.js";
+import { defineEntity , p, type EventArgs, type InferEntity } from "@mikro-orm/core";
+import { UserSchema } from "./usuario.entity.js";
 
+
+export const TicketSchema = defineEntity({
+    name:'ticket',
+    properties:{
+        id:p.integer().primary().autoincrement(),
+        title:p.string(),
+        description:p.string(),
+        //prioridad:p.manyToOne('PrioridadSchema').inversedBy('ticket'),
+        //categoria:p.manyToOne('categoriaSchema').inversedBy('ticket),
+        usuario:()=>p.manyToOne('user' as any).inversedBy('tickets'),
+    }
+})
+
+
+/*
 const Ticket = sequelize.define('Ticket', {
     titulo: { 
         type: DataTypes.STRING, 
@@ -29,3 +45,5 @@ const Ticket = sequelize.define('Ticket', {
 });
 
 module.exports = Ticket;
+
+*/
