@@ -1,6 +1,7 @@
 import { orm } from "../config/db.js";
 import { defineEntity , p, type EventArgs, type InferEntity } from "@mikro-orm/core";
 import { TicketSchema } from "./ticket.entity.js";
+import { OficinaSchema } from './oficina.entity.js';
 
 
 export const PersonSchema=defineEntity({
@@ -41,7 +42,7 @@ export const UserSchema = defineEntity({
     extends:PersonSchema,
     properties:{
         tickets: () => p.oneToMany(TicketSchema).mappedBy('usuario'), // este es el lado del dueño
-        //oficina:()=>p.manyToOne(OficinaSchema).InversedBy('usuarios'), //este es el lado de quien tendra la foreanKey
+        oficina:()=>p.manyToOne(OficinaSchema).inversedBy('usuarios'), //este es el lado de quien tendra la foreanKey
         pass:p.string(),
     }
 })

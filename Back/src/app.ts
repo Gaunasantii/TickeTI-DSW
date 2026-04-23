@@ -2,6 +2,7 @@ import Express from 'express';
 import cors from 'cors';
 import { initOrm,orm,checkDb,syncSchema } from './config/db.js'; // Importamos la conexión que hicimos antes
 
+
 // Importar Rutas
 
 const app = Express();
@@ -9,6 +10,7 @@ const app = Express();
 // Conectar DB
 await initOrm();
 syncSchema();
+await checkDb();
 
 // Middlewares
 app.use(cors());

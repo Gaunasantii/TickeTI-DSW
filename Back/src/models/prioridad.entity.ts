@@ -5,7 +5,7 @@ export const PrioridadSchema = defineEntity({
   properties: {
     id: p.integer().primary().autoincrement(),
     nombre: p.string(),
-    tiempoLimiteResolucion: p.integer(), // en horas
+    tiempoLimiteResolucion: p.integer(), 
   }
 });
 

@@ -1,6 +1,10 @@
 import { orm } from "../config/db.js";
 import { defineEntity , p, type EventArgs, type InferEntity } from "@mikro-orm/core";
 import { UserSchema } from "./usuario.entity.js";
+import { EstadoSchema }    from './estado.entity.js';
+import { PrioridadSchema } from './prioridad.entity.js';
+import { CategoriaSchema } from './categoria.entity.js';
+
 
 
 export const TicketSchema = defineEntity({
@@ -9,11 +13,13 @@ export const TicketSchema = defineEntity({
         id:p.integer().primary().autoincrement(),
         title:p.string(),
         description:p.string(),
-        //prioridad:p.manyToOne('PrioridadSchema').inversedBy('ticket'),
-        //categoria:p.manyToOne('categoriaSchema').inversedBy('ticket),
-        usuario:()=>p.manyToOne('user' as any).inversedBy('tickets'),
+        estado:() => p.manyToOne(EstadoSchema),
+        prioridad:() => p.manyToOne(PrioridadSchema),
+        categoria:() => p.manyToOne(CategoriaSchema),
+        usuario:() => p.manyToOne(UserSchema),
     }
 })
+
 
 
 /*
