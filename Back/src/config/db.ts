@@ -3,13 +3,15 @@ import { MySqlDriver } from "@mikro-orm/mysql";
 import dotenv from 'dotenv';
 
 import { TicketSchema } from '../models/ticket.entity.js'
-import { UserSchema, PersonSchema } from '../models/usuario.entity.js'
+import { UserSchema} from '../models/usuario.entity.js'
 import { EstadoSchema }    from '../models/estado.entity.js';
 import { CategoriaSchema } from '../models/categoria.entity.js';
 import { PrioridadSchema } from '../models/prioridad.entity.js';
 import { EmpresaSchema }   from '../models/empresa.entity.js';
 import { OficinaSchema }   from '../models/oficina.entity.js';
 import { TecnicoSchema }   from '../models/tecnico.entity.js';
+import { adminSchema } from "../models/admin.entity.js";
+import { PersonSchema } from "../models/Shared/person.entity.js";
 
 dotenv.config();
 
@@ -26,7 +28,7 @@ export let orm:MikroORM;
 export async function initOrm() {
   try {
     orm = await MikroORM.init({
-      entities: [UserSchema, PersonSchema, TicketSchema,
+      entities: [PersonSchema,UserSchema,adminSchema , TicketSchema,
       EstadoSchema, CategoriaSchema, PrioridadSchema,
       EmpresaSchema, OficinaSchema, TecnicoSchema,
     ],
