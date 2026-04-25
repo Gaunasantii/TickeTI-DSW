@@ -1,6 +1,8 @@
 import Express from 'express';
 import cors from 'cors';
-import { initOrm,orm,checkDb,syncSchema } from './config/db.js'; // Importamos la conexión que hicimos antes
+import { initOrm,orm,checkDb,syncSchema } from './config/db.js';
+import { userrouter } from './routes/usuario.routes.js';
+import { estadoRouter } from './routes/estado.routes.js';
 
 
 // Importar Rutas
@@ -18,7 +20,8 @@ app.use(Express.json());
 
 // Usar Rutas
 //app.use('/api', ticketRoutes);
-//app.use('/api', usuarioRoutes);
+app.use('/api', userrouter);
+app.use('/api',estadoRouter);
 
 // Ruta de prueba (la podés dejar o sacar)
 app.get('/api/status', (req, res) => {
