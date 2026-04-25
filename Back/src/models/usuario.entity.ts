@@ -10,8 +10,8 @@ export const UserSchema = defineEntity({
     extends:PersonSchema,
     discriminatorValue:"user",
     properties:{
-        tickets:() => p.oneToMany(TicketSchema).mappedBy('usuario').nullable(), // este es el lado del dueño
-        oficina:()=>p.manyToOne(OficinaSchema).inversedBy('usuarios').nullable(), //este es el lado de quien tendra la foreanKey
+        tickets:() => p.oneToMany(TicketSchema).mappedBy('usuario').nullable(), 
+        oficina:()=>p.manyToOne(OficinaSchema).inversedBy('usuarios').nullable(),
     }
 });
 
