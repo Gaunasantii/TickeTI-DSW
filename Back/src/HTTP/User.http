@@ -8,3 +8,5 @@ Content-Type: application/json
   "pass":"1234",
   "dni":"1234"
 }
+
+GET http://localhost:3000/api/usuarios
