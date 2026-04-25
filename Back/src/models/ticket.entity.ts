@@ -4,6 +4,7 @@ import { UserSchema } from "./usuario.entity.js";
 import { EstadoSchema }    from './estado.entity.js';
 import { PrioridadSchema } from './prioridad.entity.js';
 import { CategoriaSchema } from './categoria.entity.js';
+import { TecnicoSchema } from "./tecnico.entity.js";
 
 
 
@@ -17,6 +18,7 @@ export const TicketSchema = defineEntity({
         prioridad:() => p.manyToOne(PrioridadSchema),
         categoria:() => p.manyToOne(CategoriaSchema),
         usuario:() => p.manyToOne(UserSchema),
+        tecnico:() => p.manyToMany(TecnicoSchema).owner()
     }
 })
 
