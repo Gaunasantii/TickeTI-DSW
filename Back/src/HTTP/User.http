@@ -1,0 +1,10 @@
+POST http://localhost:3000/api/usuarios
+Content-Type: application/json
+
+{
+  "surName":"villalba",
+  "name":"German",
+  "tele":"1234",
+  "pass":"1234",
+  "dni":"1234"
+}

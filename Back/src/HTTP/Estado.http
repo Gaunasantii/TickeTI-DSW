@@ -1,0 +1,9 @@
+POST http://localhost:3000/api/estados
+Content-Type: application/json
+
+{
+  "nombre":"urgente",
+  "descripcion":"es muy urgente"
+}
+
+GET http://localhost:3000/api/estados
