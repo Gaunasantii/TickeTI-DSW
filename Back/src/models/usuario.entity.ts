@@ -12,8 +12,6 @@ export const PersonSchema=defineEntity({
         name:p.string(),
         tele:p.string(),
         mail:p.string(),
-        isAdmin:p.boolean().default(false),
-        isTechnician:p.boolean().default(false)
     },
 });
 
@@ -41,6 +39,8 @@ export const UserSchema = defineEntity({
     name:'user',
     extends:PersonSchema,
     properties:{
+        isAdmin:p.boolean().default(false),
+        isTechnician:p.boolean().default(false),
         tickets: () => p.oneToMany(TicketSchema).mappedBy('usuario'), // este es el lado del dueño
         oficina:()=>p.manyToOne(OficinaSchema).inversedBy('usuarios'), //este es el lado de quien tendra la foreanKey
         pass:p.string(),
