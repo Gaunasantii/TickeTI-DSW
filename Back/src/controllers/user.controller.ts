@@ -26,7 +26,65 @@ class userController{
       res.status(500).json({error:error.message});
     }
   }
+
+  async updateUser(req:Request, res:Response){
+    try{
+      const em=orm.em.fork();
+      const {id} = req.params;
+      const userinput = req.body;
+
+      const userfound = await em.findOne(UserSchema, {dni: id})
+
+      if (!userfound) {
+        return res.status(404).json({
+          message: "Usuario no encontrado"
+        });
+      }
+
+      em.assign(userfound , userinput);
+
+      await em.flush();
+
+      return res.status(200).json({
+        message: "Usuario actualizado",
+        data:userfound
+      });
+    } catch (error: any) {
+      return res.status(500).json ({
+        error:error.message
+      });
+    }
+  }
+
+  async deleteUser(req:Request, res:Response){
+    try{
+      const em=orm.em.fork();
+      const {id} = req.params;
+
+      const userfound = await em.findOne(UserSchema, {dni: id})
+
+      if (!userfound) {
+        return res.status(404).json({
+          message: "Usuario no encontrado"
+        });
+      }
+
+      em.remove(userfound);
+
+      await em.flush();
+
+      return res.status(200).json({
+        message: "Usuario eliminado",
+        data:userfound
+      });
+    } catch (error: any) {
+      return res.status(500).json ({
+        error:error.message
+      });
+    }
+  }
+
+
 }
 
 export const usercontroller = new userController();
-
