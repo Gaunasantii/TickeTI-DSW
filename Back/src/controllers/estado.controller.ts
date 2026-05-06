@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { type Request, type Response } from "express";
 import { orm } from "../config/db.js";
 import { EstadoSchema } from "../models/estado.entity.js";
 
