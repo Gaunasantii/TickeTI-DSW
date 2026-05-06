@@ -4,6 +4,7 @@ import { defineEntity , p, type EventArgs, type InferEntity } from "@mikro-orm/c
 export const PersonSchema=defineEntity({
     name:'person',
     discriminatorColumn:"type",
+    abstract:true,
     properties:{
         dni:p.string().primary(),
         surName:p.string(),
