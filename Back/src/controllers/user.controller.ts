@@ -54,21 +54,11 @@ class userController{
     try{
       const em=orm.em.fork();
       const {dni} = req.params;
-
-      //await em.getConnection().execute(`DELETE FROM person WHERE dni = ?`, [dni]);
-
-
-
       const userfound = await em.findOneOrFail(UserSchema, {dni:(dni as string)})
-      
-      console.log("Usuario encontrado:", userfound); // ¿qué muestra?
-      console.log("DNI:", dni);
 
-      await em.remove(userfound);
+      em.remove(userfound);
 
       await em.flush();
-
-      console.log("Borrado OK");
 
       return res.status(200).json({
         message: "Usuario eliminado",
