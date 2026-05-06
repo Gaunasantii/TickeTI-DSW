@@ -17,7 +17,7 @@ export const TicketSchema = defineEntity({
         estado:() => p.manyToOne(EstadoSchema),
         prioridad:() => p.manyToOne(PrioridadSchema),
         categoria:() => p.manyToOne(CategoriaSchema),
-        usuario:() => p.manyToOne(UserSchema),
+        usuario:() => p.manyToOne(UserSchema).nullable(),
         tecnico:() => p.manyToMany(TecnicoSchema).owner()
     }
 })
