@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { type Request, type Response } from "express";
 import { orm } from "../config/db.js";
 import { UserSchema } from "../models/usuario.entity.js";
 
@@ -30,16 +30,10 @@ class userController{
   async updateUser(req:Request, res:Response){
     try{
       const em=orm.em.fork();
-      const {id} = req.params;
+      const {dni} = req.params;
       const userinput = req.body;
 
-      const userfound = await em.findOne(UserSchema, {dni: id})
-
-      if (!userfound) {
-        return res.status(404).json({
-          message: "Usuario no encontrado"
-        });
-      }
+      const userfound = await em.findOneOrFail(UserSchema, {dni:(dni as string)})
 
       em.assign(userfound , userinput);
 
@@ -47,7 +41,7 @@ class userController{
 
       return res.status(200).json({
         message: "Usuario actualizado",
-        data:userfound
+        data:userfound//posteriormente reemplazar por un objeto usuario
       });
     } catch (error: any) {
       return res.status(500).json ({
@@ -59,19 +53,22 @@ class userController{
   async deleteUser(req:Request, res:Response){
     try{
       const em=orm.em.fork();
-      const {id} = req.params;
+      const {dni} = req.params;
 
-      const userfound = await em.findOne(UserSchema, {dni: id})
+      //await em.getConnection().execute(`DELETE FROM person WHERE dni = ?`, [dni]);
 
-      if (!userfound) {
-        return res.status(404).json({
-          message: "Usuario no encontrado"
-        });
-      }
 
-      em.remove(userfound);
+
+      const userfound = await em.findOneOrFail(UserSchema, {dni:(dni as string)})
+      
+      console.log("Usuario encontrado:", userfound); // ¿qué muestra?
+      console.log("DNI:", dni);
+
+      await em.remove(userfound);
 
       await em.flush();
+
+      console.log("Borrado OK");
 
       return res.status(200).json({
         message: "Usuario eliminado",
