@@ -6,7 +6,21 @@ Content-Type: application/json
   "name":"German",
   "tele":"1234",
   "pass":"1234",
+  "dni":"1"
+}
+
+
+PUT http://localhost:3000/api/usuarios/1234
+Content-Type: application/json
+
+{
+  "surName":"villalba",
+  "name":"Germa",
+  "tele":"1234",
+  "pass":"1234",
   "dni":"1234"
 }
 
 GET http://localhost:3000/api/usuarios
+
+DELETE http://localhost:3000/api/usuarios/1
