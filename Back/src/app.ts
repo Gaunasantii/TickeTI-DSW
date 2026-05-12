@@ -10,6 +10,7 @@ import { oficinarouter } from './routes/oficina.routes.js';
 import { prioridadrouter } from './routes/prioridad.routes.js';
 import { tecnicorouter } from './routes/tecnico.routes.js';
 import { ticketrouter } from './routes/ticket.routes.js';
+import { asignacionrouter } from './routes/asignacion.routes.js';
 
 
 // Importar Rutas
@@ -36,6 +37,7 @@ app.use('/api',oficinarouter);
 app.use('/api',prioridadrouter);
 app.use('/api',tecnicorouter);
 app.use('/api',ticketrouter);
+app.use('/api',asignacionrouter)
 
 
 // Ruta de prueba (la podés dejar o sacar)

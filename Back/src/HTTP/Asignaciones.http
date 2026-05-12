@@ -1,0 +1,33 @@
+@baseUrl = http://localhost:3000/api
+
+
+### ================================================
+### ASIGNACIONES - CRUD Completo
+### ================================================
+
+### 1. CREAR nueva asignacion
+POST {{baseUrl}}/asignaciones
+Content-Type: application/json
+
+{
+  "ticket":6,
+  "tecnico":"66666666"
+}
+
+### 2. OBTENER todas las asignaciones
+
+GET {{baseUrl}}/asignaciones
+Content-Type: application/json
+
+### 3. MODIFICAR una asignacion
+
+PUT {{baseUrl}}/asignaciones/1
+Content-Type: application/json
+
+{
+  "fechaCierre":"2026-05-12T20:31:53.000Z"
+}
+
+### 4. BORRAR una asignacion (No lo vamos a aplicar pero se puede testear)
+
+DELETE {{baseUrl}}/asignaciones/1

@@ -20,7 +20,7 @@ class tecnicoController{
   async findAll(req:Request,res:Response){
     try{
       const em=orm.em.fork();
-      const tecnicosRecovered=await em.findAll(TecnicoSchema);
+      const tecnicosRecovered=await em.findAll(TecnicoSchema,{populate:['asignaciones']});
       res.status(200).json({message:"Tecnicos Recuperados",data:tecnicosRecovered})
     }catch(error:any){
       res.status(500).json({error:error.message});

@@ -1,13 +1,15 @@
 import { defineEntity, p } from '@mikro-orm/core';
 import { PersonSchema } from './Shared/person.entity.js';
 import { TicketSchema } from './ticket.entity.js';
+import { asignacionSchema } from './asignacion.entity.js';
 
 export const TecnicoSchema = defineEntity({
     name:'tecnico',
     extends:PersonSchema,
     discriminatorValue:'tecnico',
     properties:{
-        ticket: () => p.manyToMany(TicketSchema).mappedBy('tecnico'),
+        //ticket: () => p.manyToMany(TicketSchema).mappedBy('tecnico'),
+        asignaciones:()=>p.oneToMany(asignacionSchema).mappedBy('tecnico')
     }
 })
 
