@@ -60,12 +60,12 @@ class userController{
 
       await em.flush();
 
-      return res.status(200).json({
+      res.status(200).json({
         message: "Usuario eliminado",
         data:userfound
       });
     } catch (error: any) {
-      return res.status(500).json ({
+      res.status(500).json ({
         error:error.message
       });
     }

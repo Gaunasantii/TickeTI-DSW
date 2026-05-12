@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { type Request, type Response } from "express";
 import { orm } from "../config/db.js";
 import { CategoriaSchema } from "../models/categoria.entity.js";
 
@@ -30,51 +30,41 @@ class CategoriaController {
     async updateCategoria(req:Request, res:Response){
         try{
         const em=orm.em.fork();
-        const {id} = req.params;
+        const id = req.params.id as string;
         const categoriainput = req.body;
 
-        const categoriafound = await em.findOne(CategoriaSchema, {id: Number(id)})
-
-        if (!categoriafound) {
-            return res.status(404).json({
-            message: "Categoria no encontrado"
-            });
-        }
+        const categoriafound = await em.findOneOrFail(CategoriaSchema, {id: Number.parseInt(id)})
 
         em.assign(categoriafound , categoriainput);
 
         await em.flush();
 
-        return res.status(200).json({
+        res.status(200).json({
             message: "Categoria actualizado",
             data:categoriafound
         });
         } catch (error: any) {
-            return res.status(500).json ({error:error.message});
+            res.status(500).json ({error:error.message});
         }
     }
 
     async deleteCategoria(req:Request, res:Response){
         try{
         const em=orm.em.fork();
-        const {id} = req.params;
+        const id = req.params.id;
 
-        const categoriafound = await em.findOne(CategoriaSchema, {id: Number(id)})
-
-        if (!categoriafound) {
-            return res.status(404).json({message: "Administrador no encontrado"});
-        }
+        const categoriafound = await em.findOneOrFail(CategoriaSchema, {id: Number(id)})
 
         em.remove(categoriafound);
 
         await em.flush();
 
-        return res.status(200).json({
+        res.status(200).json({
             message: "Categoria eliminado",
             data:categoriafound
         });
         } catch (error: any) {
-            return res.status(500).json ({error:error.message});
+            res.status(500).json ({error:error.message});
         }
     }
 }

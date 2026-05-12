@@ -27,6 +27,19 @@ class EstadoController{
       res.status(500).json({error:error.message});
     }
   }
+
+  async findOne(req:Request,res:Response){
+    try{
+      const em = orm.em.fork();
+      const {id}=req.params
+      const recoveredEstado = await em.findOneOrFail(EstadoSchema,{id:Number(id)});
+
+      res.status(200).json({message:"estado recuperado",data:recoveredEstado});
+    } catch(error:any) {
+      res.status(500).json({error:error.message});
+    }
+    
+  }
 }
 
 export const estadoController = new EstadoController();

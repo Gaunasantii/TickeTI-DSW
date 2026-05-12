@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { type Request, type Response } from "express";
 import { orm } from "../config/db.js";
 import { OficinaSchema } from "../models/oficina.entity.js";
 
@@ -33,24 +33,18 @@ class oficinaController{
       const {id} = req.params;
       const oficinainput = req.body;
 
-      const oficinafound = await em.findOne(OficinaSchema, {id: Number(id)})
-
-      if (!oficinafound) {
-        return res.status(404).json({
-          message: "Oficina no encontrado"
-        });
-      }
+      const oficinafound = await em.findOneOrFail(OficinaSchema, {id: Number(id)})
 
       em.assign(oficinafound , oficinainput);
 
       await em.flush();
 
-      return res.status(200).json({
+      res.status(200).json({
         message: "Oficina actualizada",
         data:oficinafound
       });
     } catch (error: any) {
-      return res.status(500).json ({
+      res.status(500).json ({
         error:error.message
       });
     }
@@ -61,24 +55,18 @@ class oficinaController{
       const em=orm.em.fork();
       const {id} = req.params;
 
-      const oficinafound = await em.findOne(OficinaSchema, {id: Number(id)})
-
-      if (!oficinafound) {
-        return res.status(404).json({
-          message: "Oficina no encontrada"
-        });
-      }
+      const oficinafound = await em.findOneOrFail(OficinaSchema, {id: Number(id)})
 
       em.remove(oficinafound);
 
       await em.flush();
 
-      return res.status(200).json({
+      res.status(200).json({
         message: "Oficina eliminado",
         data:oficinafound
       });
     } catch (error: any) {
-      return res.status(500).json ({
+      res.status(500).json ({
         error:error.message
       });
     }

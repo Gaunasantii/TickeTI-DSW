@@ -1,5 +1,5 @@
 import { Router } from "express";
-export const oficinarouter = Router();
+export const oficinarouter:Router = Router();
 import { oficinacontroller } from "../controllers/oficina.controller.js";
 
 oficinarouter.post("/oficinas", oficinacontroller.createOficina);

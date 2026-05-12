@@ -1,6 +1,7 @@
 import { Router } from "express";
-export const empresarouter = Router();
 import { empresacontroller } from "../controllers/empresa.controller.js";
+
+export const empresarouter:Router = Router();
 
 empresarouter.post("/empresas", empresacontroller.createEmpresa);
 empresarouter.get("/empresas", empresacontroller.findAll);

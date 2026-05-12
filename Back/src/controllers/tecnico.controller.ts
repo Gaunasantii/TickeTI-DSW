@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { type Request, type Response } from "express";
 import { orm } from "../config/db.js";
 import { TecnicoSchema } from "../models/tecnico.entity.js";
 
@@ -30,10 +30,10 @@ class tecnicoController{
   async updateTecnico(req:Request, res:Response){
     try{
       const em=orm.em.fork();
-      const {id} = req.params;
+      const dni = req.params.dni;
       const tecnicoinput = req.body;
 
-      const tecnicofound = await em.findOne(TecnicoSchema, {dni: id})
+      const tecnicofound = await em.findOneOrFail(TecnicoSchema, {dni: dni as string})
 
       if (!tecnicofound) {
         return res.status(404).json({
@@ -59,26 +59,20 @@ class tecnicoController{
   async deleteTecnico(req:Request, res:Response){
     try{
       const em=orm.em.fork();
-      const {id} = req.params;
+      const dni = req.params.dni;
 
-      const tecnicofound = await em.findOne(TecnicoSchema, {dni: id})
-
-      if (!tecnicofound) {
-        return res.status(404).json({
-          message: "Tecnico no encontrado"
-        });
-      }
+      const tecnicofound = await em.findOneOrFail(TecnicoSchema, {dni: dni as string})
 
       em.remove(tecnicofound);
 
       await em.flush();
 
-      return res.status(200).json({
+      res.status(200).json({
         message: "Tecnico eliminado",
         data:tecnicofound
       });
     } catch (error: any) {
-      return res.status(500).json ({
+      res.status(500).json ({
         error:error.message
       });
     }

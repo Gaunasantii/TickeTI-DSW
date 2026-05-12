@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { type Request, type Response } from "express";
 import { orm } from "../config/db.js";
 import { adminSchema } from "../models/admin.entity.js";
 
@@ -30,51 +30,41 @@ class AdminController {
     async updateAdmin(req:Request, res:Response){
         try{
         const em=orm.em.fork();
-        const {id} = req.params;
+        const dni = req.params.dni as string;
         const admininput = req.body;
 
-        const adminfound = await em.findOne(adminSchema, {dni: id})
-
-        if (!adminfound) {
-            return res.status(404).json({
-            message: "Administrador no encontrado"
-            });
-        }
+        const adminfound = await em.findOneOrFail(adminSchema, {dni: dni})
 
         em.assign(adminfound , admininput);
 
         await em.flush();
 
-        return res.status(200).json({
+        res.status(200).json({
             message: "Admistrador actualizado",
             data:adminfound
         });
         } catch (error: any) {
-            return res.status(500).json ({error:error.message});
+            res.status(500).json ({error:error.message});
         }
     }
 
     async deleteAdmin(req:Request, res:Response){
         try{
         const em=orm.em.fork();
-        const {id} = req.params;
+        const dni = req.params.dni as string;
 
-        const adminfound = await em.findOne(adminSchema, {dni: id})
-
-        if (!adminfound) {
-            return res.status(404).json({message: "Administrador no encontrado"});
-        }
+        const adminfound = await em.findOneOrFail(adminSchema, {dni: dni})
 
         em.remove(adminfound);
 
         await em.flush();
 
-        return res.status(200).json({
+        res.status(200).json({
             message: "Admistrador eliminado",
             data:adminfound
         });
         } catch (error: any) {
-            return res.status(500).json ({error:error.message});
+            res.status(500).json ({error:error.message});
         }
     }
 }

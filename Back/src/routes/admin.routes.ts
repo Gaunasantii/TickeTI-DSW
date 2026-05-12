@@ -1,5 +1,5 @@
 import { Router } from "express";
-export const adminrouter = Router();
+export const adminrouter:Router = Router();
 import { admincontroller } from "../controllers/admin.controller.js";
 
 adminrouter.post("/admins", admincontroller.createAdmin);

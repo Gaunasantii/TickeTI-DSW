@@ -1,5 +1,5 @@
 import { Router } from "express";
-export const prioridadrouter = Router();
+export const prioridadrouter:Router = Router();
 import { prioridadcontroller } from "../controllers/prioridad.controller.js";
 
 prioridadrouter.post("/prioridad", prioridadcontroller.createPrioridad);

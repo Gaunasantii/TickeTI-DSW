@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { type Request, type Response } from "express";
 import { orm } from "../config/db.js";
 import { PrioridadSchema } from "../models/prioridad.entity.js";
 
@@ -33,24 +33,18 @@ class prioridadController{
       const {id} = req.params;
       const prioridadinput = req.body;
 
-      const prioridadfound = await em.findOne(PrioridadSchema, {id: Number(id)})
-
-      if (!prioridadfound) {
-        return res.status(404).json({
-          message: "Prioridad no encontrado"
-        });
-      }
+      const prioridadfound = await em.findOneOrFail(PrioridadSchema, {id: Number(id)})
 
       em.assign(prioridadfound , prioridadinput);
 
       await em.flush();
 
-      return res.status(200).json({
+      res.status(200).json({
         message: "Prioridad actualizada",
         data:prioridadfound
       });
     } catch (error: any) {
-      return res.status(500).json ({
+      res.status(500).json ({
         error:error.message
       });
     }
@@ -61,24 +55,18 @@ class prioridadController{
       const em=orm.em.fork();
       const {id} = req.params;
 
-      const prioridadfound = await em.findOne(PrioridadSchema, {id: Number(id)})
-
-      if (!prioridadfound) {
-        return res.status(404).json({
-          message: "Prioridad no encontrada"
-        });
-      }
+      const prioridadfound = await em.findOneOrFail(PrioridadSchema, {id: Number(id)})
 
       em.remove(prioridadfound);
 
       await em.flush();
 
-      return res.status(200).json({
+      res.status(200).json({
         message: "Prioridad eliminado",
         data:prioridadfound
       });
     } catch (error: any) {
-      return res.status(500).json ({
+      res.status(500).json ({
         error:error.message
       });
     }

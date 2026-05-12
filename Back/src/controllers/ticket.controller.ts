@@ -1,10 +1,10 @@
-import { Request, Response } from "express";
+import { type Request, type Response } from "express";
 import { orm } from "../config/db.js";
 import { TicketSchema } from "../models/ticket.entity.js";
 
 class ticketController{
 
-  async createTecnico(req:Request,res:Response){
+  async createTicket(req:Request,res:Response){
     try{
       const em=orm.em.fork()
       const ticketInput=req.body;
@@ -33,24 +33,18 @@ class ticketController{
       const {id} = req.params;
       const ticketinput = req.body;
 
-      const ticketfound = await em.findOne(TicketSchema, {id: Number(id)})
-
-      if (!ticketfound) {
-        return res.status(404).json({
-          message: "Ticket no encontrado"
-        });
-      }
+      const ticketfound = await em.findOneOrFail(TicketSchema, {id: Number(id)})
 
       em.assign(ticketfound , ticketinput);
 
       await em.flush();
 
-      return res.status(200).json({
+      res.status(200).json({
         message: "Ticket actualizado",
         data:ticketfound
       });
     } catch (error: any) {
-      return res.status(500).json ({
+      res.status(500).json ({
         error:error.message
       });
     }
