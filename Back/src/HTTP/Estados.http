@@ -1,0 +1,60 @@
+### Variables
+@baseUrl = http://localhost:3000/api
+@estado_id = 1
+
+### ================================================
+### ESTADOS - CRUD
+### ================================================
+
+### 1. CREAR nuevo Estado
+POST {{baseUrl}}/estados
+Content-Type: application/json
+
+{
+  "nombre": "Abierto",
+  "descripcion": "Ticket recién creado, pendiente de revisión"
+}
+
+### 2. OBTENER todos los Estados
+GET {{baseUrl}}/estados
+Content-Type: application/json
+
+### ================================================
+### EJEMPLOS ADICIONALES - Estados Comunes
+### ================================================
+
+### Crear Estado - En Proceso
+POST {{baseUrl}}/estados
+Content-Type: application/json
+
+{
+  "nombre": "En Proceso",
+  "descripcion": "Ticket asignado a un técnico y en resolución"
+}
+
+### Crear Estado - Cerrado
+POST {{baseUrl}}/estados
+Content-Type: application/json
+
+{
+  "nombre": "Cerrado",
+  "descripcion": "Ticket resuelto y cerrado"
+}
+
+### Crear Estado - Pausado
+POST {{baseUrl}}/estados
+Content-Type: application/json
+
+{
+  "nombre": "Pausado",
+  "descripcion": "Ticket en espera de información del usuario"
+}
+
+### Crear Estado - Escalado
+POST {{baseUrl}}/estados
+Content-Type: application/json
+
+{
+  "nombre": "Escalado",
+  "descripcion": "Ticket escalado a nivel superior"
+}

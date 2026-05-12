@@ -1,0 +1,67 @@
+### Variables
+@baseUrl = http://localhost:3000/api
+@empresa_id = 1
+
+### ================================================
+### EMPRESAS - CRUD Completo
+### ================================================
+
+### 1. CREAR nueva Empresa
+POST {{baseUrl}}/empresas
+Content-Type: application/json
+
+{
+  "nombre": "Acme Corporation"
+}
+
+### 2. OBTENER todas las Empresas
+GET {{baseUrl}}/empresas
+Content-Type: application/json
+
+### 3. ACTUALIZAR Empresa
+PUT {{baseUrl}}/empresas/1
+Content-Type: application/json
+
+{
+  "nombre": "Acme Corporation - Actualizado"
+}
+
+### 4. ELIMINAR Empresa
+DELETE {{baseUrl}}/empresas/1
+Content-Type: application/json
+
+### ================================================
+### EJEMPLOS ADICIONALES - Empresas Comunes
+### ================================================
+
+### Crear Empresa - Tech Solutions
+POST {{baseUrl}}/empresas
+Content-Type: application/json
+
+{
+  "nombre": "Tech Solutions S.A."
+}
+
+### Crear Empresa - Digital Services
+POST {{baseUrl}}/empresas
+Content-Type: application/json
+
+{
+  "nombre": "Digital Services LLC"
+}
+
+### Crear Empresa - Global Consulting
+POST {{baseUrl}}/empresas
+Content-Type: application/json
+
+{
+  "nombre": "Global Consulting Inc"
+}
+
+### Crear Empresa - Innovate Systems
+POST {{baseUrl}}/empresas
+Content-Type: application/json
+
+{
+  "nombre": "Innovate Systems"
+}

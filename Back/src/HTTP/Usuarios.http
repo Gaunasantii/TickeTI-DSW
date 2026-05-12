@@ -1,0 +1,68 @@
+### Variables
+@baseUrl = http://localhost:3000/api
+
+
+### ================================================
+### USUARIOS - CRUD Completo
+### ================================================
+
+### 1. CREAR nuevo Usuario
+POST {{baseUrl}}/usuarios
+Content-Type: application/json
+
+{
+  "dni": "12345678",
+  "name": "Juan",
+  "surName": "Pérez",
+  "tele": "5551234567",
+  "mail": "juan.perez@example.com",
+  "pass": "password123"
+}
+
+### 2. OBTENER todos los Usuarios
+GET {{baseUrl}}/usuarios
+Content-Type: application/json
+
+### 3. ACTUALIZAR Usuario por DNI
+PUT {{baseUrl}}/usuarios/1234
+Content-Type: application/json
+
+{
+  "name": "Juan Carlos",
+  "surName": "Pérez López",
+  "tele": "5559876543",
+  "mail": "juancarlos.perez@example.com"
+}
+
+### 4. ELIMINAR Usuario por DNI
+DELETE {{baseUrl}}/usuarios/1234
+Content-Type: application/json
+
+### ================================================
+### EJEMPLOS ADICIONALES
+### ================================================
+
+### Crear Usuario con relación a Oficina
+POST {{baseUrl}}/usuarios
+Content-Type: application/json
+
+{
+  "dni": "123456789",
+  "name": "María",
+  "surName": "García",
+  "tele": "5552223333",
+  "pass": "securePass456",
+  "oficina": 1
+}
+
+### Crear otro Usuario
+POST {{baseUrl}}/usuarios
+Content-Type: application/json
+
+{
+  "dni": "22222222",
+  "name": "Carlos",
+  "surName": "López",
+  "tele": "5553334444",
+  "pass": "securePass789"
+}
