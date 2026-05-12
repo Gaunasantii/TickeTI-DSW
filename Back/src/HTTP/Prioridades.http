@@ -1,0 +1,73 @@
+### Variables
+@baseUrl = http://localhost:3000/api
+@prioridad_id = 1
+
+### ================================================
+### PRIORIDADES - CRUD Completo
+### ================================================
+
+### 1. CREAR nueva Prioridad
+POST {{baseUrl}}/prioridad
+Content-Type: application/json
+
+{
+  "nombre": "Baja",
+  "tiempoLimiteResolucion": 259200
+}
+
+### 2. OBTENER todas las Prioridades
+GET {{baseUrl}}/prioridad
+Content-Type: application/json
+
+### 3. ACTUALIZAR Prioridad
+PUT {{baseUrl}}/prioridad/1
+Content-Type: application/json
+
+{
+  "nombre": "Baja",
+  "tiempoLimiteResolucion": 432000
+}
+
+### 4. ELIMINAR Prioridad
+DELETE {{baseUrl}}/prioridad/1
+Content-Type: application/json
+
+### ================================================
+### EJEMPLOS ADICIONALES - Prioridades Comunes
+### ================================================
+
+### Crear Prioridad - Media (72 horas en segundos)
+POST {{baseUrl}}/prioridad
+Content-Type: application/json
+
+{
+  "nombre": "Media",
+  "tiempoLimiteResolucion": 259200
+}
+
+### Crear Prioridad - Alta (24 horas en segundos)
+POST {{baseUrl}}/prioridad
+Content-Type: application/json
+
+{
+  "nombre": "Alta",
+  "tiempoLimiteResolucion": 86400
+}
+
+### Crear Prioridad - Urgente (4 horas en segundos)
+POST {{baseUrl}}/prioridad
+Content-Type: application/json
+
+{
+  "nombre": "Urgente",
+  "tiempoLimiteResolucion": 14400
+}
+
+### Crear Prioridad - Crítica (1 hora en segundos)
+POST {{baseUrl}}/prioridad
+Content-Type: application/json
+
+{
+  "nombre": "Crítica",
+  "tiempoLimiteResolucion": 3600
+}

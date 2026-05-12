@@ -1,0 +1,117 @@
+### Variables
+@baseUrl = http://localhost:3000/api
+@ticket_id = 6
+
+### ================================================
+### TICKETS - CRUD Completo
+### ================================================
+
+### 1. CREAR nuevo Ticket
+POST {{baseUrl}}/tickets
+Content-Type: application/json
+
+{
+  "title": "Problema con impresora en oficina",
+  "description": "La impresora de la oficina no está imprimiendo. Error: offline",
+  "estado": 2,
+  "prioridad": 2,
+  "categoria": 2,
+  "usuario": "12345"
+}
+
+### 2. OBTENER todos los Tickets
+GET {{baseUrl}}/tickets
+Content-Type: application/json
+
+### 3. ACTUALIZAR Ticket
+PUT {{baseUrl}}/tickets/6
+Content-Type: application/json
+
+{
+  "title": "Problema con impresora en oficina - EN PROCESO",
+  "description": "La impresora de la oficina no está imprimiendo. Error: offline. Ya fue revisada.",
+  "estado": 2,
+  "prioridad": 2
+}
+
+### ================================================
+### EJEMPLOS ADICIONALES - Diferentes Tipos de Tickets
+### ================================================
+
+### Crear Ticket - Problema de Software
+POST {{baseUrl}}/tickets
+Content-Type: application/json
+
+{
+  "title": "Error en aplicación de nómina",
+  "description": "La aplicación de nómina se cierra inesperadamente al generar reportes",
+  "estado": 1,
+  "prioridad": 3,
+  "categoria": 2,
+  "usuario": "12345"
+}
+
+### Crear Ticket - Problema de Red
+POST {{baseUrl}}/tickets
+Content-Type: application/json
+
+{
+  "title": "Conexión a internet lenta",
+  "description": "La conexión a internet está muy lenta, afectando la productividad",
+  "estado": 1,
+  "prioridad": 2,
+  "categoria": 3,
+  "usuario": "1234"
+}
+
+### Crear Ticket - Solicitud de Acceso
+POST {{baseUrl}}/tickets
+Content-Type: application/json
+
+{
+  "title": "Solicitud de acceso a carpeta compartida",
+  "description": "Necesito acceso a la carpeta compartida 'Proyectos2024'",
+  "estado": 2,
+  "prioridad": 2,
+  "categoria": 4,
+  "usuario": "1234"
+}
+
+### Crear Ticket - Problema Hardware Crítico
+POST {{baseUrl}}/tickets
+Content-Type: application/json
+
+{
+  "title": "Servidor no responde",
+  "description": "El servidor principal no está respondiendo. El sistema está caído.",
+  "estado": 2,
+  "prioridad": 4,
+  "categoria": 2,
+  "usuario": "12345"
+}
+
+### Crear Ticket - Fallo de Monitor
+POST {{baseUrl}}/tickets
+Content-Type: application/json
+
+{
+  "title": "Monitor se apaga automáticamente",
+  "description": "El monitor se apaga después de unos minutos de uso. Requiere revisión.",
+  "estado": 1,
+  "prioridad": 1,
+  "categoria": 1,
+  "usuario": "33333333"
+}
+
+### Crear Ticket - Problema de Teléfono
+POST {{baseUrl}}/tickets
+Content-Type: application/json
+
+{
+  "title": "Teléfono de escritorio no funciona",
+  "description": "El teléfono de la oficina no puede hacer ni recibir llamadas",
+  "estado": 1,
+  "prioridad": 2,
+  "categoria": 5,
+  "usuario": "44444444"
+}

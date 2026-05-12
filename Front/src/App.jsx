@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import LoginForm from './components/LoginForm';
+import { LoginForm } from './components/LoginForm';
 import UsuarioForm from './components/UsuarioForm';
 import TicketForm from './components/TicketForm';
 // Importá también el TicketList cuando lo tengas
@@ -14,3 +14,5 @@ function App() {
     </div>
   )
 }
+
+export default App;

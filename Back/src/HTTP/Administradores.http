@@ -1,0 +1,76 @@
+### Variables
+@baseUrl = http://localhost:3000/api
+
+### ================================================
+### ADMINISTRADORES - CRUD Completo
+### ================================================
+
+### 1. CREAR nuevo Administrador
+POST {{baseUrl}}/admins
+Content-Type: application/json
+
+{
+  "dni": "1",
+  "name": "Adrián",
+  "surName": "Fernández",
+  "tele": "5551112222",
+  "pass": "adminPassword123"
+}
+
+### 2. OBTENER todos los Administradores
+GET {{baseUrl}}/admins
+Content-Type: application/json
+
+### 3. ACTUALIZAR Administrador por DNI
+PUT {{baseUrl}}/admins/1
+Content-Type: application/json
+
+{
+  "name": "Adrián Maximiliano",
+  "surName": "Fernández López",
+  "tele": "5559998888"
+}
+
+### 4. ELIMINAR Administrador por DNI
+DELETE {{baseUrl}}/admins/1
+Content-Type: application/json
+
+### ================================================
+### PETICIONES ADICIONALES
+### ================================================
+
+### Crear Administrador
+POST {{baseUrl}}/admins
+Content-Type: application/json
+
+{
+  "dni": "88888888",
+  "name": "Claudia",
+  "surName": "Domínguez",
+  "tele": "5552223333",
+  "pass": "gerenciaTI456"
+}
+
+### Crear Administrador
+POST {{baseUrl}}/admins
+Content-Type: application/json
+
+{
+  "dni": "99999999",
+  "name": "David",
+  "surName": "Morales",
+  "tele": "5553334444",
+  "pass": "supervisorTickets789"
+}
+
+### Crear Administrador
+POST {{baseUrl}}/admins
+Content-Type: application/json
+
+{
+  "dni": "10101010",
+  "name": "Elena",
+  "surName": "González",
+  "tele": "5554445555",
+  "pass": "directorTI012"
+}

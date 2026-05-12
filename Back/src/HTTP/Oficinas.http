@@ -1,0 +1,73 @@
+### Variables
+@baseUrl = http://localhost:3000/api
+@oficina_id = 1
+
+### ================================================
+### OFICINAS - CRUD Completo
+### ================================================
+
+### 1. CREAR nueva Oficina
+POST {{baseUrl}}/oficinas
+Content-Type: application/json
+
+{
+  "nombre": "Oficina Central Buenos Aires",
+  "empresa": 1
+}
+
+### 2. OBTENER todas las Oficinas
+GET {{baseUrl}}/oficinas
+Content-Type: application/json
+
+### 3. ACTUALIZAR Oficina
+PUT {{baseUrl}}/oficinas/{{@oficina_id}}
+Content-Type: application/json
+
+{
+  "nombre": "Oficina Central CABA",
+  "empresa": 1
+}
+
+### 4. ELIMINAR Oficina
+DELETE {{baseUrl}}/oficinas/{{@oficina_id}}
+Content-Type: application/json
+
+### ================================================
+### EJEMPLOS ADICIONALES - Oficinas Comunes
+### ================================================
+
+### Crear Oficina - Sucursal Córdoba
+POST {{baseUrl}}/oficinas
+Content-Type: application/json
+
+{
+  "nombre": "Sucursal Córdoba",
+  "empresa": 1
+}
+
+### Crear Oficina - Sucursal Rosario
+POST {{baseUrl}}/oficinas
+Content-Type: application/json
+
+{
+  "nombre": "Sucursal Rosario",
+  "empresa": 1
+}
+
+### Crear Oficina - Sucursal Mendoza
+POST {{baseUrl}}/oficinas
+Content-Type: application/json
+
+{
+  "nombre": "Sucursal Mendoza",
+  "empresa": 2
+}
+
+### Crear Oficina - Sucursal La Plata
+POST {{baseUrl}}/oficinas
+Content-Type: application/json
+
+{
+  "nombre": "Sucursal La Plata",
+  "empresa": 2
+}

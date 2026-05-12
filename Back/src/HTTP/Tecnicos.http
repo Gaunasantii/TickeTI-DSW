@@ -1,0 +1,76 @@
+### Variables
+@baseUrl = http://localhost:3000/api
+
+### ================================================
+### TÉCNICOS - CRUD Completo
+### ================================================
+
+### 1. CREAR nuevo Técnico
+POST {{baseUrl}}/tecnicos
+Content-Type: application/json
+
+{
+  "dni": "33333",
+  "name": "Roberto",
+  "surName": "Martínez",
+  "tele": "5554445555",
+  "pass": "techPassword123"
+}
+
+### 2. OBTENER todos los Técnicos
+GET {{baseUrl}}/tecnicos
+Content-Type: application/json
+
+### 3. ACTUALIZAR Técnico por DNI
+PUT {{baseUrl}}/tecnicos/33333
+Content-Type: application/json
+
+{
+  "name": "Roberto Juan",
+  "surName": "Martínez García",
+  "tele": "5556667777"
+}
+
+### 4. ELIMINAR Técnico por DNI
+DELETE {{baseUrl}}/tecnicos/33333
+Content-Type: application/json
+
+### ================================================
+### PETICIONES ADICIONALES
+### ================================================
+
+### Crear Técnico
+POST {{baseUrl}}/tecnicos
+Content-Type: application/json
+
+{
+  "dni": "44444444",
+  "name": "Fernando",
+  "surName": "Gómez",
+  "tele": "5557778888",
+  "pass": "hardwareTech456"
+}
+
+### Crear Técnico
+POST {{baseUrl}}/tecnicos
+Content-Type: application/json
+
+{
+  "dni": "55555555",
+  "name": "Alejandro",
+  "surName": "Rodríguez",
+  "tele": "5558889999",
+  "pass": "networkTech789"
+}
+
+### Crear Técnico
+POST {{baseUrl}}/tecnicos
+Content-Type: application/json
+
+{
+  "dni": "66666666",
+  "name": "Patricia",
+  "surName": "Sánchez",
+  "tele": "5559990000",
+  "pass": "softwareTech012"
+}

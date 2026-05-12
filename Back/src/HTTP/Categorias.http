@@ -1,0 +1,79 @@
+### Variables
+
+### TESTEADO TOTALMENTE
+
+@baseUrl = http://localhost:3000/api
+@categoria_id = 1
+
+### ================================================
+### CATEGORÍAS - CRUD Completo
+### ================================================
+
+### 1. CREAR nueva Categoría
+
+POST {{baseUrl}}/categorias
+Content-Type: application/json
+
+{
+  "nombre": "Hardware"
+}
+
+### 2. OBTENER todas las Categorías
+GET {{baseUrl}}/categorias
+Content-Type: application/json
+
+### 3. ACTUALIZAR Categoría
+PUT {{baseUrl}}/categorias/1
+Content-Type: application/json
+
+{
+  "nombre": "Hardware y Periféricos"
+}
+
+### 4. ELIMINAR Categoría
+DELETE {{baseUrl}}/categorias/1
+Content-Type: application/json
+
+### ================================================
+### EJEMPLOS ADICIONALES - Categorías Comunes
+### ================================================
+
+### Crear Categoría - Software
+POST {{baseUrl}}/categorias
+Content-Type: application/json
+
+{
+  "nombre": "Software"
+}
+
+### Crear Categoría - Redes
+POST {{baseUrl}}/categorias
+Content-Type: application/json
+
+{
+  "nombre": "Redes"
+}
+
+### Crear Categoría - Accesos
+POST {{baseUrl}}/categorias
+Content-Type: application/json
+
+{
+  "nombre": "Accesos"
+}
+
+### Crear Categoría - Telecomunicaciones
+POST {{baseUrl}}/categorias
+Content-Type: application/json
+
+{
+  "nombre": "Telecomunicaciones"
+}
+
+### Crear Categoría - Soporte Técnico
+POST {{baseUrl}}/categorias
+Content-Type: application/json
+
+{
+  "nombre": "Soporte Técnico"
+}
