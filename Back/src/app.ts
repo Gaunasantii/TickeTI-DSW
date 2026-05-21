@@ -1,6 +1,6 @@
 import Express from 'express';
 import cors from 'cors';
-import { initOrm,orm,checkDb,syncSchema } from './config/db.js';
+import { initOrm, orm, checkDb, syncSchema } from './config/db.js';
 import { userrouter } from './routes/usuario.routes.js';
 import { estadoRouter } from './routes/estado.routes.js';
 import { adminrouter } from './routes/admin.routes.js';
@@ -11,6 +11,7 @@ import { prioridadrouter } from './routes/prioridad.routes.js';
 import { tecnicorouter } from './routes/tecnico.routes.js';
 import { ticketrouter } from './routes/ticket.routes.js';
 import { asignacionrouter } from './routes/asignacion.routes.js';
+import { authRouter } from './routes/auth.routes.js';
 
 
 // Importar Rutas
@@ -29,15 +30,16 @@ app.use(Express.json());
 // Usar Rutas
 //app.use('/api', ticketRoutes);
 app.use('/api', userrouter);
-app.use('/api',estadoRouter);
-app.use('/api',adminrouter);
-app.use('/api',categoriarouter);
-app.use('/api',empresarouter);
-app.use('/api',oficinarouter);
-app.use('/api',prioridadrouter);
-app.use('/api',tecnicorouter);
-app.use('/api',ticketrouter);
-app.use('/api',asignacionrouter)
+app.use('/api', estadoRouter);
+app.use('/api', adminrouter);
+app.use('/api', categoriarouter);
+app.use('/api', empresarouter);
+app.use('/api', oficinarouter);
+app.use('/api', prioridadrouter);
+app.use('/api', tecnicorouter);
+app.use('/api', ticketrouter);
+app.use('/api', asignacionrouter)
+app.use('/api/auth', authRouter);
 
 
 // Ruta de prueba (la podés dejar o sacar)
