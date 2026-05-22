@@ -1,72 +1,57 @@
 import { type Request, type Response } from "express";
 import { orm } from "../config/db.js";
 import { UserSchema } from "../models/usuario.entity.js";
+import { userDAO } from "../DAO/user.DAO.js";
+class userController {
 
-class userController{
-
-  async createUser(req:Request,res:Response){
-    try{
-      const em=orm.em.fork()
-      const userInput=req.body;
-      const newUser=em.create(UserSchema,userInput);
-      em.persist(newUser);
-      await em.flush();
-      res.status(201).json({message:"Usuario creado",data:newUser});
-    }catch(error:any){
-      res.status(500).json({error:error.message})
+  async createUser(req: Request, res: Response) {
+    try {
+      const userInput = req.body;
+      const newUser = await userDAO.createUser(userInput);
+      res.status(201).json({ message: "Usuario creado", data: newUser });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message })
     }
   };
 
-  async findAll(req:Request,res:Response){
-    try{
-      const em=orm.em.fork();
-      const usersRecovered=await em.findAll(UserSchema);
-      res.status(200).json({message:"Usuarios Recuperados",data:usersRecovered})
-    }catch(error:any){
-      res.status(500).json({error:error.message});
+  async findAll(req: Request, res: Response) {
+    try {
+      const usersRecovered = await userDAO.findAll({})
+      res.status(200).json({ message: "Usuarios Recuperados", data: usersRecovered })
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
     }
   }
 
-  async updateUser(req:Request, res:Response){
-    try{
-      const em=orm.em.fork();
-      const {dni} = req.params;
+  async updateUser(req: Request, res: Response) {
+    try {
+      const { dni } = req.params;
       const userinput = req.body;
 
-      const userfound = await em.findOneOrFail(UserSchema, {dni:(dni as string)})
-
-      em.assign(userfound , userinput);
-
-      await em.flush();
+      const userfound = await userDAO.updateUser(userinput, { dni: (dni as string) });
 
       return res.status(200).json({
         message: "Usuario actualizado",
-        data:userfound//posteriormente reemplazar por un objeto usuario
+        data: userfound//posteriormente reemplazar por un objeto usuario
       });
     } catch (error: any) {
-      return res.status(500).json ({
-        error:error.message
+      return res.status(500).json({
+        error: error.message
       });
     }
   }
 
-  async deleteUser(req:Request, res:Response){
-    try{
-      const em=orm.em.fork();
-      const {dni} = req.params;
-      const userfound = await em.findOneOrFail(UserSchema, {dni:(dni as string)})
-
-      em.remove(userfound);
-
-      await em.flush();
-
+  async deleteUser(req: Request, res: Response) {
+    try {
+      const { dni } = req.params;
+      const userDeleted = await userDAO.deleteUser({ dni: (dni as string) });
       res.status(200).json({
         message: "Usuario eliminado",
-        data:userfound
+        data: userDeleted
       });
     } catch (error: any) {
-      res.status(500).json ({
-        error:error.message
+      res.status(500).json({
+        error: error.message
       });
     }
   }
