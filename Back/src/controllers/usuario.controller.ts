@@ -1,6 +1,4 @@
 import { type Request, type Response } from "express";
-import { orm } from "../config/db.js";
-import { UserSchema } from "../models/usuario.entity.js";
 import { userDAO } from "../DAO/user.DAO.js";
 class userController {
 
