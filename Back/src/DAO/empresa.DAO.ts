@@ -1,11 +1,11 @@
 import { orm } from "../config/db.js";
-import { CategoriaSchema } from "../models/categoria.entity.js";
+import { EmpresaSchema } from "../models/empresa.entity.js";
 
 export class empresaDAO {
   static async findAll(filters: any) {
     try {
       const em = orm.em.fork();
-      const empresaRecovered = await em.findAll(CategoriaSchema, filters);
+      const empresaRecovered = await em.findAll(EmpresaSchema, filters);
       return empresaRecovered;
     } catch (error: any) {
       throw new Error(error.message);
@@ -15,7 +15,7 @@ export class empresaDAO {
   static async findOne(filters: any) {
     try {
       const em = orm.em.fork();
-      const empresaFound = await em.findOneOrFail(CategoriaSchema, filters);
+      const empresaFound = await em.findOneOrFail(EmpresaSchema, filters);
       return empresaFound;
     } catch (error: any) {
       throw new Error(error.message);
@@ -25,7 +25,7 @@ export class empresaDAO {
   static async createEmpresa(empresaInput: any) {
     try {
       const em = orm.em.fork();
-      const newEmpresa = em.create(CategoriaSchema, empresaInput);
+      const newEmpresa = em.create(EmpresaSchema, empresaInput);
       em.persist(newEmpresa);
       await em.flush();
       return newEmpresa;
@@ -36,7 +36,7 @@ export class empresaDAO {
   static async updateEmpresa(empresaInput: any, filters: any) {
     try {
       const em = orm.em.fork();
-      const empresaToUpdate = await em.findOneOrFail(CategoriaSchema, filters);
+      const empresaToUpdate = await em.findOneOrFail(EmpresaSchema, filters);
       em.assign(empresaToUpdate, empresaInput);
       await em.flush();
       return empresaToUpdate;
@@ -48,7 +48,7 @@ export class empresaDAO {
   static async deleteEmpresa(filters: any) {
     try {
       const em = orm.em.fork();
-      const empresaToDelete = await em.findOneOrFail(CategoriaSchema, filters);
+      const empresaToDelete = await em.findOneOrFail(EmpresaSchema, filters);
       em.remove(empresaToDelete);
       await em.flush();
       return empresaToDelete;

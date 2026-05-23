@@ -1,73 +1,58 @@
 import { type Request, type Response } from "express";
-import { orm } from "../config/db.js";
-import { OficinaSchema } from "../models/oficina.entity.js";
+import { oficinaDAO } from "../DAO/oficina.DAO.js";
 
-class oficinaController{
+class oficinaController {
 
-  async createOficina(req:Request,res:Response){
-    try{
-      const em=orm.em.fork()
-      const oficinaInput=req.body;
-      const newOficina=em.create(OficinaSchema,oficinaInput);
-      em.persist(newOficina);
-      await em.flush();
-      res.status(201).json({message:"Oficina creado",data:newOficina});
-    }catch(error:any){
-      res.status(500).json({error:error.message})
+  async createOficina(req: Request, res: Response) {
+    try {
+      const oficinaInput = req.body;
+      const newOficina = await oficinaDAO.createOficina(oficinaInput);
+      res.status(201).json({ message: "Oficina creado", data: newOficina });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message })
     }
   };
 
-  async findAll(req:Request,res:Response){
-    try{
-      const em=orm.em.fork();
-      const oficinaRecovered=await em.findAll(OficinaSchema);
-      res.status(200).json({message:"Empresa Recuperadas",data:oficinaRecovered})
-    }catch(error:any){
-      res.status(500).json({error:error.message});
+  async findAll(req: Request, res: Response) {
+    try {
+      const oficinaRecovered = await oficinaDAO.findAll({});
+      res.status(200).json({ message: "Empresa Recuperadas", data: oficinaRecovered })
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
     }
   }
 
-  async updateOficina(req:Request, res:Response){
-    try{
-      const em=orm.em.fork();
-      const {id} = req.params;
+  async updateOficina(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
       const oficinainput = req.body;
 
-      const oficinafound = await em.findOneOrFail(OficinaSchema, {id: Number(id)})
-
-      em.assign(oficinafound , oficinainput);
-
-      await em.flush();
-
+      const oficinafound = await oficinaDAO.findOne({ id: Number(id) });
       res.status(200).json({
         message: "Oficina actualizada",
-        data:oficinafound
+        data: oficinafound
       });
     } catch (error: any) {
-      res.status(500).json ({
-        error:error.message
+      res.status(500).json({
+        error: error.message
       });
     }
   }
 
-  async deleteOficina(req:Request, res:Response){
-    try{
-      const em=orm.em.fork();
-      const {id} = req.params;
+  async deleteOficina(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
 
-      const oficinafound = await em.findOneOrFail(OficinaSchema, {id: Number(id)})
+      const oficinafound = await oficinaDAO.findOne({ id: Number(id) });
 
-      em.remove(oficinafound);
-
-      await em.flush();
-
+      await oficinaDAO.deleteOficina({ id: Number(id) });
       res.status(200).json({
         message: "Oficina eliminado",
-        data:oficinafound
+        data: oficinafound
       });
     } catch (error: any) {
-      res.status(500).json ({
-        error:error.message
+      res.status(500).json({
+        error: error.message
       });
     }
   }
