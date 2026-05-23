@@ -57,8 +57,8 @@ export const syncSchema = async () => {
 export const checkDb = async () => {
   try {
     await orm.isConnected()
-    console.log('DB conectada ✅')
+    console.log('DB conectada correctamente')
   } catch (e) {
-    console.error('DB no conectada ❌', e)
+    console.error('DB no conectada', e)
   }
 }
