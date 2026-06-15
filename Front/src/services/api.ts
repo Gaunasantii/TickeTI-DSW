@@ -46,7 +46,7 @@ export const usuarioService = {
 
 export const loginService = {
   Login: async(loginData)=>{
-    const response = await fetch(`${API_URL}/auth/login`,
+    const response = await fetch(`${API_URL}/usuarios/login`,
       {method:'POST',
         headers:{
           'content-type':'application/json',
@@ -63,4 +63,22 @@ export const loginService = {
     };
     return await response.json();
   }
-}
+};
+
+export const oficinaService = {
+  listarOficinas: async () => {
+    const response = await fetch(`${API_URL}/oficinas`);
+    if (!response.ok) throw new Error('Error al obtener oficinas');
+    return await response.json();
+  },
+
+  crearOficina: async (data: any) => {
+    const response = await fetch(`${API_URL}/oficinas`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) throw new Error('Error al crear oficina');
+    return await response.json();
+  }
+};

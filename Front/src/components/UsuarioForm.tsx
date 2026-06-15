@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { usuarioService } from '../services/api';
 
@@ -34,7 +35,7 @@ const UsuarioForm = () => {
       <h2 className="text-2xl font-bold mb-5 text-gray-800">Registrar Usuario</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
 
-        {/* DNI */}
+       // DNI
         <div>
           <label className="block text-sm font-medium text-gray-700">DNI</label>
           <input 
@@ -47,7 +48,7 @@ const UsuarioForm = () => {
           <p className="text-[10px] text-gray-400 mt-1">* Se utilizará para identificar el usuario en el sistema.</p>
         </div>
         
-        {/* Nombre */}
+        //  Nombre
         <div>
           <label className="block text-sm font-medium text-gray-700">Nombre</label>
           <textarea
@@ -58,7 +59,7 @@ const UsuarioForm = () => {
           />
         </div>
 
-        {/* Apellido */}
+        //  Apellido
         <div>
           <label className="block text-sm font-medium text-gray-700">Apellido</label>
           <textarea
@@ -69,7 +70,7 @@ const UsuarioForm = () => {
           />
         </div>
 
-        {/* TELEFONO */}
+        //  Telefono
         <div>
           <label className="block text-sm font-medium text-gray-700">Telefono</label>
           <input 
@@ -81,7 +82,7 @@ const UsuarioForm = () => {
           />
         </div>
 
-        {/* Contraseña */}
+        //  Contraseña
         <div>
           <label className="block text-sm font-medium text-gray-700">Contraseña</label>
           <input

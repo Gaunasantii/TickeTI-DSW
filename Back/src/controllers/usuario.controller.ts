@@ -1,6 +1,7 @@
 import { type Request, type Response } from "express";
 import { orm } from "../config/db.js";
 import { UserSchema } from "../models/usuario.entity.js";
+import { PersonSchema } from "../models/Shared/person.entity.js";
 
 class userController{
 
@@ -71,6 +72,27 @@ class userController{
     }
   }
 
+  async login(req:Request, res:Response){
+    try{
+      const em=orm.em.fork();
+      const {email, pass} = req.body;
+      const personfound = await em.findOneOrFail(PersonSchema, {mail:(email as string), pass:(pass as string)})
+
+      if(!personfound || personfound.pass !== pass){
+        return res.status(401).json({
+          error:"Credenciales invalidas"
+        });
+      }
+      res.status(200).json({
+        message: "Login exitoso",
+        data:personfound
+      });
+    } catch (error: any) {
+      return res.status(500).json ({
+        error:error.message   
+      });
+    }
+  }   
 
 }
 

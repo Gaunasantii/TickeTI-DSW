@@ -15,7 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "@mikro-orm/core": "7.0.11",
-    "@mikro-orm/mysql": "7.0.11",
+    "@mikro-orm/mysql": "^7.0.17",
     "@types/cors": "2.8.19",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",

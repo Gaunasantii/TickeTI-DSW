@@ -14,4 +14,3 @@ export const UserSchema = defineEntity({
         oficina:()=>p.manyToOne(OficinaSchema).inversedBy('usuarios').nullable(),
     }
 });
-
