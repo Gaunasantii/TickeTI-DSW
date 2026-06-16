@@ -43,7 +43,7 @@ export const Dashboard = () => {
           </div>
         )}
 
-        {(usuario.type === 'usuario' || !usuario.type) && (
+        {(usuario.type === 'user' || !usuario.type) && (
           <div className="panel user-panel">
             <h2>Portal de Soporte</h2>
             <p>¿Tenés algún problema con tu equipo o el sistema?</p>
