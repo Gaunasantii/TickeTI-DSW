@@ -1,84 +1,57 @@
 import { type Request, type Response } from "express";
-import { orm } from "../config/db.js";
-import { TecnicoSchema } from "../models/tecnico.entity.js";
+import { tecnicoDAO } from "../DAO/tecnico.DAO.js";
 
-class tecnicoController{
+class tecnicoController {
 
-  async createTecnico(req:Request,res:Response){
-    try{
-      const em=orm.em.fork()
-      const tecnicoInput=req.body;
-      const newTecnico=em.create(TecnicoSchema,tecnicoInput);
-      em.persist(newTecnico);
-      await em.flush();
-      res.status(201).json({message:"Tecnico creado",data:newTecnico});
-    }catch(error:any){
-      res.status(500).json({error:error.message})
+  async createTecnico(req: Request, res: Response) {
+    try {
+      const tecnicoInput = req.body;
+      const newTecnico = await tecnicoDAO.createTecnico(tecnicoInput);
+      res.status(201).json({ message: "Tecnico creado", data: newTecnico });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message })
     }
   };
 
-  async findAll(req:Request,res:Response){
-    try{
-      const em=orm.em.fork();
-      const tecnicosRecovered=await em.findAll(TecnicoSchema,{populate:['asignaciones']});
-      res.status(200).json({message:"Tecnicos Recuperados",data:tecnicosRecovered})
-    }catch(error:any){
-      res.status(500).json({error:error.message});
+  async findAll(req: Request, res: Response) {
+    try {
+      const tecnicosRecovered = await tecnicoDAO.findAll({ populate: ['asignaciones'] });
+      res.status(200).json({ message: "Tecnicos Recuperados", data: tecnicosRecovered })
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
     }
   }
 
-  async updateTecnico(req:Request, res:Response){
-    try{
-      const em=orm.em.fork();
+  async updateTecnico(req: Request, res: Response) {
+    try {
       const dni = req.params.dni;
       const tecnicoinput = req.body;
-
-      const tecnicofound = await em.findOneOrFail(TecnicoSchema, {dni: dni as string})
-
-      if (!tecnicofound) {
-        return res.status(404).json({
-          message: "Tecnico no encontrado"
-        });
-      }
-
-      em.assign(tecnicofound , tecnicoinput);
-
-      await em.flush();
+      const updatedTecnico = await tecnicoDAO.updateTecnico(tecnicoinput, { dni: dni as string });
 
       return res.status(200).json({
         message: "Tecnico actualizado",
-        data:tecnicofound
+        data: updatedTecnico
       });
     } catch (error: any) {
-      return res.status(500).json ({
-        error:error.message
+      return res.status(500).json({
+        error: error.message
       });
     }
   }
 
-  async deleteTecnico(req:Request, res:Response){
-    try{
-      const em=orm.em.fork();
+  async deleteTecnico(req: Request, res: Response) {
+    try {
       const dni = req.params.dni;
-
-      const tecnicofound = await em.findOneOrFail(TecnicoSchema, {dni: dni as string})
-
-      em.remove(tecnicofound);
-
-      await em.flush();
-
-      res.status(200).json({
+      const deletedTecnico = await tecnicoDAO.deleteTecnico({ dni: dni as string });
+      return res.status(200).json({
         message: "Tecnico eliminado",
-        data:tecnicofound
+        data: deletedTecnico
       });
     } catch (error: any) {
-      res.status(500).json ({
-        error:error.message
+      return res.status(500).json({
+        error: error.message
       });
     }
   }
-
-
 }
-
 export const tecnicocontroller = new tecnicoController();

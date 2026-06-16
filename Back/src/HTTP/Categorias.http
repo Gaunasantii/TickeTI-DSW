@@ -23,15 +23,15 @@ GET {{baseUrl}}/categorias
 Content-Type: application/json
 
 ### 3. ACTUALIZAR Categoría
-PUT {{baseUrl}}/categorias/1
+PUT {{baseUrl}}/categorias/2
 Content-Type: application/json
 
 {
   "nombre": "Hardware y Periféricos"
 }
 
-### 4. ELIMINAR Categoría
-DELETE {{baseUrl}}/categorias/1
+### 4. ELIMINAR Categoría // Nunca se hara realmente porque se necesita para las relaciones, pero se deja el endpoint para pruebas
+DELETE {{baseUrl}}/categorias/2
 Content-Type: application/json
 
 ### ================================================

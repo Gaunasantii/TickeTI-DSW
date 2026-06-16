@@ -1,78 +1,61 @@
 import { type Request, type Response } from "express";
-import { orm } from "../config/db.js";
-import { EmpresaSchema } from "../models/empresa.entity.js";
+import { empresaDAO } from "../DAO/empresa.DAO.js";
 
-class empresaController{
+class empresaController {
 
-  async createEmpresa(req:Request,res:Response){
-    try{
-      const em=orm.em.fork()
-      const empresaInput=req.body;
-      const newEmpresa=em.create(EmpresaSchema,empresaInput);
-      em.persist(newEmpresa);
-      await em.flush();
-      res.status(201).json({message:"Empresa creada",data:newEmpresa});
-    }catch(error:any){
-      res.status(500).json({error:error.message})
+  async createEmpresa(req: Request, res: Response) {
+    try {
+      const empresaInput = req.body;
+      const newEmpresa = await empresaDAO.createEmpresa(empresaInput);
+      res.status(201).json({ message: "Empresa creada", data: newEmpresa });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message })
     }
   };
 
-  async findAll(req:Request,res:Response){
-    try{
-      const em=orm.em.fork();
-      const empresaRecovered=await em.findAll(EmpresaSchema);
-      res.status(200).json({message:"Empresa Recuperadas",data:empresaRecovered})
-    }catch(error:any){
-      res.status(500).json({error:error.message});
+  async findAll(req: Request, res: Response) {
+    try {
+      const empresaRecovered = await empresaDAO.findAll({});
+      res.status(200).json({ message: "Empresa Recuperadas", data: empresaRecovered })
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
     }
   }
 
-  async updateEmpresa(req:Request, res:Response){
-    try{
-      const em=orm.em.fork();
-      const {id} = req.params;
+  async updateEmpresa(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
       const empresainput = req.body;
 
-      const empresafound = await em.findOneOrFail(EmpresaSchema, {id: Number(id)})
-
-      em.assign(empresafound , empresainput);
-
-      await em.flush();
+      const empresafound = await empresaDAO.updateEmpresa(empresainput, { id: Number(id) });
 
       res.status(200).json({
         message: "Empresa actualizada",
-        data:empresafound
+        data: empresafound
       });
     } catch (error: any) {
-      res.status(500).json ({
-        error:error.message
+      res.status(500).json({
+        error: error.message
       });
     }
   }
 
-  async deleteEmpresa(req:Request, res:Response){
-    try{
-      const em=orm.em.fork();
-      const {id} = req.params;
+  async deleteEmpresa(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
 
-      const empresafound = await em.findOneOrFail(EmpresaSchema, {id: Number(id)})
-
-      em.remove(empresafound);
-
-      await em.flush();
+      const empresafound = await empresaDAO.deleteEmpresa({ id: Number(id) });
 
       res.status(200).json({
         message: "Empresa eliminado",
-        data:empresafound
+        data: empresafound
       });
     } catch (error: any) {
-      res.status(500).json ({
-        error:error.message
+      res.status(500).json({
+        error: error.message
       });
     }
   }
-
-
 }
 
 export const empresacontroller = new empresaController();
