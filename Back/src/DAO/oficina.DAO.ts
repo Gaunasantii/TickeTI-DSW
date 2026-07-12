@@ -1,11 +1,19 @@
 import { orm } from "../config/db.js";
 import { OficinaSchema } from "../models/oficina.entity.js";
+import { EmpresaSchema } from "../models/empresa.entity.js";
 
 export class oficinaDAO {
   static async createOficina(oficinaInput: any) {
     try {
       const em = orm.em.fork();
-      const newOficina = em.create(OficinaSchema, oficinaInput);
+
+      const { empresa_id, ...rest } = oficinaInput;
+      
+      const newOficina = em.create(OficinaSchema, {
+        ...rest,
+        empresa: em.getReference(EmpresaSchema, Number(empresa_id))
+      });
+
       em.persist(newOficina);
       await em.flush();
       return newOficina;
@@ -13,6 +21,7 @@ export class oficinaDAO {
       throw new Error(error.message);
     }
   }
+  
 
   static async findAll(filters: any) {
     try {

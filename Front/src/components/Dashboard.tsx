@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import './Dashboard.css'; // <--- Importante
+import './Dashboard.css'; //
 
 export const Dashboard = () => {
   const navigate = useNavigate();
@@ -30,7 +30,13 @@ export const Dashboard = () => {
             <p>Tenés acceso total al sistema de TickeTI.</p>
             <div className="button-group">
               <button onClick={() => navigate('/usuarios')} className="btn btn-primary">Gestionar Usuarios</button>
-              <button className="btn btn-secondary">Ver Todos los Tickets</button>
+              <button onClick={() => navigate('/empresas')} className="btn btn-secondary">Gestionar Empresas</button>
+              <button onClick={() => navigate('/categorias')} className="btn btn-secondary">Categorías</button>
+              <button onClick={() => navigate('/prioridades')} className="btn btn-secondary">Prioridades</button>
+            </div>
+    
+            <div className="button-group" style={{marginTop: '20px'}}>
+              <button cl  assName="btn btn-info">Ver Todos los Tickets</button>
             </div>
           </div>
         )}
