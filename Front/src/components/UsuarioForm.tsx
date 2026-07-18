@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { usuarioService } from '../services/api';
 
-const UsuarioForm = () => {
+export const UsuarioForm = () => {
   const [formData, setFormData] = useState({
     dni: '',
     apellido: '',
@@ -106,4 +106,4 @@ const UsuarioForm = () => {
   );
 };
 
-export default UsuarioForm;
+

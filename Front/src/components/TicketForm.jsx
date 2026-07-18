@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ticketService } from '../services/api';
 
-const TicketForm = () => {
+export const TicketForm = () => {
   const [formData, setFormData] = useState({
     titulo: '',
     descripcion: '',
@@ -100,5 +100,3 @@ const TicketForm = () => {
     </div>
   );
 };
-
-export default TicketForm;

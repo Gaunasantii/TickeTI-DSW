@@ -7,6 +7,7 @@ import { OficinasDeEmpresa } from './components/OficinasDeEmpresa';
 import { ListaCategorias } from './components/ListaCategorias';
 import { ListaPrioridades } from './components/ListaPrioridades';
 import { ListaUsuarios } from './components/ListaUsuarios';
+import { TicketForm } from './components/TicketForm.jsx'
 
 export const App = () => {
   return (
@@ -19,6 +20,7 @@ export const App = () => {
       <Route path="/categorias" element={<ListaCategorias />} />
       <Route path="/prioridades" element={<ListaPrioridades />} />
       <Route path="/usuarios" element={<ListaUsuarios />} />
+      <Route path="/tickets" element={<TicketForm />} />
     </Routes>
   );
 };
