@@ -20,7 +20,6 @@ export const App = () => {
       <Route path="/categorias" element={<ListaCategorias />} />
       <Route path="/prioridades" element={<ListaPrioridades />} />
       <Route path="/usuarios" element={<ListaUsuarios />} />
-      <Route path="/tickets" element={<TicketForm />} />
     </Routes>
   );
 };
