@@ -1,5 +1,6 @@
 import { type Request, type Response } from "express";
 import { empresaDAO } from "../DAO/empresa.DAO.js";
+import { EmpresaDTO } from "../DTO/empresa.dto.js";
 
 class empresaController {
 
@@ -7,7 +8,13 @@ class empresaController {
     try {
       const empresaInput = req.body;
       const newEmpresa = await empresaDAO.createEmpresa(empresaInput);
-      res.status(201).json({ message: "Empresa creada", data: newEmpresa });
+
+      const empresaDTO = new EmpresaDTO(
+        newEmpresa.nombre,
+        newEmpresa.id
+      );
+
+      res.status(201).json({ message: "Empresa creada", data: empresaDTO });
     } catch (error: any) {
       res.status(500).json({ error: error.message })
     }
@@ -16,7 +23,15 @@ class empresaController {
   async findAll(req: Request, res: Response) {
     try {
       const empresaRecovered = await empresaDAO.findAll({});
-      res.status(200).json({ message: "Empresa Recuperadas", data: empresaRecovered })
+      
+      const empresasDTO = empresaRecovered.map((empresa: any) =>
+        new EmpresaDTO(
+          empresa.nombre,
+          empresa.id
+        )
+      );
+      
+      res.status(200).json({ message: "Empresa Recuperadas", data: empresasDTO })
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
@@ -29,9 +44,14 @@ class empresaController {
 
       const empresafound = await empresaDAO.updateEmpresa(empresainput, { id: Number(id) });
 
+      const empresaDTO = new EmpresaDTO(
+        empresafound.nombre,
+        empresafound.id
+      );
+
       res.status(200).json({
         message: "Empresa actualizada",
-        data: empresafound
+        data: empresaDTO
       });
     } catch (error: any) {
       res.status(500).json({
@@ -46,9 +66,14 @@ class empresaController {
 
       const empresafound = await empresaDAO.deleteEmpresa({ id: Number(id) });
 
+      const empresaDTO = new EmpresaDTO(
+        empresafound.nombre,
+        empresafound.id
+      );
+
       res.status(200).json({
         message: "Empresa eliminado",
-        data: empresafound
+        data: empresaDTO
       });
     } catch (error: any) {
       res.status(500).json({

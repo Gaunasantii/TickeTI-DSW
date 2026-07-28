@@ -2,6 +2,7 @@ import { type Request, type Response } from "express";
 import { orm } from "../config/db.js";
 import { adminSchema } from "../models/admin.entity.js";
 import { adminDAO } from "../DAO/admin.DAO.js";
+import { AdminDTO } from "../DTO/admin.dto.js";
 
 class AdminController {
 
@@ -9,7 +10,16 @@ class AdminController {
         try {
             const adminInput = req.body;
             const newAdmin = await adminDAO.createAdmin(adminInput);
-            res.status(201).json({ message: "Adminstrador creado", data: newAdmin });
+
+            const adminDTO = new AdminDTO(
+                newAdmin.dni,
+                newAdmin.surName,
+                newAdmin.name,
+                newAdmin.tele,
+                newAdmin.mail
+            );
+
+            res.status(201).json({ message: "Adminstrador creado", data: adminDTO });
         } catch (error: any) {
             res.status(500).json({ error: error.message });
         }
@@ -18,7 +28,18 @@ class AdminController {
     async findAll(req: Request, res: Response) {
         try {
             const adminRecovered = await adminDAO.findAll({});
-            res.status(200).json({ message: "Administradores Recuperados", data: adminRecovered })
+
+            const adminDTOs = adminRecovered.map((admin: any) =>
+                new AdminDTO(
+                    admin.dni,
+                    admin.surName,
+                    admin.name,
+                    admin.tele,
+                    admin.mail
+                )
+            );
+
+            res.status(200).json({ message: "Administradores Recuperados", data: adminDTOs })
         } catch (error: any) {
             res.status(500).json({ error: error.message });
         }
@@ -31,9 +52,18 @@ class AdminController {
 
             const adminfound = await adminDAO.updateAdmin(admininput, { dni: dni });
 
+            const adminDTO = new AdminDTO(
+                adminfound.dni,
+                adminfound.surName,
+                adminfound.name,
+                adminfound.tele,
+                adminfound.mail
+            );
+
+
             res.status(200).json({
                 message: "Admistrador actualizado",
-                data: adminfound
+                data: adminDTO
             });
         } catch (error: any) {
             res.status(500).json({ error: error.message });
@@ -46,9 +76,17 @@ class AdminController {
 
             const adminfound = await adminDAO.deleteAdmin({ dni: dni });
 
+            const adminDTO = new AdminDTO(
+                adminfound.dni,
+                adminfound.surName,
+                adminfound.name,
+                adminfound.tele,
+                adminfound.mail
+            );
+
             res.status(200).json({
                 message: "Admistrador eliminado",
-                data: adminfound
+                data: adminDTO
             });
         } catch (error: any) {
             res.status(500).json({ error: error.message });

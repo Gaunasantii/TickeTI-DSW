@@ -1,5 +1,6 @@
 import { type Request, type Response } from "express";
 import { categoriaDAO } from "../DAO/categoria.DAO.js";
+import { CategoriaDTO } from "../DTO/categoria.dto.js";
 
 class CategoriaController {
 
@@ -7,7 +8,13 @@ class CategoriaController {
         try {
             const categoriaInput = req.body;
             const newCategoria = await categoriaDAO.createCategoria(categoriaInput);
-            res.status(201).json({ message: "Categoria creado", data: newCategoria });
+            
+            const categoriaDTO = new CategoriaDTO(
+                newCategoria.nombre,
+                newCategoria.id
+            );
+
+            res.status(201).json({ message: "Categoria creado", data: categoriaDTO });
         } catch (error: any) {
             res.status(500).json({ error: error.message });
         }
@@ -16,7 +23,15 @@ class CategoriaController {
     async findAll(req: Request, res: Response) {
         try {
             const categoriasRecovered = await categoriaDAO.findAll({});
-            res.status(200).json({ message: "Categorias Recuperados", data: categoriasRecovered })
+            
+            const categoriasDTO = categoriasRecovered.map((categoria: any) =>
+                new CategoriaDTO(
+                    categoria.nombre,
+                    categoria.id
+                )
+            );
+
+            res.status(200).json({ message: "Categorias Recuperados", data: categoriasDTO })
         } catch (error: any) {
             res.status(500).json({ error: error.message });
         }
@@ -29,9 +44,14 @@ class CategoriaController {
 
             const categoriafound = await categoriaDAO.updateCategoria(categoriainput, { id: Number.parseInt(id) })
 
+            const categoriaDTO = new CategoriaDTO(
+                categoriafound.nombre,
+                categoriafound.id
+            );
+
             res.status(200).json({
                 message: "Categoria actualizado",
-                data: categoriafound
+                data: categoriaDTO
             });
         } catch (error: any) {
             res.status(500).json({ error: error.message });
@@ -44,9 +64,14 @@ class CategoriaController {
 
             const categoriafound = await categoriaDAO.deleteCategoria({ id: Number.parseInt(id) })
 
+            const categoriaDTO = new CategoriaDTO(
+                categoriafound.nombre,
+                categoriafound.id
+            );
+
             res.status(200).json({
                 message: "Categoria eliminado",
-                data: categoriafound
+                data: categoriaDTO
             });
         } catch (error: any) {
             res.status(500).json({ error: error.message });

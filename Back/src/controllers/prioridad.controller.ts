@@ -1,5 +1,6 @@
 import { type Request, type Response } from "express";
 import { prioridadDAO } from "../DAO/prioridad.DAO.js";
+import { PrioridadDTO } from "../DTO/prioridad.dto.js";
 
 class prioridadController {
 
@@ -7,7 +8,14 @@ class prioridadController {
     try {
       const prioridadInput = req.body;
       const newPrioridad = await prioridadDAO.createPrioridad(prioridadInput);
-      res.status(201).json({ message: "Prioridad creado", data: newPrioridad });
+      
+      const prioridadDTO = new PrioridadDTO(
+        newPrioridad.nombre,
+        newPrioridad.tiempoLimiteResolucion,
+        newPrioridad.id
+      );
+
+      res.status(201).json({ message: "Prioridad creado", data: prioridadDTO });
     } catch (error: any) {
       res.status(500).json({ error: error.message })
     }
@@ -16,7 +24,16 @@ class prioridadController {
   async findAll(req: Request, res: Response) {
     try {
       const prioridadRecovered = await prioridadDAO.findAll({});
-      res.status(200).json({ message: "Prioridades Recuperadas", data: prioridadRecovered })
+      
+      const prioridadesDTO = prioridadRecovered.map((prioridad: any) =>
+        new PrioridadDTO(
+          prioridad.nombre,
+          prioridad.tiempoLimiteResolucion,
+          prioridad.id
+        )
+      );
+
+      res.status(200).json({ message: "Prioridades Recuperadas", data: prioridadesDTO })
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
@@ -28,10 +45,18 @@ class prioridadController {
       const prioridadinput = req.body;
 
       const prioridadUpdated = await prioridadDAO.updatePrioridad(prioridadinput, { id: Number(id) });
+
+      const prioridadDTO = new PrioridadDTO(
+        prioridadUpdated.nombre,
+        prioridadUpdated.tiempoLimiteResolucion,
+        prioridadUpdated.id
+      );
+
       res.status(200).json({
         message: "Prioridad actualizada",
-        data: prioridadUpdated
+        data: prioridadDTO
       });
+
     } catch (error: any) {
       res.status(500).json({
         error: error.message
@@ -44,10 +69,16 @@ class prioridadController {
       const { id } = req.params;
 
       const prioridadToDelete = await prioridadDAO.deletePrioridad({ id: Number(id) });
+      
+      const prioridadDTO = new PrioridadDTO(
+        prioridadToDelete.nombre,
+        prioridadToDelete.tiempoLimiteResolucion,
+        prioridadToDelete.id
+      );
 
       res.status(200).json({
         message: "Prioridad eliminada",
-        data: prioridadToDelete
+        data: prioridadDTO
       });
     } catch (error: any) {
       res.status(500).json({
