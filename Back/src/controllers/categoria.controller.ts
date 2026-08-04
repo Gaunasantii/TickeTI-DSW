@@ -1,6 +1,6 @@
 import { type Request, type Response } from "express";
 import { categoriaDAO } from "../DAO/categoria.DAO.js";
-import { CategoriaDTO } from "../DTO/categoria.dto.js";
+import { CategoriaDTO } from "../DTO/categoria/categoria.dto.js";
 
 class CategoriaController {
 

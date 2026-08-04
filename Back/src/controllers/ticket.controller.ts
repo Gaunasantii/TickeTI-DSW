@@ -1,6 +1,6 @@
 import { type Request, type Response } from "express";
 import { ticketDAO } from "../DAO/ticket.DAO.js";
-import { TicketDTO } from "../DTO/ticket.dto.js";
+import { TicketDTO } from "../DTO/ticket/ticket.dto.js";
 
 class ticketController {
 

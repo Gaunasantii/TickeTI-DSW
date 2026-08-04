@@ -2,7 +2,7 @@ import { type Request, type Response } from "express";
 import { orm } from "../config/db.js";
 import { adminSchema } from "../models/admin.entity.js";
 import { adminDAO } from "../DAO/admin.DAO.js";
-import { AdminDTO } from "../DTO/admin.dto.js";
+import { AdminDTO } from "../DTO/admin/admin.dto.js";
 
 class AdminController {
 

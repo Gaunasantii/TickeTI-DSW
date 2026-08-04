@@ -1,6 +1,6 @@
 import { type Request, type Response } from "express";
 import { asignacionDAO } from "../DAO/asignacion.DAO.js";
-import { AsignacionDTO } from "../DTO/asignacion.dto.js";
+import { AsignacionDTO } from "../DTO/asignacion/asignacion.dto.js";
 
 class AsignacionController {
   async findAll(req: Request, res: Response) {

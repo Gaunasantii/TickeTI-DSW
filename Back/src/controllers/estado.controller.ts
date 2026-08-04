@@ -1,6 +1,6 @@
 import { type Request, type Response } from "express";
 import { EstadoDAO } from "../DAO/estado.DAO.js";
-import { EstadoDTO } from "../DTO/estado.dto.js";
+import { EstadoDTO } from "../DTO/estado/estado.dto.js";
 
 class EstadoController {
   async createNew(req: Request, res: Response) {

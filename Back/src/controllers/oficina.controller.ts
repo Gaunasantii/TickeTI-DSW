@@ -1,6 +1,6 @@
 import { type Request, type Response } from "express";
 import { oficinaDAO } from "../DAO/oficina.DAO.js";
-import { OficinaDTO } from "../DTO/oficina.dto.js";
+import { OficinaDTO } from "../DTO/oficina/oficina.dto.js";
 
 class oficinaController {
 

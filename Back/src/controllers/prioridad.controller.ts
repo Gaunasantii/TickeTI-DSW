@@ -1,6 +1,6 @@
 import { type Request, type Response } from "express";
 import { prioridadDAO } from "../DAO/prioridad.DAO.js";
-import { PrioridadDTO } from "../DTO/prioridad.dto.js";
+import { PrioridadDTO } from "../DTO/prioridad/prioridad.dto.js";
 
 class prioridadController {
 

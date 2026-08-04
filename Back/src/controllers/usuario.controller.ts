@@ -1,6 +1,6 @@
 import { type Request, type Response } from "express";
 import { userDAO } from "../DAO/user.DAO.js";
-import { UsuarioDTO } from "../DTO/usuario.dto.js";
+import { UsuarioDTO } from "../DTO/usuario/usuario.dto.js";
 class userController {
 
   async createUser(req: Request, res: Response) {

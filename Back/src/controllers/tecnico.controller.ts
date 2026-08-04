@@ -1,6 +1,6 @@
 import { type Request, type Response } from "express";
 import { tecnicoDAO } from "../DAO/tecnico.DAO.js";
-import { TecnicoDTO } from "../DTO/tecnico.dto.js";
+import { TecnicoDTO } from "../DTO/tecnico/tecnico.dto.js";
 
 class tecnicoController {
 
