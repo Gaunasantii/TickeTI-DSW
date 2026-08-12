@@ -14,13 +14,15 @@ export const NavBar=()=>{
         </div>
       </div>
 
-      <div className="flex flex-row justify-end gap-10">
+      <div className="flex flex-row justify-end gap-10 ">
         <button className="
           btn btn-secondary
           transition-all
           duration-300
           hover:shadow-md
-          active:scale-95">Contactanos</button>
+          active:scale-95
+          hidden
+          md:block">Contactanos</button>
         <button className="btn
           btn-primary 
           transition-all
