@@ -8,11 +8,14 @@ import { ListaCategorias } from './components/ListaCategorias';
 import { ListaPrioridades } from './components/ListaPrioridades';
 import { ListaUsuarios } from './components/ListaUsuarios';
 import { TicketForm } from './components/TicketForm.jsx'
+import { HomePage } from './pages/Home/Home.js';
+import { LogIn } from 'lucide-react';
 
 export const App = () => {
   return (
     <Routes>
-      <Route path="/" element={<LoginForm />} />
+      <Route path="/" element={<HomePage />} />
+      <Route path="/login" element={<LoginForm />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/empresas" element={<ListaEmpresas />} />
       <Route path="/empresas/:empresaId/oficinas" element={<OficinasDeEmpresa />} />

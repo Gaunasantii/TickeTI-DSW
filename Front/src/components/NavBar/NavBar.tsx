@@ -1,6 +1,9 @@
+import { Navigate, useNavigate } from 'react-router';
 import { LogoIcon } from "../Logo.tsx"
 
 export const NavBar=()=>{
+  const navigate = useNavigate();
+
   return(
     <nav className="flex sticky top-0 w-full flex-row p-5 bg-white shadow-md justify-between">
       <div className="flex flex-row justify-between">
@@ -23,7 +26,9 @@ export const NavBar=()=>{
           active:scale-95
           hidden
           md:block">Contactanos</button>
-        <button className="btn
+        <button 
+          onClick={() => navigate('/login')}
+          className="btn
           btn-primary 
           transition-all
           duration-300
