@@ -2,7 +2,7 @@ import { LogoIcon } from "../Logo.tsx"
 
 export const NavBar=()=>{
   return(
-    <nav className="flex static w-full flex-row p-5 bg-[#EDEDED] shadow-md justify-between">
+    <nav className="flex sticky top-0 w-full flex-row p-5 bg-white shadow-md justify-between">
       <div className="flex flex-row justify-between">
         <div className="flex items-center gap-2">
           <a href="/">
