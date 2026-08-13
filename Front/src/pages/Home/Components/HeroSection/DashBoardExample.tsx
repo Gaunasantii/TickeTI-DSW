@@ -23,9 +23,9 @@ export const DashboardExample=()=> {
           <div className="h-4 rounded-md bg-blue-50 w-5/6" />
         </aside>
  
-        {/* Contenido principal */}
+        
         <main className="flex flex-col gap-4">
-          {/* Panel de lista de tickets */}
+          
           <section className="bg-white rounded-xl border border-slate-100 p-4">
             <div className="flex items-center justify-between mb-4">
               <div className="h-5 w-40 rounded-md bg-blue-100" />
@@ -43,7 +43,7 @@ export const DashboardExample=()=> {
             </ul>
           </section>
  
-          {/* Fila inferior: stat + alerta */}
+          
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-white rounded-xl border border-slate-100 p-4 flex flex-col items-center justify-center gap-1">
               <span className="text-3xl font-bold text-slate-800">85%</span>
