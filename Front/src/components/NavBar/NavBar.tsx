@@ -19,6 +19,7 @@ export const NavBar=()=>{
 
       <div className="flex flex-row justify-end gap-10 ">
         <button className="
+          onClick={() => navigate('/contact')}
           btn btn-secondary
           transition-all
           duration-300
