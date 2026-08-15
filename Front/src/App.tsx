@@ -1,5 +1,4 @@
 import { Routes, Route } from 'react-router';
-import { LoginForm } from './components/LoginForm';
 import { Dashboard } from './components/Dashboard';
 import { FormularioOficina } from './components/FormularioOficina';
 import { ListaEmpresas } from './components/ListaEmpresas';
@@ -10,12 +9,13 @@ import { ListaUsuarios } from './components/ListaUsuarios';
 import { TicketForm } from './components/TicketForm.jsx'
 import { HomePage } from './pages/Home/Home.js';
 import { ContactPage } from './pages/Contact/Contact';
+import { LoginPage } from './pages/Login/Login.js';
 
 export const App = () => {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/login" element={<LoginForm />} />
+      <Route path="/login" element={<LoginPage />} />
       <Route path="/contact" element={<ContactPage />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/empresas" element={<ListaEmpresas />} />

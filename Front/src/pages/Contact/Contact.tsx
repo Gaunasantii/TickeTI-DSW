@@ -1,5 +1,5 @@
-import { NavBar } from "../../components/NavBar/NavBar.tsx";
-import { Footer } from "../../components/Footer/Footer.tsx";
+import { NavBar } from "../../components/Layout/NavBar.tsx";
+import { Footer } from "../../components/Layout/Footer.tsx";
 import { ContactSection } from "./Components/ContactSection/ContactSection.tsx";
 
 export const ContactPage = () => {

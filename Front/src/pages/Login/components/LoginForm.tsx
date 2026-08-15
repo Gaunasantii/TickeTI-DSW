@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router'; 
-import { loginService } from '../services/api';
-import { NavBar } from './NavBar/NavBar.tsx';
-import { Footer } from './Footer/Footer.tsx';
+import { LoginValues } from './LoginValues.ts';
 
-export const LoginForm = () => {
+interface LoginProps{
+  onSubmit:(FormData:LoginValues)=>void
+}
+
+export const LoginForm = ({onSubmit}:LoginProps) => {
   const [formData, setFormData] = useState({ email: '', pass: '' });
   const [verPass, setVerPass] = useState(false);
-  const navigate = useNavigate(); 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -16,19 +16,11 @@ export const LoginForm = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); 
-    try {
-      const resultado = await loginService.Login(formData);
-      localStorage.setItem('usuarioTickeTI', JSON.stringify(resultado.data));
-      navigate('/dashboard');
-    } catch (error: any) {
-      alert(error.message || "Error al iniciar sesión");
-    }
+    onSubmit(formData)
   };
 
 return (
     <>
-      <NavBar />
-
       <div className="flex flex-col items-center justify-center min-h-[70vh] px-4">
         <div className="w-full max-w-sm flex flex-col gap-6 p-8 rounded-xl border border-gray-200 shadow-md bg-white">
           <h2 className="text-2xl font-bold text-gray-900 text-center">
@@ -83,8 +75,6 @@ return (
           </form>
         </div>
       </div>
-
-      <Footer />
     </>
   );
 };
