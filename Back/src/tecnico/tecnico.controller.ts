@@ -1,23 +1,16 @@
 import { type Request, type Response } from "express";
 import { tecnicoDAO } from "./tecnico.DAO.js";
 import { TecnicoDTO } from "./DTO/tecnico.dto.js";
+import { TecnicoService } from "./tecnico.service.js";
 
 class tecnicoController {
 
   async createTecnico(req: Request, res: Response) {
     try {
       const tecnicoInput = req.body;
-      const newTecnico = await tecnicoDAO.createTecnico(tecnicoInput);
-      
-      const tecnicoDTO = new TecnicoDTO(
-        newTecnico.dni,
-        newTecnico.surName,
-        newTecnico.name,
-        newTecnico.tele,
-        newTecnico.mail
-      );
+      const newTecnico = await TecnicoService.createTecnico(tecnicoInput);
 
-      res.status(201).json({ message: "Tecnico creado", data: tecnicoDTO });
+      res.status(200).json({ message: "Tecnico creado", data: newTecnico });
     } catch (error: any) {
       res.status(500).json({ error: error.message })
     }
@@ -25,19 +18,9 @@ class tecnicoController {
 
   async findAll(req: Request, res: Response) {
     try {
-      const tecnicosRecovered = await tecnicoDAO.findAll({ populate: ['asignaciones'] });
-      
-      const tecnicosDTO = tecnicosRecovered.map((tecnico: any) =>
-        new TecnicoDTO(
-          tecnico.dni,
-          tecnico.surName,
-          tecnico.name,
-          tecnico.tele,
-          tecnico.mail
-        )
-      );
+      const tecnicosRecovered = await TecnicoService.getAllTecnicos()
 
-      res.status(200).json({ message: "Tecnicos Recuperados", data: tecnicosDTO })
+      res.status(200).json({ message: "Tecnicos Recuperados", data: tecnicosRecovered })
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
@@ -45,24 +28,16 @@ class tecnicoController {
 
   async updateTecnico(req: Request, res: Response) {
     try {
-      const dni = req.params.dni;
+      const dni = req.params.dni as string;
       const tecnicoinput = req.body;
-      const updatedTecnico = await tecnicoDAO.updateTecnico(tecnicoinput, { dni: dni as string });
-
-      const tecnicoDTO = new TecnicoDTO(
-        updatedTecnico.dni,
-        updatedTecnico.surName,
-        updatedTecnico.name,
-        updatedTecnico.tele,
-        updatedTecnico.mail
-      );
+      const updatedTecnico = await TecnicoService.updateTecnico(dni, tecnicoinput)
 
       return res.status(200).json({
         message: "Tecnico actualizado",
-        data: tecnicoDTO
+        data: updatedTecnico
       });
     } catch (error: any) {
-      return res.status(500).json({
+      return res.status(404).json({
         error: error.message
       });
     }
@@ -70,23 +45,14 @@ class tecnicoController {
 
   async deleteTecnico(req: Request, res: Response) {
     try {
-      const dni = req.params.dni;
-      const deletedTecnico = await tecnicoDAO.deleteTecnico({ dni: dni as string });
-      
-      const tecnicoDTO = new TecnicoDTO(
-        deletedTecnico.dni,
-        deletedTecnico.surName,
-        deletedTecnico.name,
-        deletedTecnico.tele,
-        deletedTecnico.mail
-      );
+      const dni = req.params.dni as string;
+      await TecnicoService.deleteTecnico(dni)
 
-      return res.status(200).json({
+      return res.status(204).json({
         message: "Tecnico eliminado",
-        data: tecnicoDTO
       });
     } catch (error: any) {
-      return res.status(500).json({
+      return res.status(404).json({
         error: error.message
       });
     }

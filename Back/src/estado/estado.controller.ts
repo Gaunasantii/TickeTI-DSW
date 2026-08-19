@@ -1,13 +1,14 @@
 import { type Request, type Response } from "express";
 import { EstadoDAO } from "./estado.DAO.js";
 import { EstadoDTO } from "./DTO/estado.dto.js";
+import { EstadoService } from "./estado.service.js";
 
 class EstadoController {
   async createNew(req: Request, res: Response) {
     try {
       const estadoInput = req.body;
       const newEstado = await EstadoDAO.createState(estadoInput);
-      
+
       const estadoDTO = new EstadoDTO(
         newEstado.nombre,
         newEstado.descripcion,
@@ -22,17 +23,9 @@ class EstadoController {
 
   async findAll(req: Request, res: Response) {
     try {
-      const recoveredEstados = await EstadoDAO.findAll({});
-      
-      const estadosDTO = recoveredEstados.map((estado: any) =>
-        new EstadoDTO(
-          estado.nombre,
-          estado.descripcion,
-          estado.id
-        )
-      );
+      const estados = await EstadoService.getAll()
 
-      res.status(200).json({ message: "estados recuperados", data: estadosDTO });
+      res.status(200).json({ message: "estados recuperados", data: estados });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
@@ -40,18 +33,11 @@ class EstadoController {
 
   async findOne(req: Request, res: Response) {
     try {
-      const { id } = req.params
-      const recoveredEstado = await EstadoDAO.findOne({ id: Number(id) });
-      
-      const estadoDTO = new EstadoDTO(
-        recoveredEstado.nombre,
-        recoveredEstado.descripcion,
-        recoveredEstado.id
-      );
-
-      res.status(200).json({ message: "estado recuperado", data: estadoDTO });
+      const id = Number(req.params)
+      const estado = await EstadoService.getEstadoById(id)
+      res.status(200).json({ message: "estado recuperado", data: estado });
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      res.status(404).json({ error: error.message });
     }
 
   }

@@ -1,24 +1,16 @@
 import { type Request, type Response } from "express";
 import { userDAO } from "./user.DAO.js";
 import { UsuarioDTO } from "./DTO/usuario.dto.js";
+import { UsuarioService } from "./usuario.service.js";
 
 class userController {
 
   async createUser(req: Request, res: Response) {
     try {
       const userInput = req.body;
-      const newUser = await userDAO.createUser(userInput);
-      
-      const usuarioDTO = new UsuarioDTO(
-        newUser.dni,
-        newUser.surName,
-        newUser.name,
-        newUser.tele,
-        newUser.mail,
-        newUser.oficina?.id
-      );
+      const newUser = await UsuarioService.createUsuario(userInput)
 
-      res.status(201).json({ message: "Usuario creado", data: usuarioDTO });
+      res.status(200).json({ message: "Usuario creado", data: newUser });
     } catch (error: any) {
       res.status(500).json({ error: error.message })
     }
@@ -26,20 +18,8 @@ class userController {
 
   async findAll(req: Request, res: Response) {
     try {
-      const usersRecovered = await userDAO.findAll({})
-      
-      const usuariosDTO = usersRecovered.map((user: any) =>
-        new UsuarioDTO(
-          user.dni,
-          user.surName,
-          user.name,
-          user.tele,
-          user.mail,
-          user.oficina?.id
-        )
-      );
-
-      res.status(200).json({ message: "Usuarios Recuperados", data: usuariosDTO })
+      const usersRecovered = await UsuarioService.getAllUsuarios();
+      res.status(200).json({ message: "Usuarios Recuperados", data: usersRecovered })
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
@@ -47,26 +27,16 @@ class userController {
 
   async updateUser(req: Request, res: Response) {
     try {
-      const { dni } = req.params;
+      const dni = req.params.dni as string;
       const userinput = req.body;
-
-      const userfound = await userDAO.updateUser(userinput, { dni: (dni as string) });
-
-      const usuarioDTO = new UsuarioDTO(
-        userfound.dni,
-        userfound.surName,
-        userfound.name,
-        userfound.tele,
-        userfound.mail,
-        userfound.oficina?.id
-      );
+      const updatedUsuario = await UsuarioService.updateUsuario(dni, userinput)
 
       return res.status(200).json({
         message: "Usuario actualizado",
-        data: usuarioDTO
+        data: updatedUsuario
       });
     } catch (error: any) {
-      return res.status(500).json({
+      return res.status(404).json({
         error: error.message
       });
     }
@@ -74,24 +44,14 @@ class userController {
 
   async deleteUser(req: Request, res: Response) {
     try {
-      const { dni } = req.params;
-      const userDeleted = await userDAO.deleteUser({ dni: (dni as string) });
-      
-      const usuarioDTO = new UsuarioDTO(
-        userDeleted.dni,
-        userDeleted.surName,
-        userDeleted.name,
-        userDeleted.tele,
-        userDeleted.mail,
-        userDeleted.oficina?.id
-      );
+      const dni = req.params.dni as string;
+      await UsuarioService.deleteUsuario(dni)
 
-      res.status(200).json({
-        message: "Usuario eliminado",
-        data: usuarioDTO
+      res.status(204).json({
+        message: "Usuario eliminado"
       });
     } catch (error: any) {
-      res.status(500).json({
+      res.status(404).json({
         error: error.message
       });
     }

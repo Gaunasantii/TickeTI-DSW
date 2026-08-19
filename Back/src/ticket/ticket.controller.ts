@@ -1,25 +1,16 @@
 import { type Request, type Response } from "express";
 import { ticketDAO } from "./ticket.DAO.js";
 import { TicketDTO } from "./DTO/ticket.dto.js";
+import { TicketService } from "./ticket.service.js";
 
 class ticketController {
 
   async createTicket(req: Request, res: Response) {
     try {
       const ticketInput = req.body;
-      const newTicket = await ticketDAO.createTicket(ticketInput);
-      
-      const ticketDTO = new TicketDTO(
-        newTicket.title,
-        newTicket.description,
-        newTicket.estado?.id,
-        newTicket.prioridad?.id,
-        newTicket.categoria?.id,
-        newTicket.usuario?.dni,
-        newTicket.id
-      );
-      
-      res.status(201).json({ message: "Ticket creado", data: ticketDTO });
+      const newTicket = await TicketService.createTicket(ticketInput)
+
+      res.status(200).json({ message: "Ticket creado", data: newTicket });
     } catch (error: any) {
       res.status(500).json({ error: error.message })
     }
@@ -27,21 +18,9 @@ class ticketController {
 
   async findAll(req: Request, res: Response) {
     try {
-      const ticketRecovered = await ticketDAO.findAll({});
-      
-      const ticketsDTO = ticketRecovered.map((ticket: any) =>
-        new TicketDTO(
-          ticket.title,
-          ticket.description,
-          ticket.estado?.id,
-          ticket.prioridad?.id,
-          ticket.categoria?.id,
-          ticket.usuario?.dni,
-          ticket.id
-        )
-      );
+      const ticketsRecovered = await TicketService.getAllTickets()
 
-      res.status(200).json({ message: "Ticket Recuperados", data: ticketsDTO })
+      res.status(200).json({ message: "Ticket Recuperados", data: ticketsRecovered })
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
@@ -49,27 +28,17 @@ class ticketController {
 
   async updateTicket(req: Request, res: Response) {
     try {
-      const { id } = req.params;
+      const id = Number(req.params.id);
       const ticketInput = req.body;
 
-      const ticketToUpdate = await ticketDAO.updateTicket(ticketInput, { id: Number(id) });
-
-      const ticketDTO = new TicketDTO(
-        ticketToUpdate.title,
-        ticketToUpdate.description,
-        ticketToUpdate.estado?.id,
-        ticketToUpdate.prioridad?.id,
-        ticketToUpdate.categoria?.id,
-        ticketToUpdate.usuario?.dni,
-        ticketToUpdate.id
-      );
+      const updatedTicket = await TicketService.updateTicket(ticketInput, id);
 
       res.status(200).json({
         message: "Ticket actualizado",
-        data: ticketDTO
+        data: updatedTicket
       });
     } catch (error: any) {
-      res.status(500).json({
+      res.status(404).json({
         error: error.message
       });
     }

@@ -1,20 +1,16 @@
 import { type Request, type Response } from "express";
 import { categoriaDAO } from "./categoria.DAO.js";
 import { CategoriaDTO } from "./DTO/categoria.dto.js";
+import { CategoriaService } from "./categoria.service.js";
 
 class CategoriaController {
 
     async createCategoria(req: Request, res: Response) {
         try {
             const categoriaInput = req.body;
-            const newCategoria = await categoriaDAO.createCategoria(categoriaInput);
-            
-            const categoriaDTO = new CategoriaDTO(
-                newCategoria.nombre,
-                newCategoria.id
-            );
+            const newCategoria = await CategoriaService.createCategoria(categoriaInput);
 
-            res.status(201).json({ message: "Categoria creado", data: categoriaDTO });
+            res.status(200).json({ message: "Categoria creado", data: newCategoria });
         } catch (error: any) {
             res.status(500).json({ error: error.message });
         }
@@ -22,16 +18,8 @@ class CategoriaController {
 
     async findAll(req: Request, res: Response) {
         try {
-            const categoriasRecovered = await categoriaDAO.findAll({});
-            
-            const categoriasDTO = categoriasRecovered.map((categoria: any) =>
-                new CategoriaDTO(
-                    categoria.nombre,
-                    categoria.id
-                )
-            );
-
-            res.status(200).json({ message: "Categorias Recuperados", data: categoriasDTO })
+            const categorias = await CategoriaService.getallCategorias();
+            res.status(200).json({ message: "Categorias Recuperados", data: categorias })
         } catch (error: any) {
             res.status(500).json({ error: error.message });
         }
@@ -39,42 +27,29 @@ class CategoriaController {
 
     async updateCategoria(req: Request, res: Response) {
         try {
-            const id = req.params.id as string;
+            const id = Number(req.params.id);
             const categoriainput = req.body;
-
-            const categoriafound = await categoriaDAO.updateCategoria(categoriainput, { id: Number.parseInt(id) })
-
-            const categoriaDTO = new CategoriaDTO(
-                categoriafound.nombre,
-                categoriafound.id
-            );
+            const categoria = await CategoriaService.updateCategoria(categoriainput, id)
 
             res.status(200).json({
                 message: "Categoria actualizado",
-                data: categoriaDTO
+                data: categoria
             });
         } catch (error: any) {
-            res.status(500).json({ error: error.message });
+            res.status(404).json({ error: error.message });
         }
     }
 
     async deleteCategoria(req: Request, res: Response) {
         try {
-            const id = req.params.id as string;
+            const id = Number(req.params.id);
+            await CategoriaService.deleteCategoria(id);
 
-            const categoriafound = await categoriaDAO.deleteCategoria({ id: Number.parseInt(id) })
-
-            const categoriaDTO = new CategoriaDTO(
-                categoriafound.nombre,
-                categoriafound.id
-            );
-
-            res.status(200).json({
+            res.status(204).json({
                 message: "Categoria eliminado",
-                data: categoriaDTO
             });
         } catch (error: any) {
-            res.status(500).json({ error: error.message });
+            res.status(404).json({ error: error.message });
         }
     }
 }

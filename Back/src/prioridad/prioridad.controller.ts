@@ -1,21 +1,16 @@
 import { type Request, type Response } from "express";
 import { prioridadDAO } from "./prioridad.DAO.js";
 import { PrioridadDTO } from "./DTO/prioridad.dto.js";
+import { PrioridadService } from "./prioridad.service.js";
 
 class prioridadController {
 
   async createPrioridad(req: Request, res: Response) {
     try {
       const prioridadInput = req.body;
-      const newPrioridad = await prioridadDAO.createPrioridad(prioridadInput);
-      
-      const prioridadDTO = new PrioridadDTO(
-        newPrioridad.nombre,
-        newPrioridad.tiempoLimiteResolucion,
-        newPrioridad.id
-      );
+      const newPrioridad = await PrioridadService.createPrioridad(prioridadInput)
 
-      res.status(201).json({ message: "Prioridad creado", data: prioridadDTO });
+      res.status(200).json({ message: "Prioridad creado", data: newPrioridad });
     } catch (error: any) {
       res.status(500).json({ error: error.message })
     }
@@ -23,17 +18,9 @@ class prioridadController {
 
   async findAll(req: Request, res: Response) {
     try {
-      const prioridadRecovered = await prioridadDAO.findAll({});
-      
-      const prioridadesDTO = prioridadRecovered.map((prioridad: any) =>
-        new PrioridadDTO(
-          prioridad.nombre,
-          prioridad.tiempoLimiteResolucion,
-          prioridad.id
-        )
-      );
+      const prioridadesRecovered = await PrioridadService.getallPrioridades()
 
-      res.status(200).json({ message: "Prioridades Recuperadas", data: prioridadesDTO })
+      res.status(200).json({ message: "Prioridades Recuperadas", data: prioridadesRecovered })
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
@@ -41,24 +28,17 @@ class prioridadController {
 
   async updatePrioridad(req: Request, res: Response) {
     try {
-      const { id } = req.params;
+      const id = Number(req.params.id);
       const prioridadinput = req.body;
 
-      const prioridadUpdated = await prioridadDAO.updatePrioridad(prioridadinput, { id: Number(id) });
-
-      const prioridadDTO = new PrioridadDTO(
-        prioridadUpdated.nombre,
-        prioridadUpdated.tiempoLimiteResolucion,
-        prioridadUpdated.id
-      );
-
+      const prioridadUpdated = await PrioridadService.updatePrioridad(prioridadinput, id)
       res.status(200).json({
         message: "Prioridad actualizada",
-        data: prioridadDTO
+        data: prioridadUpdated
       });
 
     } catch (error: any) {
-      res.status(500).json({
+      res.status(404).json({
         error: error.message
       });
     }
@@ -66,22 +46,14 @@ class prioridadController {
 
   async deletePrioridad(req: Request, res: Response) {
     try {
-      const { id } = req.params;
+      const id = Number(req.params.id);
+      PrioridadService.deletePrioridad(id)
 
-      const prioridadToDelete = await prioridadDAO.deletePrioridad({ id: Number(id) });
-      
-      const prioridadDTO = new PrioridadDTO(
-        prioridadToDelete.nombre,
-        prioridadToDelete.tiempoLimiteResolucion,
-        prioridadToDelete.id
-      );
-
-      res.status(200).json({
-        message: "Prioridad eliminada",
-        data: prioridadDTO
+      res.status(204).json({
+        message: "Prioridad eliminada"
       });
     } catch (error: any) {
-      res.status(500).json({
+      res.status(404).json({
         error: error.message
       });
     }

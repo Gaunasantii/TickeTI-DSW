@@ -1,6 +1,7 @@
 import { type Request, type Response } from "express";
 import { asignacionDAO } from "./asignacion.DAO.js";
 import { AsignacionDTO } from "./DTO/asignacion.dto.js";
+import { AsignacionService } from "./asignacion.service.js";
 
 class AsignacionController {
   async findAll(req: Request, res: Response) {
@@ -15,18 +16,8 @@ class AsignacionController {
   async createAsignacion(req: Request, res: Response) {
     try {
       const asignacionInput = req.body;
-      const newAsignacion = await asignacionDAO.createAsignacion(asignacionInput);
-      
-      const asignacionDTO = new AsignacionDTO(
-        newAsignacion.fechaCreacion,
-        newAsignacion.fechaCierre,
-        newAsignacion.estado,
-        newAsignacion.ticket?.id,
-        newAsignacion.tecnico?.dni,
-        newAsignacion.id
-      );
-
-      res.status(201).json({ message: "asignacion creada", data: asignacionDTO });
+      const newAsignacion = await AsignacionService.createAsignacion(asignacionInput)
+      res.status(200).json({ message: "asignacion creada", data: newAsignacion });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
@@ -34,27 +25,17 @@ class AsignacionController {
 
   async updateAsignacion(req: Request, res: Response) {
     try {
-      const { id } = req.params;
+      const id = Number(req.params.id);
       req.body.fechaCierre = new Date(req.body.fechaCierre)
       const asignacionInput = req.body
-
-      const asignacionFound = await asignacionDAO.updateAsignacion(asignacionInput, { id: Number(id) });
-      
-      const asignacionDTO = new AsignacionDTO(
-        asignacionFound.fechaCreacion,
-        asignacionFound.fechaCierre,
-        asignacionFound.estado,
-        asignacionFound.ticket?.id,
-        asignacionFound.tecnico?.dni,
-        asignacionFound.id
-      );
+      const asignacion = await AsignacionService.updateAsignacion(id, asignacionInput)
 
       res.status(200).json({
         message: "asignacion actualizada",
-        data: asignacionDTO
+        data: asignacion
       });
     } catch (error: any) {
-      res.status(500).json({
+      res.status(404).json({
         error: error.message
       });
     }
@@ -63,25 +44,13 @@ class AsignacionController {
 
   async deleteAsignacion(req: Request, res: Response) {
     try {
-      const { id } = req.params;
-
-      const asignacionFound = await asignacionDAO.deleteAsignacion({ id: Number(id) });
-
-      const asignacionDTO = new AsignacionDTO(
-        asignacionFound.fechaCreacion,
-        asignacionFound.fechaCierre,
-        asignacionFound.estado,
-        asignacionFound.ticket?.id,
-        asignacionFound.tecnico?.dni,
-        asignacionFound.id
-      );
-
-      res.status(200).json({
+      const id = Number(req.params.id);
+      await AsignacionService.deleteAsignacion(id)
+      res.status(204).json({
         message: "asignacion eliminada",
-        data: asignacionFound
       });
     } catch (error: any) {
-      res.status(500).json({
+      res.status(404).json({
         error: error.message
       });
     }
