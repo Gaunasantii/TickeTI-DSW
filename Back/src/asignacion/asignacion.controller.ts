@@ -1,5 +1,6 @@
 import { type Request, type Response } from "express";
 import { asignacionDAO } from "./asignacion.DAO.js";
+import { AsignacionDTO } from "./DTO/asignacion.dto.js";
 
 class AsignacionController {
   async findAll(req: Request, res: Response) {
@@ -15,7 +16,17 @@ class AsignacionController {
     try {
       const asignacionInput = req.body;
       const newAsignacion = await asignacionDAO.createAsignacion(asignacionInput);
-      res.status(201).json({ message: "asignacion creada", data: newAsignacion });
+      
+      const asignacionDTO = new AsignacionDTO(
+        newAsignacion.fechaCreacion,
+        newAsignacion.fechaCierre,
+        newAsignacion.estado,
+        newAsignacion.ticket?.id,
+        newAsignacion.tecnico?.dni,
+        newAsignacion.id
+      );
+
+      res.status(201).json({ message: "asignacion creada", data: asignacionDTO });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
@@ -28,9 +39,19 @@ class AsignacionController {
       const asignacionInput = req.body
 
       const asignacionFound = await asignacionDAO.updateAsignacion(asignacionInput, { id: Number(id) });
+      
+      const asignacionDTO = new AsignacionDTO(
+        asignacionFound.fechaCreacion,
+        asignacionFound.fechaCierre,
+        asignacionFound.estado,
+        asignacionFound.ticket?.id,
+        asignacionFound.tecnico?.dni,
+        asignacionFound.id
+      );
+
       res.status(200).json({
         message: "asignacion actualizada",
-        data: asignacionFound
+        data: asignacionDTO
       });
     } catch (error: any) {
       res.status(500).json({
@@ -45,6 +66,15 @@ class AsignacionController {
       const { id } = req.params;
 
       const asignacionFound = await asignacionDAO.deleteAsignacion({ id: Number(id) });
+
+      const asignacionDTO = new AsignacionDTO(
+        asignacionFound.fechaCreacion,
+        asignacionFound.fechaCierre,
+        asignacionFound.estado,
+        asignacionFound.ticket?.id,
+        asignacionFound.tecnico?.dni,
+        asignacionFound.id
+      );
 
       res.status(200).json({
         message: "asignacion eliminada",
