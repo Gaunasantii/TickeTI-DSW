@@ -1,17 +1,17 @@
 import Express from 'express';
 import cors from 'cors';
 import { initOrm, orm, checkDb, syncSchema } from './config/db.js';
-import { userrouter } from './routes/usuario.routes.js';
-import { estadoRouter } from './routes/estado.routes.js';
-import { adminrouter } from './routes/admin.routes.js';
-import { categoriarouter } from './routes/categoria.routes.js';
-import { empresarouter } from './routes/empresa.routes.js';
-import { oficinarouter } from './routes/oficina.routes.js';
-import { prioridadrouter } from './routes/prioridad.routes.js';
-import { tecnicorouter } from './routes/tecnico.routes.js';
-import { ticketrouter } from './routes/ticket.routes.js';
-import { asignacionrouter } from './routes/asignacion.routes.js';
-import { authRouter } from './routes/auth.routes.js';
+import { userrouter } from './usuario/usuario.routes.js';
+import { estadoRouter } from './estado/estado.routes.js';
+import { adminrouter } from './admin/admin.routes.js';
+import { categoriarouter } from './categoria/categoria.routes.js';
+import { empresarouter } from './empresa/empresa.routes.js';
+import { oficinarouter } from './oficinas/oficina.routes.js';
+import { prioridadrouter } from './prioridad/prioridad.routes.js';
+import { tecnicorouter } from './tecnico/tecnico.routes.js';
+import { ticketrouter } from './ticket/ticket.routes.js';
+import { asignacionrouter } from './asignacion/asignacion.routes.js';
+import { authRouter } from './auth/auth.routes.js';
 
 
 // Importar Rutas
