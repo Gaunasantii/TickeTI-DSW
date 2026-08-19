@@ -7,7 +7,7 @@ export class AuthController {
     try {
       const { mail, pass } = req.body;
       const token=AuthService.Login(pass,mail);
-      res.json({ token });
+      res.cookie('AccesToken', token,{httpOnly:true});
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     };
