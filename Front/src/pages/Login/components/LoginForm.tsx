@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { LoginValues } from './LoginValues.ts';
+import { LoginValues } from '../../../types/LoginValues.ts';
 
 interface LoginProps{
   onSubmit:(FormData:LoginValues)=>void
