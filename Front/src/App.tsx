@@ -10,6 +10,7 @@ import { TicketForm } from './components/TicketForm.jsx'
 import { HomePage } from './pages/Home/Home.js';
 import { ContactPage } from './pages/Contact/Contact';
 import { LoginPage } from './pages/Login/Login.js';
+import { OficinaPage } from './pages/Oficina/Oficina.js';
 
 export const App = () => {
   return (
@@ -17,6 +18,7 @@ export const App = () => {
       <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/contact" element={<ContactPage />} />
+      <Route path="/Oficina" element={<OficinaPage/>} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/empresas" element={<ListaEmpresas />} />
       <Route path="/empresas/:empresaId/oficinas" element={<OficinasDeEmpresa />} />
