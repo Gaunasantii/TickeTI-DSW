@@ -13,12 +13,12 @@ export class EmpresaService {
 
   static async getAllEmpresas() {
     const empresas = await empresaDAO.findAll({});
-    return empresas.map((e) => {
+    return empresas.map((e) =>
       new EmpresaDTO(
         e.nombre,
         e.id
       )
-    })
+    )
   }
 
   static async updateEmpresa(id: number, empresaInput: any) {
