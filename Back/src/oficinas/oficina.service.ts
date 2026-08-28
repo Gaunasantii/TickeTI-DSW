@@ -4,13 +4,13 @@ import { oficinaDAO } from "./oficina.DAO.js";
 export class OficinaService {
   static async getAll() {
     const oficinas = await oficinaDAO.findAll({});
-    return oficinas.map((o) => {
+    return oficinas.map((o) =>
       new OficinaDTO(
         o.nombre,
         o.empresa?.id,
         o.id
       )
-    })
+    )
   }
 
   static async createOficina(oficinaInput: any) {

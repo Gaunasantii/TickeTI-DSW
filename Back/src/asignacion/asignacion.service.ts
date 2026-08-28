@@ -17,7 +17,7 @@ export class AsignacionService {
   static async getAllAsignaciones() {
     const asignaciones = await asignacionDAO.findAll({})
 
-    return asignaciones.map((as) => {
+    return asignaciones.map((as) =>
       new AsignacionDTO(
         as.fechaCreacion,
         as.estado,
@@ -25,8 +25,8 @@ export class AsignacionService {
         as.tecnico.dni,
         as.id,
         as.fechaCierre
-      );
-    })
+      )
+    )
   }
 
   static async updateAsignacion(id: number, asignacionInput: any) {
