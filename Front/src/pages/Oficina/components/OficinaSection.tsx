@@ -11,8 +11,12 @@ export const OficinaSection= () => {
 
     //Alta
     const [mostrarModal, setMostrarModal] = useState(false);
-    const [nombre, setNombre] = useState("");
-    const [idEmpresa, setEmpresa] = useState("");
+
+    const [oficinaData,setData]=useState({
+        nombre:"",
+        empresa:0
+    })
+
     const [guardando, setGuardando] = useState(false);
 
     const cargaOficina = () => {
@@ -20,7 +24,7 @@ export const OficinaSection= () => {
     };
 
     useEffect(() => {
-        ListarOficinas().then(setOficinas);
+        ListarOficinas().then((res)=>setOficinas(res.data));
     }, []);
 
     const oficinasFiltradas = oficinas.filter((o) =>
@@ -31,26 +35,31 @@ export const OficinaSection= () => {
         e.preventDefault();
         setGuardando(true);
         try{
-            await crearOficina({
-                nombre,
-                idEmpresa: Number(idEmpresa),
-            });
+            await crearOficina(oficinaData);
             setMostrarModal(false);
-            setNombre("");
-            setEmpresa("");
+            setData({
+                nombre:"",
+                empresa:0
+            })
             cargaOficina();
         } catch (error){
-            alert("No se puedo crear la oficina")
+            alert("No se pudo crear la oficina")
         } finally {
             setGuardando(false);
         }
 
     }
 
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>, isNumeric:boolean=false) => {
+    const { name, value } = e.target;
+    if(isNumeric) {setData({ ...oficinaData, [name]: Number(value) })}
+    else{setData({ ...oficinaData, [name]: value })};
+  };
+
     return (
         <div className="px-10 md:px-20 py-16">
             <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-10">
-                <div text-3xl md:text-4xl font-bold text-gray-900 leading-tight>
+                <div className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
                     <h1 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight">
                         Gestion de oficinas
                     </h1>
@@ -87,19 +96,11 @@ export const OficinaSection= () => {
                     />
                 </div>
 
-                <table w-full text-left>
+                <table className="w-full text-left">
                     <thead>
                         <tr className="border-b border-gray-100">
                             <th className="px-4 py-3 text-xs font-semibold tracking-wide text-gray-500">
                                 OFICINA
-                            </th>
-
-                            <th className="px-4 py-3 text-xs font-semibold tracking-wide text-gray-500">
-                                UBICACIÓN
-                            </th>
-
-                            <th className="px-4 py-3 text-xs font-semibold tracking-wide text-gray-500">
-                                TÉCNICOS ASIGNADOS
                             </th>
 
                             <th className="px-4 py-3 text-xs font-semibold tracking-wide text-gray-500">
@@ -111,14 +112,14 @@ export const OficinaSection= () => {
                     <tbody>
                         
                         {oficinasFiltradas.map((of) => (
-                            <tr key={of.idOficina} className="border-b border-gray-50 last:border-0 hover:bg-gray-50">
+                            <tr key={of.id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50">
                                 <td className="px-4 py-4">
                                     <strong className="text-gray-900 font-semibold">
                                         {of.nombre}
                                     </strong>
 
                                     <div className="text-xs text-gray-400 mt-0.5">
-                                        ID: OFI-{of.idOficina}
+                                        ID: OFI-{of.id}
                                     </div>
                                 </td>
 
@@ -138,8 +139,9 @@ export const OficinaSection= () => {
                         </h2>
 
                         <form onSubmit={handleCrearOficina} className="flex flex-col gap-4">
-                            <input className="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Nombre de la oficina" value={nombre} onChange={(e) => setNombre(e.target.value)} required />
-                            <input className="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="ID de la empresa" type="number" value={idEmpresa} onChange={(e) => setEmpresa(e.target.value)} required />
+                            <input name="nombre" className="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Nombre de la oficina" value={oficinaData.nombre} onChange={(e) => handleChange(e)} required />
+                            {/*El segundo input tiene que removerse */}
+                            <input name="empresa" className="px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="ID de la empresa" type="number" value={oficinaData.empresa} onChange={(e) => {handleChange(e,true)}} required />
                             <div className="flex justify-end gap-3 mt-2">
                                 <button type="button" onClick={() => setMostrarModal(false)} className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100">
                                     Cancelar

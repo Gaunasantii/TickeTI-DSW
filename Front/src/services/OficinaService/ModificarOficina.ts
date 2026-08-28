@@ -2,7 +2,7 @@ import { api } from "../api.ts"
 
 export const modificarOfina = async (oficinaData: any) => {
   try {
-    const response = await api("/oficinas/${id}", { method: "PUT", body: JSON.stringify(oficinaData) });
+    const response = await api("oficinas/${id}", { method: "PUT", body: JSON.stringify(oficinaData) });
     const data = await response.json();
 
     if (!response.ok) {

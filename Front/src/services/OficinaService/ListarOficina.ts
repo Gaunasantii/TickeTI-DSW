@@ -2,7 +2,7 @@ import { api } from "../api.ts"
 
 export const ListarOficinas = async () => {
   try {
-    const response = await api("/oficinas", { method: "GET" });
+    const response = await api("oficinas", { method: "GET" });
     const data = await response.json();
 
     if (!response.ok) {

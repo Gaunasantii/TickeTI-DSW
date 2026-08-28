@@ -1,5 +1,5 @@
-export interface Oficina{
-    idOficina?: number;
+export interface Oficina {
+    id: number;
     nombre: string;
-    idEmpresa:number;
+    Empresa: number;
 }
