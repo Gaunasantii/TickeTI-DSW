@@ -12,6 +12,7 @@ import { tecnicorouter } from './tecnico/tecnico.routes.js';
 import { ticketrouter } from './ticket/ticket.routes.js';
 import { asignacionrouter } from './asignacion/asignacion.routes.js';
 import { authRouter } from './auth/auth.routes.js';
+import { ErrorHander } from './middlewares/errorHandler.middleware.js';
 
 
 // Importar Rutas
@@ -44,6 +45,7 @@ app.use('/api', ticketrouter);
 app.use('/api', asignacionrouter)
 app.use('/api/auth', authRouter);
 
+app.use(ErrorHander);
 
 // Ruta de prueba (la podés dejar o sacar)
 app.get('/api/status', (req, res) => {

@@ -7,7 +7,7 @@ export class JWToken {
   static createToken(user: Person) {
     return jwt.sign(
       {
-        id: user.dni,
+        dni: user.dni,
         rol: user.type,
         email: user.mail,
         name: user.name,

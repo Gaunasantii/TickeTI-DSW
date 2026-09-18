@@ -1,10 +1,11 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../utils/jwt.js";
+import { UnauthorizedError, ForbiddenError } from "../utils/base.error.js";
 
 export interface AuthRequest extends Request {
   user?: {
-    id: string;
+    dni: string;
     rol: string;
     email: string;
     name: string;
@@ -21,17 +22,14 @@ export const authenticateToken = (
   const token = authHeader && authHeader.split(" ")[1];
 
   if (!token) {
-    return res.status(401).json({ message: "Token de acceso no proporcionado" });
+    throw new UnauthorizedError("Token de autenticación no proporcionado");
   }
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as AuthRequest["user"];
-    req.user = decoded;
+    req.user = decoded as any;
     next();
   } catch (error: any) {
-    return res.status(403).json({
-      message: "Token inválido o expirado",
-      detalle: error.message,
-    });
+    throw new ForbiddenError("Token de autenticación inválido o expirado");
   }
 };

@@ -1,8 +1,8 @@
 import { Router } from "express";
 export const userrouter: Router = Router();
 import { usercontroller } from "./usuario.controller.js";
-import { authenticateToken } from "../middlewares/auth.middleware.ts";
-import { authorizeRoles } from "../middlewares/role.middleware.ts";
+import { authenticateToken } from "../middlewares/auth.middleware.js";
+import { authorizeRoles } from "../middlewares/role.middleware.js";
 
 // Solo un administrador autenticado puede listar o crear usuarios
 userrouter.post("/usuarios", authenticateToken, authorizeRoles("admin"), usercontroller.createUser);
