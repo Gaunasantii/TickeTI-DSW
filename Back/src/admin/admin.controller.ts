@@ -32,7 +32,7 @@ class AdminController {
             const dni = req.params.dni as string;
             await adminService.deleteAdmin(dni);
 
-            res.status(204).json(new ApiSuccessResponse<null>(null, "Administrador eliminado correctamente"));
+            res.status(200).json(new ApiSuccessResponse<null>(null, "Administrador eliminado correctamente"));
     }
 }
 

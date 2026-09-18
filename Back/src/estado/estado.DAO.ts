@@ -1,60 +1,40 @@
 import { orm } from "../config/db.js";
+import { mapDbErrorToAppError } from "../utils/DbErrorMapper.js";
 import { EstadoSchema } from "./estado.entity.js";
 
 export class EstadoDAO {
   static async findAll(filters: any) {
-    try {
       const em = orm.em.fork();
       const recoveredStates = await em.find(EstadoSchema, filters);
       return recoveredStates;
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
   }
 
   static async findOne(filters: any) {
-    try {
       const em = orm.em.fork();
-      const foundState = await em.findOneOrFail(EstadoSchema, filters);
+      const foundState = await em.findOne(EstadoSchema, filters);
       return foundState;
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
   }
 
   static async createState(stateInput: any) {
-    try {
       const em = orm.em.fork();
       const newState = em.create(EstadoSchema, stateInput);
       em.persist(newState);
-      await em.flush();
+      await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
       return newState;
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
   }
 
-  static async updateState(stateInput: any, filters: any) {
-    try {
+  static async updateState(stateInput: any, stateFound: any) {
       const em = orm.em.fork();
-      const stateToUpdate = await em.findOneOrFail(EstadoSchema, filters);
-      em.assign(stateToUpdate, stateInput);
-      await em.flush();
-      return stateToUpdate;
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
+      em.assign(stateFound, stateInput);
+      await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
+      return stateFound;
   }
 
   static async deleteState(filters: any) {
-    try {
       const em = orm.em.fork();
       const stateToDelete = await em.findOneOrFail(EstadoSchema, filters);
       em.remove(stateToDelete);
-      await em.flush();
+      await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
       return stateToDelete;
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
   }
 }
