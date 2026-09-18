@@ -1,6 +1,7 @@
 import { error } from "node:console";
 import { adminDAO } from "./admin.DAO.js";
 import { AdminDTO } from "./DTO/admin.dto.js";
+import { NotFoundError } from "../utils/base.error.js";
 
 export class adminService {
   static async createAdmin(adminInput: any) {
@@ -27,20 +28,23 @@ export class adminService {
   }
 
   static async updateAdmin(adminInput: any, dni: string) {
-    const adminfound = await adminDAO.updateAdmin(adminInput, { dni: dni });
+    const adminfound = await adminDAO.findOne({ dni: dni });
+    if (!adminfound) throw new NotFoundError("Administrador no encontrado", `El administrador con el dni ${dni} no fue encontrado`);
+    const updatedAdmin = await adminDAO.updateAdmin(adminInput, adminfound);
 
     return new AdminDTO(
-      adminfound.dni,
-      adminfound.surName,
-      adminfound.name,
-      adminfound.tele,
-      adminfound.mail
+      updatedAdmin.dni,
+      updatedAdmin.surName,
+      updatedAdmin.name,
+      updatedAdmin.tele,
+      updatedAdmin.mail
     );
   }
 
-  static async deleteAdmin(dni: string) {
-    const adminfound = await adminDAO.deleteAdmin({ dni: dni });
-
-    if (!adminfound) throw new Error("Administrador no encontrado");
+  
+  static async deleteAdmin(dni: string): Promise<void> {
+    const adminfound = await adminDAO.findOne({ dni: dni });
+      if (!adminfound) throw new NotFoundError("Administrador no encontrado", `El administrador con el dni ${dni} no fue encontrado`);
+    await adminDAO.deleteAdmin(adminfound);
   }
 }
