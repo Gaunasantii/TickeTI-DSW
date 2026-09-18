@@ -10,7 +10,7 @@ class AdminController {
     async createAdmin(req: Request, res: Response) {
         try {
             const adminInput = req.body;
-            const newAdmin = adminService.createAdmin(adminInput)
+            const newAdmin = await adminService.createAdmin(adminInput)
             res.status(201).json({ message: "Adminstrador creado", data: newAdmin });
         } catch (error: any) {
             res.status(500).json({ error: error.message });
