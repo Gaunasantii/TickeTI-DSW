@@ -1,3 +1,4 @@
+import { NotFoundError } from "../utils/base.error.js";
 import { OficinaDTO } from "./DTO/oficina.dto.js";
 import { oficinaDAO } from "./oficina.DAO.js";
 
@@ -23,16 +24,20 @@ export class OficinaService {
   }
 
   static async deleteOficina(id: number) {
-    await oficinaDAO.deleteOficina(id);
+    const oficinaFound=await oficinaDAO.findOne({id:id})
+    if(!oficinaFound)throw new NotFoundError("Oficina no encontrada",`Oficina con id ${id} no encontrada`)
+    await oficinaDAO.deleteOficina(oficinaFound);
   }
 
   static async updateOficina(id: number, oficinaInput: any) {
-    const oficinafound = await oficinaDAO.updateOficina(oficinaInput, { id: id });
+    const oficinafound = await oficinaDAO.findOne({id:id})
+     if(!oficinafound)throw new NotFoundError("Oficina no encontrada",`Oficina con id ${id} no encontrada`)
+    const oficinaUpdated=await oficinaDAO.updateOficina(oficinaInput,oficinafound)
 
     return new OficinaDTO(
-      oficinafound.nombre,
-      oficinafound.empresa?.id,
-      oficinafound.id
+      oficinaUpdated.nombre,
+      oficinaUpdated.empresa?.id,
+      oficinaUpdated.id
     );
   }
 }
