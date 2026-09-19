@@ -22,7 +22,7 @@ class tecnicoController {
     
       const dni = req.params.dni as string;
       const tecnicoinput = req.body;
-      const updatedTecnico = await TecnicoService.updateTecnico(dni, tecnicoinput)
+      await TecnicoService.updateTecnico(dni, tecnicoinput)
 
       return res.status(200).json(new ApiSuccessResponse<null>(null,"Tecnico actualizado con exitos"));
   }

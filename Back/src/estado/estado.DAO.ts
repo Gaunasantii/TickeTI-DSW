@@ -4,19 +4,19 @@ import { EstadoSchema } from "./estado.entity.js";
 
 export class EstadoDAO {
   static async findAll(filters: any) {
-      const em = orm.em.fork();
+      const em = orm.em ;
       const recoveredStates = await em.find(EstadoSchema, filters);
       return recoveredStates;
   }
 
   static async findOne(filters: any) {
-      const em = orm.em.fork();
+      const em = orm.em ;
       const foundState = await em.findOne(EstadoSchema, filters);
       return foundState;
   }
 
   static async createState(stateInput: any) {
-      const em = orm.em.fork();
+      const em = orm.em ;
       const newState = em.create(EstadoSchema, stateInput);
       em.persist(newState);
       await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
@@ -24,14 +24,14 @@ export class EstadoDAO {
   }
 
   static async updateState(stateInput: any, stateFound: any) {
-      const em = orm.em.fork();
+      const em = orm.em ;
       em.assign(stateFound, stateInput);
       await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
       return stateFound;
   }
 
   static async deleteState(filters: any) {
-      const em = orm.em.fork();
+      const em = orm.em ;
       const stateToDelete = await em.findOneOrFail(EstadoSchema, filters);
       em.remove(stateToDelete);
       await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
