@@ -18,11 +18,10 @@ export const authenticateToken = (
   res: Response,
   next: NextFunction
 ) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
+  const token=req.cookies.AccessToken
 
   if (!token) {
-    throw new UnauthorizedError("Token de autenticación no proporcionado");
+    throw new UnauthorizedError("Token de autenticación no proporcionado","No inicio sesion");
   }
 
   try {
@@ -30,6 +29,6 @@ export const authenticateToken = (
     req.user = decoded as any;
     next();
   } catch (error: any) {
-    throw new ForbiddenError("Token de autenticación inválido o expirado");
+    throw new ForbiddenError("Token de autenticación inválido o expirado","El token fue modificado o expiro");
   }
 };
