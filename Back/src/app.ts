@@ -13,6 +13,7 @@ import { ticketrouter } from './ticket/ticket.routes.js';
 import { asignacionrouter } from './asignacion/asignacion.routes.js';
 import { authRouter } from './auth/auth.routes.js';
 import { ErrorHander } from './middlewares/errorHandler.middleware.js';
+import { RequestContext } from '@mikro-orm/core';
 
 
 // Importar Rutas
@@ -30,6 +31,10 @@ app.use(cors({
     credentials: true
 }));
 app.use(Express.json());
+
+app.use((req,res,next)=>{
+    RequestContext.create(orm.em,next)
+})
 
 // Usar Rutas
 //app.use('/api', ticketRoutes);
