@@ -9,7 +9,7 @@ import {
 
 export function mapDbErrorToAppError(error: any):never {
     if(error instanceof UniqueConstraintViolationException){
-        throw new ConflictError("Ya se encuentra registrado un admin con los datos unicos proporcionados");
+        throw new ConflictError("Ya se encuentra registrado un registro con los datos unicos proporcionados");
     }
 
     if (error instanceof ForeignKeyConstraintViolationException) {
