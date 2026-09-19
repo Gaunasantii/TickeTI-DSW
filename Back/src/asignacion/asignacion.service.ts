@@ -1,5 +1,6 @@
 import { asignacionDAO } from "./asignacion.DAO.js";
 import { AsignacionDTO } from "./DTO/asignacion.dto.js";
+import { NotFoundError } from "../utils/base.error.js";
 export class AsignacionService {
   static async createAsignacion(asignacionInput: any) {
     const newAsignacion = await asignacionDAO.createAsignacion(asignacionInput);
@@ -30,7 +31,9 @@ export class AsignacionService {
   }
 
   static async updateAsignacion(id: number, asignacionInput: any) {
-    const asignacionFound = await asignacionDAO.updateAsignacion(asignacionInput, { id: id });
+    const asignacionFound = await asignacionDAO.findOne({ id: id });
+    if(!asignacionFound) throw new NotFoundError("Asignacion no encontrada", `La asignacion con el id ${id} no fue encontrada`);
+    const updatedAsignacion = await asignacionDAO.updateAsignacion(asignacionInput, asignacionFound);
 
     return new AsignacionDTO(
       asignacionFound.fechaCreacion,
@@ -43,6 +46,8 @@ export class AsignacionService {
   }
 
   static async deleteAsignacion(id: number) {
-    await asignacionDAO.deleteAsignacion({ id: id })
+    const asignacionFound = await asignacionDAO.findOne({ id: id });
+    if(!asignacionFound) throw new NotFoundError("Asignacion no encontrada", `La asignacion con el id ${id} no fue encontrada`);
+    await asignacionDAO.deleteAsignacion(asignacionFound);
   }
 }
