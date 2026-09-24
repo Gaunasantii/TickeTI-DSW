@@ -1,60 +1,38 @@
 import { orm } from "../config/db.js";
+import { mapDbErrorToAppError } from "../utils/DbErrorMapper.js";
 import { PrioridadSchema } from "./prioridad.entity.js";
 
 export class prioridadDAO {
   static async findAll(filters: any) {
-    try {
-      const em = orm.em.fork();
-      const prioridadRecovered = await em.findAll(PrioridadSchema, filters);
-      return prioridadRecovered;
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
+    const em = orm.em ;
+    const prioridadRecovered = await em.findAll(PrioridadSchema, filters);
+    return prioridadRecovered;
   }
 
   static async findOne(filters: any) {
-    try {
-      const em = orm.em.fork();
-      const prioridadFound = await em.findOneOrFail(PrioridadSchema, filters);
+      const em = orm.em ;
+      const prioridadFound = await em.findOne(PrioridadSchema, filters);
       return prioridadFound;
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
   }
 
   static async createPrioridad(prioridadInput: any) {
-    try {
-      const em = orm.em.fork();
+      const em = orm.em ;
       const newPrioridad = em.create(PrioridadSchema, prioridadInput);
       em.persist(newPrioridad);
-      await em.flush();
+      await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
       return newPrioridad;
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
   }
 
-  static async updatePrioridad(prioridadInput: any, filters: any) {
-    try {
-      const em = orm.em.fork();
-      const prioridadToUpdate = await em.findOneOrFail(PrioridadSchema, filters);
-      em.assign(prioridadToUpdate, prioridadInput);
-      await em.flush();
-      return prioridadToUpdate;
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
+  static async updatePrioridad(prioridadInput: any, prioridadFound:any) {
+      const em = orm.em ;
+      em.assign(prioridadFound, prioridadInput);
+      await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
+      return prioridadFound;
   }
 
-  static async deletePrioridad(filters: any) {
-    try {
-      const em = orm.em.fork();
-      const prioridadToDelete = await em.findOneOrFail(PrioridadSchema, filters);
-      em.remove(prioridadToDelete);
-      await em.flush();
-      return prioridadToDelete;
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
+  static async deletePrioridad(prioridadFound:any) {
+      const em = orm.em ;
+      em.remove(prioridadFound);
+      await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
   }
 }

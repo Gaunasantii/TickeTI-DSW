@@ -1,5 +1,6 @@
 import { EstadoDAO } from "./estado.DAO.js";
 import { EstadoDTO } from "./DTO/estado.dto.js";
+import { NotFoundError } from "../utils/base.error.js";
 
 export class EstadoService {
   static async createEstado(estadoInput: any) {
@@ -14,6 +15,9 @@ export class EstadoService {
 
   static async getEstadoById(id: Number) {
     const recoveredEstado = await EstadoDAO.findOne({ id: id });
+    if (!recoveredEstado) {
+      throw new NotFoundError("Estado no encontrado",`Estado con id ${id} no encontrado`);
+    }
 
     return new EstadoDTO(
       recoveredEstado.nombre,

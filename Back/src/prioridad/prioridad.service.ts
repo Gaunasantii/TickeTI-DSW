@@ -1,3 +1,4 @@
+import { NotFoundError } from "../utils/base.error.js";
 import { PrioridadDTO } from "./DTO/prioridad.dto.js";
 import { prioridadDAO } from "./prioridad.DAO.js";
 
@@ -25,7 +26,9 @@ export class PrioridadService {
   }
 
   static async updatePrioridad(prioridadInput: any, id: number) {
-    const prioridadUpdated = await prioridadDAO.updatePrioridad(prioridadInput, { id: id });
+    const prioridadFound=await prioridadDAO.findOne({id:id})
+    if(!prioridadFound)throw new NotFoundError("Prioridad no encontrada",`prioridad con id ${id} no hallada`)
+    const prioridadUpdated= await prioridadDAO.updatePrioridad(prioridadInput,prioridadFound)
 
     return new PrioridadDTO(
       prioridadUpdated.nombre,
@@ -35,6 +38,8 @@ export class PrioridadService {
   }
 
   static async deletePrioridad(id: number) {
-    await prioridadDAO.deletePrioridad(id);
+    const prioridadFound=await prioridadDAO.findOne({id:id})
+    if(!prioridadFound)throw new NotFoundError("Prioridad no encontrada",`prioridad con id ${id} no hallada`)
+    await prioridadDAO.deletePrioridad(prioridadFound);
   }
 }

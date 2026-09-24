@@ -1,62 +1,40 @@
 import { orm } from "../config/db.js";
+import { mapDbErrorToAppError } from "../utils/DbErrorMapper.js";
 import { OficinaSchema } from "./oficina.entity.js";
 
 export class oficinaDAO {
   static async createOficina(oficinaInput: any) {
-    try {
-      const em = orm.em.fork();
-
+      const em = orm.em ;
       const newOficina = em.create(OficinaSchema, oficinaInput)
       em.persist(newOficina);
-      await em.flush();
+      await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
       return newOficina;
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
   }
 
 
   static async findAll(filters: any) {
-    try {
-      const em = orm.em.fork();
+      const em = orm.em ;
       const oficinaRecovered = await em.findAll(OficinaSchema, filters);
       return oficinaRecovered;
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
   }
 
-  static async updateOficina(oficinaInput: any, filters: any) {
-    try {
-      const em = orm.em.fork();
-      const oficinaToUpdate = await em.findOneOrFail(OficinaSchema, filters);
+  static async updateOficina(oficinaInput: any, oficinaToUpdate:any) {
+      const em = orm.em ;
       em.assign(oficinaToUpdate, oficinaInput);
-      await em.flush();
+      await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
       return oficinaToUpdate;
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
   }
 
-  static async deleteOficina(filters: any) {
-    try {
-      const em = orm.em.fork();
-      const oficinaToDelete = await em.findOneOrFail(OficinaSchema, filters);
+  static async deleteOficina(oficinaToDelete:any) {
+      const em = orm.em ;
       em.remove(oficinaToDelete);
-      await em.flush();
+      await em.flush().catch((error)=>mapDbErrorToAppError(error));
       return oficinaToDelete;
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
   }
 
   static async findOne(filters: any) {
-    try {
-      const em = orm.em.fork();
-      const oficinaFound = await em.findOneOrFail(OficinaSchema, filters);
+      const em = orm.em ;
+      const oficinaFound = await em.findOne(OficinaSchema, filters);
       return oficinaFound;
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
   }
 }

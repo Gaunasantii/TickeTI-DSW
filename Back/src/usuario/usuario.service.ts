@@ -1,3 +1,4 @@
+import { NotFoundError } from "../utils/base.error.js";
 import { UsuarioDTO } from "./DTO/usuario.dto.js";
 import { userDAO } from "./user.DAO.js";
 
@@ -31,19 +32,23 @@ export class UsuarioService {
   }
 
   static async updateUsuario(dni: string, usuarioInput: any) {
-    const userfound = await userDAO.updateUser(usuarioInput, { dni: dni });
+    const userFound= await userDAO.findOne({dni:dni})
+    if(!userFound)throw new NotFoundError("Usuario no encontrado")
+    const userUpdated = await userDAO.updateUser(usuarioInput, userFound);
 
     return new UsuarioDTO(
-      userfound.dni,
-      userfound.surName,
-      userfound.name,
-      userfound.tele,
-      userfound.mail,
-      userfound.oficina?.id
+      userUpdated.dni,
+      userUpdated.surName,
+      userUpdated.name,
+      userUpdated.tele,
+      userUpdated.mail,
+      userUpdated.oficina?.id
     );
   }
 
   static async deleteUsuario(dni: string) {
-    await userDAO.deleteUser(dni);
+    const userFound= await userDAO.findOne({dni:dni})
+    if(!userFound)throw new NotFoundError("Usuario no encontrado")
+    await userDAO.deleteUser(userFound);
   }
 }

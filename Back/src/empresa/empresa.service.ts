@@ -1,3 +1,4 @@
+import { NotFoundError } from "../utils/base.error.js";
 import { EmpresaDTO } from "./DTO/empresa.dto.js";
 import { empresaDAO } from "./empresa.DAO.js";
 
@@ -22,15 +23,19 @@ export class EmpresaService {
   }
 
   static async updateEmpresa(id: number, empresaInput: any) {
-    const empresafound = await empresaDAO.updateEmpresa(empresaInput, { id: Number(id) });
+    const empresafound = await empresaDAO.findOne({id:id});
+    if(!empresafound)throw new NotFoundError("Empresa no encontrada",`Empresa de id ${id} no encontrado`)
+    const empresaUpdated= await empresaDAO.updateEmpresa(empresaInput,empresafound);
 
     return new EmpresaDTO(
-      empresafound.nombre,
-      empresafound.id
+      empresaUpdated.nombre,
+      empresaUpdated.id
     );
   }
 
   static async deleteEmpresa(id: number) {
-    await empresaDAO.deleteEmpresa(id);
+    const empresafound = await empresaDAO.findOne({id:id});
+    if(!empresafound)throw new NotFoundError("Empresa no encontrada",`Empresa de id ${id} no encontrado`)
+    await empresaDAO.deleteEmpresa(empresafound);
   }
 }

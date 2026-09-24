@@ -1,3 +1,4 @@
+import { NotFoundError } from "../utils/base.error.js";
 import { TicketDTO } from "./DTO/ticket.dto.js";
 import { ticketDAO } from "./ticket.DAO.js";
 
@@ -33,16 +34,18 @@ export class TicketService {
   }
 
   static async updateTicket(ticketInput: any, id: Number) {
-    const ticketToUpdate = await ticketDAO.updateTicket(ticketInput, { id: id });
+    const ticketToUpdate = await ticketDAO.findOne({ id: id });
+    if(!ticketToUpdate)throw new NotFoundError("Ticket no encontrado")
+    const ticketUpdated = await ticketDAO.updateTicket(ticketInput,ticketToUpdate)
 
     return new TicketDTO(
-      ticketToUpdate.title,
-      ticketToUpdate.description,
-      ticketToUpdate.estado?.id,
-      ticketToUpdate.prioridad?.id,
-      ticketToUpdate.categoria?.id,
-      ticketToUpdate.usuario?.dni,
-      ticketToUpdate.id
+      ticketUpdated.title,
+      ticketUpdated.description,
+      ticketUpdated.estado?.id,
+      ticketUpdated.prioridad?.id,
+      ticketUpdated.categoria?.id,
+      ticketUpdated.usuario?.dni,
+      ticketUpdated.id
     );
   }
 }

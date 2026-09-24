@@ -1,60 +1,39 @@
 import { orm } from "../config/db.js";
+import { mapDbErrorToAppError } from "../utils/DbErrorMapper.js";
 import { TecnicoSchema } from "./tecnico.entity.js";
 
 export class tecnicoDAO {
   static async createTecnico(tecnicoInput: any) {
-    try {
-      const em = orm.em.fork();
+      const em = orm.em;
       const newTecnico = em.create(TecnicoSchema, tecnicoInput);
       em.persist(newTecnico);
-      await em.flush();
+      await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
       return newTecnico;
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
   }
 
   static async findAll(filters: any) {
-    try {
-      const em = orm.em.fork();
+      const em = orm.em;
       const tecnicoRecovered = await em.findAll(TecnicoSchema, filters);
       return tecnicoRecovered;
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
   }
 
-  static async updateTecnico(tecnicoInput: any, filters: any) {
-    try {
-      const em = orm.em.fork();
-      const tecnicoToUpdate = await em.findOneOrFail(TecnicoSchema, filters);
+  static async updateTecnico(tecnicoInput: any, tecnicoToUpdate:any) {
+      const em = orm.em;
       em.assign(tecnicoToUpdate, tecnicoInput);
-      await em.flush();
+      await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
       return tecnicoToUpdate;
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
   }
 
-  static async deleteTecnico(filters: any) {
-    try {
-      const em = orm.em.fork();
-      const tecnicoToDelete = await em.findOneOrFail(TecnicoSchema, filters);
+  static async deleteTecnico(tecnicoToDelete:any) {
+      const em = orm.em;
       em.remove(tecnicoToDelete);
-      await em.flush();
+      await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
       return tecnicoToDelete;
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
   }
 
   static async findOne(filters: any) {
-    try {
-      const em = orm.em.fork();
-      const tecnicoFound = await em.findOneOrFail(TecnicoSchema, filters);
+      const em = orm.em;
+      const tecnicoFound = await em.findOne(TecnicoSchema, filters);
       return tecnicoFound;
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
   }
 }
