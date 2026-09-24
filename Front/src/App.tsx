@@ -13,6 +13,7 @@ import { LoginPage } from './pages/Login/Login.js';
 import { OficinaPage } from './pages/Oficina/Oficina.js';
 import { UserDashboardPage } from './pages/Usuario/Usuario';
 import { AdminPage } from './pages/Admin/Admin';
+import { TecnicoPage } from './pages/Tecnico/Tecnico';
 
 export const App = () => {
   return (
@@ -30,6 +31,7 @@ export const App = () => {
       <Route path="/usuarios" element={<ListaUsuarios />} />
       <Route path="/usuario" element={<UserDashboardPage />} />
       <Route path="/admin" element={<AdminPage />} />
+      <Route path="/tecnico" element={<TecnicoPage />} />
     </Routes>
   );
 };
