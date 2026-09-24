@@ -1,27 +1,32 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router";
-import { decodeToken, tokenExpirado } from "../utils/decodeToken";
 
 interface ProtectedRouteProps {
   rolesPermitidos?: string[];
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ rolesPermitidos }) => {
-  const token = localStorage.getItem("token");
+  const usuarioRaw = localStorage.getItem("usuario");
 
-  // Si no hay token o está vencido, al login
-  if (!token || tokenExpirado(token)) {
-    localStorage.removeItem("token");
+  // Si no hay datos de usuario en localStorage, redirigir al login
+  if (!usuarioRaw) {
     return <Navigate to="/login" replace />;
   }
 
-  const decoded = decodeToken(token);
-  const userRol = (decoded?.rol || decoded?.type || decoded?.role || "").toLowerCase();
+  let usuario: any = null;
+  try {
+    usuario = JSON.parse(usuarioRaw);
+  } catch {
+    localStorage.removeItem("usuario");
+    return <Navigate to="/login" replace />;
+  }
 
-  // Si se especificaron roles y el rol del usuario no está en la lista, redirigir a su área segura
+  const userRol = (usuario?.rol || usuario?.role || usuario?.type || "").toLowerCase();
+
+  // Si se definieron roles permitidos y el rol no coincide
   if (rolesPermitidos && rolesPermitidos.length > 0) {
     const permitidosNormalizados = rolesPermitidos.map((r) => r.toLowerCase());
-    
+
     if (!permitidosNormalizados.includes(userRol)) {
       if (userRol === "admin" || userRol === "administrador") {
         return <Navigate to="/admin" replace />;

@@ -14,10 +14,19 @@ export const LoginPage = () => {
   const onSubmit = async (formData: LoginValues) => {
     try {
       const resultado = await loginService(formData);
-      login(resultado.token);
+      console.log("Respuesta completa del login:", resultado);
 
-      const decoded = decodeToken(resultado.token);
-      const rol = (decoded?.rol || decoded?.type || decoded?.role || "").toLowerCase();
+      // Los datos del usuario vienen directamente en resultado.data
+      const usuario = resultado.data || resultado.usuario || resultado;
+      const rol = (usuario?.rol || usuario?.role || usuario?.type || "").toLowerCase();
+
+      // Guardamos la sesión del usuario en localStorage
+      localStorage.setItem("usuario", JSON.stringify(usuario));
+
+      // Si el contexto tiene función de login, le pasamos los datos
+      if (login) {
+        login(usuario);
+      }
 
       // Redirección condicional según el rol
       if (rol === "admin" || rol === "administrador") {
@@ -28,6 +37,7 @@ export const LoginPage = () => {
         navigate("/usuario");
       }
     } catch (error: any) {
+      console.error(error);
       alert(error.message || "Error al iniciar sesión");
     }
   };
