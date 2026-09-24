@@ -1,60 +1,39 @@
 import { orm } from "../config/db.js";
+import { mapDbErrorToAppError } from "../utils/DbErrorMapper.js";
 import { asignacionSchema } from "./asignacion.entity.js";
 
 export class asignacionDAO {
   static async createAsignacion(asignacionInput: any) {
-    try {
-      const em = orm.em.fork();
+      const em = orm.em ;
       const newAsignacion = em.create(asignacionSchema, asignacionInput);
       em.persist(newAsignacion);
-      await em.flush();
+      await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
       return newAsignacion;
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
   }
 
   static async findAll(filters: any) {
-    try {
-      const em = orm.em.fork();
+      const em = orm.em ;
       const asignacionRecovered = await em.findAll(asignacionSchema, filters);
       return asignacionRecovered;
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
   }
 
-  static async updateAsignacion(asignacionInput: any, filters: any) {
-    try {
-      const em = orm.em.fork();
-      const asignacionFound = await em.findOneOrFail(asignacionSchema, filters);
+  static async updateAsignacion(asignacionInput: any, asignacionFound: any) {
+      const em = orm.em ;
       em.assign(asignacionFound, asignacionInput);
-      await em.flush();
+      await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
       return asignacionFound;
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
   }
 
-  static async deleteAsignacion(filters: any) {
-    try {
-      const em = orm.em.fork();
-      const asignacionFound = await em.findOneOrFail(asignacionSchema, filters);
+  static async deleteAsignacion(asignacionFound: any) {
+      const em = orm.em ;
       em.remove(asignacionFound);
-      await em.flush();
+      await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
       return asignacionFound;
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
   }
 
   static async findOne(filters: any) {
-    try {
-      const em = orm.em.fork();
-      const asignacionFound = await em.findOneOrFail(asignacionSchema, filters);
+      const em = orm.em ;
+      const asignacionFound = await em.findOne(asignacionSchema, filters);
       return asignacionFound;
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
   }
 }

@@ -1,3 +1,4 @@
+import { NotFoundError } from "../utils/base.error.js";
 import { TecnicoDTO } from "./DTO/tecnico.dto.js";
 import { tecnicoDAO } from "./tecnico.DAO.js";
 
@@ -29,7 +30,9 @@ export class TecnicoService {
   }
 
   static async updateTecnico(dni: string, tecnicoInput: any) {
-    const updatedTecnico = await tecnicoDAO.updateTecnico(tecnicoInput, { dni: dni });
+    const tecnicoFound = await tecnicoDAO.findOne({dni:dni})
+    if(!tecnicoFound)throw new NotFoundError("Tecnico no encontrado",`Tecnico de dni ${dni} no encontrado`)
+    const updatedTecnico = await tecnicoDAO.updateTecnico(tecnicoInput, tecnicoFound);
 
     return new TecnicoDTO(
       updatedTecnico.dni,
@@ -41,6 +44,8 @@ export class TecnicoService {
   }
 
   static async deleteTecnico(dni: string) {
-    await tecnicoDAO.deleteTecnico(dni);
+    const tecnicoFound = await tecnicoDAO.findOne({dni:dni})
+    if(!tecnicoFound)throw new NotFoundError("Tecnico no encontrado",`Tecnico de dni ${dni} no encontrado`)
+    await tecnicoDAO.deleteTecnico(tecnicoFound);
   }
 }

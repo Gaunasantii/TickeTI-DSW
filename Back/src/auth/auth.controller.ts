@@ -1,16 +1,16 @@
 import { type Request, type Response } from 'express';
 import { AuthService } from './auth.services.js';
+import { ApiSuccessResponse } from '../utils/api.response.js';
+import { loginDto } from './DTO/login.dto.js';
 
 export class AuthController {
 
   async login(req: Request, res: Response) {
-    try {
+    
       const { email, pass } = req.body;
-      const token = await AuthService.Login(pass, email);
+      const {token,user} = await AuthService.Login(pass, email);
       res.cookie('AccessToken', token, { httpOnly: true });
-      res.status(200).json({ message: "Inicio de sesion exitoso" });
-    } catch (error: any) {
-      res.status(401).json({ error: error.message });
-    };
+      res.status(200).json(new ApiSuccessResponse<loginDto>(new loginDto(user),"Login exitoso"));
+    
   }
 }

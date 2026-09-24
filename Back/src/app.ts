@@ -1,4 +1,5 @@
 import Express from 'express';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { initOrm, orm, checkDb, syncSchema } from './config/db.js';
 import { userrouter } from './usuario/usuario.routes.js';
@@ -12,9 +13,11 @@ import { tecnicorouter } from './tecnico/tecnico.routes.js';
 import { ticketrouter } from './ticket/ticket.routes.js';
 import { asignacionrouter } from './asignacion/asignacion.routes.js';
 import { authRouter } from './auth/auth.routes.js';
-
+import { ErrorHander } from './middlewares/errorHandler.middleware.js';
+import { RequestContext } from '@mikro-orm/core';
 
 // Importar Rutas
+
 
 const app = Express();
 
@@ -29,6 +32,11 @@ app.use(cors({
     credentials: true
 }));
 app.use(Express.json());
+app.use(cookieParser())
+
+app.use((req,res,next)=>{
+    RequestContext.create(orm.em,next)
+})
 
 // Usar Rutas
 //app.use('/api', ticketRoutes);
@@ -44,6 +52,7 @@ app.use('/api', ticketrouter);
 app.use('/api', asignacionrouter)
 app.use('/api/auth', authRouter);
 
+app.use(ErrorHander);
 
 // Ruta de prueba (la podés dejar o sacar)
 app.get('/api/status', (req, res) => {
