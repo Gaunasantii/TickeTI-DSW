@@ -4,7 +4,6 @@ import { Footer } from "../../components/Layout/Footer.tsx"
 import { login as loginService} from "../../services/AuthServices/login.ts"
 import { Navigate, useNavigate } from 'react-router'
 import { LoginValues } from "../../types/LoginValues.ts"
-import { decodeToken } from "../../utils/decodeToken.ts"
 import { useAuth } from "../../context/AuthContext.tsx"
 
 export const LoginPage=()=>{
@@ -18,7 +17,6 @@ export const LoginPage=()=>{
       login (resultado.token);
       navigate('/dashboard');
       alert(resultado.message);
-      console.log(decodeToken(resultado.token));
       //localStorage.setItem('usuarioTickeTI', JSON.stringify(resultado.data));
       //navigate('/dashboard');
     } catch (error: any) {

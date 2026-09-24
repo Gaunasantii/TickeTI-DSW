@@ -1,65 +1,37 @@
-import { createContext, useContext, useState, useEffect, type ReactNode, Children } from "react";
-import { decodeToken, tokenExpirado, type UsuarioToken } from "../utils/decodeToken";
+import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
 
-type authContextType = {
-    usuario : UsuarioToken | null;
-    token : string | null;
+type AuthContextType = {
+    token: string | null;
     cargando: boolean;
     login: (token: string) => void;
     logout: () => void;
     isAuthenticated: boolean;
 }
 
-const authContext = createContext<authContextType | undefined>(undefined);
+const authContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-    const [usuario, setUsario] = useState<UsuarioToken | null>(null);
     const [token, setToken] = useState<string | null>(null);
     const [cargando, setCargando] = useState(true);
 
-    useEffect( () => {
+    useEffect(() => {
         const tokenGuardado = localStorage.getItem("token");
-
-        if(!tokenGuardado) {
-            setCargando(false);
-            return;
-        }
-
-        const payload = decodeToken(tokenGuardado);
-
-        if (!payload || tokenExpirado(payload)) {
-            localStorage.removeItem('token');
-            setUsario(null);
-            setToken(null);
-        }else{
-            setUsario(payload);
-            setToken(tokenGuardado);
-        }
-
+        setToken(tokenGuardado);
         setCargando(false);
     }, []);
 
     const login = (nuevoToken: string) => {
-        const payload = decodeToken(nuevoToken);
-
-        if(!payload){
-            console.error('No se pudo decodificar el token al hacer login');
-            return;
-        }
-
         localStorage.setItem('token', nuevoToken);
         setToken(nuevoToken);
-        setUsario(payload);
     };
 
     const logout = () => {
         localStorage.removeItem('token');
         setToken(null);
-        setUsario(null);
     };
 
-    return(
-        <authContext.Provider value={{ usuario, token, cargando, login, logout, isAuthenticated: !!usuario, }}>
+    return (
+        <authContext.Provider value={{ token, cargando, login, logout, isAuthenticated: !!token }}>
             {children}
         </authContext.Provider>
     );
