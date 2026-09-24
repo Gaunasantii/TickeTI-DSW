@@ -6,7 +6,7 @@ export const crearUsuario = async (usuarioData: any) => {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.message || "Error al crear usuario");
+      throw new Error(data.errors || data.message || "Error al crear usuario");
     }
 
     return data;

@@ -6,7 +6,7 @@ export const modificarOfina = async (oficinaData: any) => {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.message || "Error al Crear oficina");
+      throw new Error(data.errors || data.message || "Error al Crear oficina");
     }
 
     return data;
