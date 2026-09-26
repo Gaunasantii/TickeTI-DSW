@@ -1,9 +1,14 @@
 interface IApiResponse<T> {
     data: T|T[];
     message?:string;
-    errors?:string[]|string;
+    errors?:string[]|string|IFieldError[];
     success?:boolean;
     meta?:IPaginationMeta;
+}
+
+export interface IFieldError{
+    field:string,
+    error:string,
 }
 
 export interface IPaginationMeta {
@@ -32,5 +37,5 @@ export class ApiPaginationResponse<T> implements IApiResponse<T>{
 export class ApiErrorResponse implements IApiResponse<null>{
     public success=false;
     public data=null;
-    constructor(public errors:string[]|string, public message:string){}
+    constructor(public errors:string[]|string|IFieldError[], public message:string){}
 }
