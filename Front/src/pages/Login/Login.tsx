@@ -4,7 +4,6 @@ import { Footer } from "../../components/Layout/Footer.tsx";
 import { login as loginService } from "../../services/AuthServices/login.ts";
 import { useNavigate } from "react-router";
 import { LoginValues } from "../../types/LoginValues.ts";
-import { decodeToken } from "../../utils/decodeToken.ts";
 import { useAuth } from "../../context/AuthContext.tsx";
 
 export const LoginPage = () => {
@@ -14,16 +13,14 @@ export const LoginPage = () => {
   const onSubmit = async (formData: LoginValues) => {
     try {
       const resultado = await loginService(formData);
-      console.log("Respuesta completa del login:", resultado);
 
-      // Los datos del usuario vienen directamente en resultado.data
+      // Los datos del usuario vienen en resultado.data
       const usuario = resultado.data || resultado.usuario || resultado;
       const rol = (usuario?.rol || usuario?.role || usuario?.type || "").toLowerCase();
 
-      // Guardamos la sesión del usuario en localStorage
-      localStorage.setItem("usuario", JSON.stringify(usuario));
+      // Guardamos la sesión en sessionStorage para que muera al cerrar la pestaña
+      sessionStorage.setItem("usuario", JSON.stringify(usuario));
 
-      // Si el contexto tiene función de login, le pasamos los datos
       if (login) {
         login(usuario);
       }
@@ -37,7 +34,7 @@ export const LoginPage = () => {
         navigate("/usuario");
       }
     } catch (error: any) {
-      console.error(error);
+      console.error("Error en login:", error);
       alert(error.message || "Error al iniciar sesión");
     }
   };
@@ -50,3 +47,5 @@ export const LoginPage = () => {
     </>
   );
 };
+
+export default LoginPage;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { obtenerTickets } from "../../services/TicketServices/ObtenerTickets";
 
 interface Ticket {
@@ -14,9 +14,24 @@ interface Ticket {
 }
 
 export const AdminPage: React.FC = () => {
+  const navigate = useNavigate();
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Leemos los datos de la sesión activa en la pestaña
+  const usuarioRaw = sessionStorage.getItem("usuario");
+  let usuario = null;
+  try {
+    usuario = usuarioRaw ? JSON.parse(usuarioRaw) : null;
+  } catch {
+    usuario = null;
+  }
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("usuario");
+    navigate("/login");
+  };
 
   const cargarDatos = async () => {
     try {
@@ -37,10 +52,21 @@ export const AdminPage: React.FC = () => {
 
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-8">
-      {/* Encabezado */}
-      <header className="border-b pb-4">
-        <h1 className="text-3xl font-bold text-gray-800">Panel de Administración</h1>
-        <p className="text-sm text-gray-500">Supervisión general, gestión de recursos y tickets</p>
+      {/* Encabezado con información de usuario y botón de Logout */}
+      <header className="border-b pb-4 flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-800">Panel de Administración</h1>
+          <p className="text-sm text-gray-500">
+            Supervisión general | Administrador:{" "}
+            <strong className="text-gray-700 capitalize">{usuario?.name || "Admin"}</strong>
+          </p>
+        </div>
+        <button
+          onClick={handleLogout}
+          className="px-4 py-2 text-sm font-semibold text-red-600 border border-red-200 rounded-md hover:bg-red-50 transition active:scale-95"
+        >
+          Cerrar sesión
+        </button>
       </header>
 
       {/* Accesos rápidos a la gestión de entidades */}

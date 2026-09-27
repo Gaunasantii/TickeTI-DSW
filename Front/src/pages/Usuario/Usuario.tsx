@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import { crearTicket } from "../../services/TicketServices/CrearTicket";
 import { obtenerTickets } from "../../services/TicketServices/ObtenerTickets";
 
@@ -13,12 +14,27 @@ interface Ticket {
 }
 
 export const UserDashboardPage: React.FC = () => {
+  const navigate = useNavigate();
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const [asunto, setAsunto] = useState("");
   const [descripcion, setDescripcion] = useState("");
+
+  // Leemos la sesión activa de la pestaña
+  const usuarioRaw = sessionStorage.getItem("usuario");
+  let usuario = null;
+  try {
+    usuario = usuarioRaw ? JSON.parse(usuarioRaw) : null;
+  } catch {
+    usuario = null;
+  }
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("usuario");
+    navigate("/login");
+  };
 
   const cargarTickets = async () => {
     try {
@@ -56,9 +72,21 @@ export const UserDashboardPage: React.FC = () => {
 
   return (
     <div className="max-w-5xl mx-auto p-6 space-y-8">
-      <header className="border-b pb-4">
-        <h1 className="text-2xl font-bold text-gray-800">Panel de Solicitante</h1>
-        <p className="text-sm text-gray-500">Reportá incidencias y seguí el avance de tus tickets</p>
+      {/* Encabezado con información del solicitante y botón Cerrar sesión */}
+      <header className="border-b pb-4 flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800">Panel de Solicitante</h1>
+          <p className="text-sm text-gray-500">
+            Reportá incidencias y seguí el avance de tus tickets | Usuario:{" "}
+            <strong className="text-gray-700 capitalize">{usuario?.name || "Usuario"}</strong>
+          </p>
+        </div>
+        <button
+          onClick={handleLogout}
+          className="px-4 py-2 text-sm font-semibold text-red-600 border border-red-200 rounded-md hover:bg-red-50 transition active:scale-95"
+        >
+          Cerrar sesión
+        </button>
       </header>
 
       {/* Formulario de Nuevo Ticket */}
@@ -124,3 +152,5 @@ export const UserDashboardPage: React.FC = () => {
     </div>
   );
 };
+
+export default UserDashboardPage;

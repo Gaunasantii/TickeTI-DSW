@@ -6,9 +6,9 @@ interface ProtectedRouteProps {
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ rolesPermitidos }) => {
-  const usuarioRaw = localStorage.getItem("usuario");
+  const usuarioRaw = sessionStorage.getItem("usuario");
 
-  // Si no hay datos de usuario en localStorage, redirigir al login
+  // Si no hay datos de usuario en sessionStorage, va al login
   if (!usuarioRaw) {
     return <Navigate to="/login" replace />;
   }
@@ -17,13 +17,19 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ rolesPermitidos 
   try {
     usuario = JSON.parse(usuarioRaw);
   } catch {
-    localStorage.removeItem("usuario");
+    sessionStorage.removeItem("usuario");
     return <Navigate to="/login" replace />;
   }
 
   const userRol = (usuario?.rol || usuario?.role || usuario?.type || "").toLowerCase();
 
-  // Si se definieron roles permitidos y el rol no coincide
+  // Si el objeto no contiene un rol válido, limpiamos y va al login
+  if (!userRol) {
+    sessionStorage.removeItem("usuario");
+    return <Navigate to="/login" replace />;
+  }
+
+  // Si se definieron roles permitidos y el rol no coincide con la ruta
   if (rolesPermitidos && rolesPermitidos.length > 0) {
     const permitidosNormalizados = rolesPermitidos.map((r) => r.toLowerCase());
 
@@ -32,8 +38,11 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ rolesPermitidos 
         return <Navigate to="/admin" replace />;
       } else if (userRol === "tecnico") {
         return <Navigate to="/tecnico" replace />;
-      } else {
+      } else if (userRol === "usuario" || userRol === "solicitante" || userRol === "cliente") {
         return <Navigate to="/usuario" replace />;
+      } else {
+        sessionStorage.removeItem("usuario");
+        return <Navigate to="/login" replace />;
       }
     }
   }
