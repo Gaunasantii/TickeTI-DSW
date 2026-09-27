@@ -1,12 +1,11 @@
 import { type Request, type Response } from "express";
-import { orm } from "../config/db.js";
 import { adminSchema } from "./admin.entity.js";
-import { adminDAO } from "./admin.DAO.js";
 import { type createAdminInDto } from "./DTO/CreateAdmin.dto.js";
 import { adminService } from "./admin.service.js";
 import { ApiSuccessResponse } from "../utils/api.response.js";
 import { type AdminOutDto, AdminOutSchema } from "./DTO/AdminOut.dto.js";
 import type { ModifyAdminBodyDTO, ModifyAdminParamsDTO } from "./DTO/ModifyAdmin.dto.js";
+import { wrap } from "@mikro-orm/core";
 
 class AdminController {
 
@@ -19,7 +18,7 @@ class AdminController {
 
     async findAll(req: Request, res: Response) {
             const admins = await adminService.getAllAdmins();
-            const adminsDtos = admins.map(admin=>AdminOutSchema.parse(admin))
+            const adminsDtos = admins.map(admin=>AdminOutSchema.parse(wrap(admin).toJSON()))
             res.status(200).json(new ApiSuccessResponse<Array<AdminOutDto>>(adminsDtos, "Administradores recuperados correctamente"));
     }
 
@@ -27,7 +26,7 @@ class AdminController {
             const dni = req.params.dni;
             const admininput = req.body;
             const updatedAdmin = await adminService.updateAdmin(admininput, dni);
-            const adminDto=AdminOutSchema.parse(updatedAdmin)
+            const adminDto=AdminOutSchema.parse(wrap(updatedAdmin).toJSON())
 
             res.status(200).json(new ApiSuccessResponse<AdminOutDto>(adminDto, "Administrador actualizado correctamente"));
     }

@@ -5,7 +5,7 @@ import type { ZodObject } from "zod";
 import type { IFieldError } from "../utils/api.response.js";
 
 export const ValidationMiddleware=(Schema:ZodObject)=>(req:Request,res:Response,next:NextFunction)=>{
-    const result=Schema.safeParse(req);
+    const result=Schema.safeParse({body:req.body,query:req.query,params:req.params});
     if(!result.success){
         const ListaErrores:IFieldError[]=result.error.issues.map(error=>({
             field:error.path[error.path.length-1]as string,
@@ -13,6 +13,8 @@ export const ValidationMiddleware=(Schema:ZodObject)=>(req:Request,res:Response,
         }))
         throw new ValidationError("Datos invalidos",ListaErrores)
     }
-    req.body=result.data;
+    if (result.data.body) req.body = result.data.body;
+    if (result.data.params) req.params = result.data.params as any;
+    if (result.data.query) req.query = result.data.query as any;
     next();
 }
