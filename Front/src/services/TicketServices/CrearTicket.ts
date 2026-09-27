@@ -1,17 +1,18 @@
-import { api } from "../api.ts"
+import { api } from "../api.ts";
 
-export const crearTicket = async (ticketData: any) => {
-  try {
-    const response = await api("/tickets", { method: "POST", body: JSON.stringify(ticketData) });
-    const data = await response.json();
+export const crearTicket = async (datosTicket: any) => {
+  const response = await api("/tickets", {
+    method: "POST",
+    body: JSON.stringify(datosTicket),
+  });
 
-    if (!response.ok) {
-      throw new Error(data.message || "Error al Crear ticket");
-    }
+  const resJson = await response.json();
 
-    return data;
-  } catch (error) {
-    console.error('Error creando ticket:', error);
-    throw error;
+  if (!response.ok) {
+    throw new Error(resJson.message || "Error al registrar el ticket");
   }
-}
+
+  return resJson.data || resJson;
+};
+
+export default crearTicket;

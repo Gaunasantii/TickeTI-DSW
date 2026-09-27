@@ -57,16 +57,20 @@ export const UserDashboardPage: React.FC = () => {
     e.preventDefault();
     try {
       await crearTicket({
-        asunto,
-        descripcion,
+        title: asunto,
+        asunto: asunto,
+        description: descripcion,
+        descripcion: descripcion,
         categoria: 1,
         prioridad: 1,
+        estado: 1,      // <-- ID del estado inicial (Abierto / Pendiente)
+        status: 1,
       });
       setAsunto("");
       setDescripcion("");
       await cargarTickets();
     } catch (err: any) {
-      alert(err.message);
+      alert(err.message || "Error al crear el ticket");
     }
   };
 
