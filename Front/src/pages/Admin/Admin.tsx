@@ -38,7 +38,7 @@ export const AdminPage: React.FC = () => {
       setCargando(true);
       setError(null);
       const res = await obtenerTickets();
-      setTickets(res.data || res || []);
+      setTickets(res);
     } catch (err: any) {
       setError(err.message || "Error al cargar los tickets del sistema");
     } finally {
