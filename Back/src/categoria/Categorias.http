@@ -15,7 +15,6 @@ POST {{baseUrl}}/categorias
 Content-Type: application/json
 
 {
-  "nombre": "Hardware"
 }
 
 ### 2. OBTENER todas las Categorías
@@ -30,7 +29,8 @@ Content-Type: application/json
   "nombre": "Hardware y Periféricos"
 }
 
-### 4. ELIMINAR Categoría // Nunca se hara realmente porque se necesita para las relaciones, pero se deja el endpoint para pruebas
+### 4. ELIMINAR Categoría // Nunca se hara realmente porque se necesita para las relaciones,
+### pero se deja el endpoint para pruebas
 DELETE {{baseUrl}}/categorias/2
 Content-Type: application/json
 
