@@ -7,4 +7,5 @@ export const authRouter: Router = Router();
 
 const authController = new AuthController();
 
-authRouter.post("/login",ValidationMiddleware(LoginInSchema), authController.login)
+authRouter.post("/login",ValidationMiddleware(LoginInSchema), authController.login);
+authRouter.post("logout",authController.logout);

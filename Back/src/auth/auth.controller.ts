@@ -13,4 +13,9 @@ export class AuthController {
       res.cookie('AccessToken', token, { httpOnly: true });
       res.status(200).json(new ApiSuccessResponse<LoginDto>(LoginOutSchema.parse(wrap(user).toJSON()),"Login exitoso"));
   }
+
+  async logout(req:Request,res:Response){
+    res.clearCookie('AccessToken',{ httpOnly: true });
+    res.status(200).json(new ApiSuccessResponse<null>(null,"Logout Exitoso"));
+  }
 }
