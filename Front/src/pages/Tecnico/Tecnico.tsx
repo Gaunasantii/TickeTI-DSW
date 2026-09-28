@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { obtenerTickets } from "../../services/TicketServices/ObtenerTickets";
 import { actualizarTicket } from "../../services/TicketServices/ActualizarTicket";
+import { crearTicket } from "../../services/TicketServices/CrearTicket";
 
 interface Ticket {
   id: string | number;
@@ -14,7 +15,9 @@ interface Ticket {
   prioridadId?: number;
   prioridad?: { nombre: string } | number | string;
   categoriaId?: number;
-  usuario?: { nombre: string; dni?: string } | string;
+  usuario?: { nombre?: string; dni?: string } | string;
+  usuarioDni?: string;
+  usuario_dni?: string;
 }
 
 export const MAPA_ESTADOS: Record<number, { label: string; color: string }> = {
@@ -30,6 +33,11 @@ export const TecnicoPage: React.FC = () => {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [actualizandoId, setActualizandoId] = useState<string | number | null>(null);
+
+  // Estados para la creación de ticket desde el rol técnico
+  const [asunto, setAsunto] = useState("");
+  const [descripcion, setDescripcion] = useState("");
+  const [creando, setCreando] = useState(false);
 
   const usuarioRaw = sessionStorage.getItem("usuario");
   let usuario = null;
@@ -61,8 +69,39 @@ export const TecnicoPage: React.FC = () => {
     cargarTickets();
   }, []);
 
+  const handleCrearTicket = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      setCreando(true);
+      const dniTecnico = String(usuario?.dni || usuario?.id || "").trim();
+
+      if (!dniTecnico || dniTecnico.length < 8) {
+        alert("El usuario técnico debe tener un DNI numérico válido de al menos 8 dígitos.");
+        return;
+      }
+
+      await crearTicket({
+        title: asunto,
+        description: descripcion,
+        estado: 1,
+        prioridad: 1,
+        categoria: 1,
+        usuario: dniTecnico,
+      });
+
+      setAsunto("");
+      setDescripcion("");
+      await cargarTickets();
+      alert("Ticket reportado exitosamente.");
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || "Error al crear el ticket");
+    } finally {
+      setCreando(false);
+    }
+  };
+
   const handleCambiarEstado = async (ticketId: string | number, nuevoEstadoId: number) => {
-    // Si intenta Cerrar el ticket (ID 4), pedir confirmación
     if (nuevoEstadoId === 4) {
       const confirma = window.confirm(
         "¿Estás seguro de que deseás cerrar este ticket?\nUna vez cerrado, se archivará y pasará al historial."
@@ -84,7 +123,6 @@ export const TecnicoPage: React.FC = () => {
     }
   };
 
-  // En la bandeja activa mostramos tickets que no estén cerrados (estadoId !== 4)
   const ticketsActivos = tickets.filter((t) => {
     const estadoId = Number(t.estadoId ?? (typeof t.estado === "object" ? t.estado?.id : t.estado)) || 1;
     return estadoId !== 4;
@@ -109,6 +147,49 @@ export const TecnicoPage: React.FC = () => {
         </button>
       </header>
 
+      {/* Formulario de reporte de ticket para el Técnico */}
+      <section className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
+        <h2 className="text-xl font-semibold text-gray-800 mb-2">Crear Incidencia / Solicitar Asistencia</h2>
+        <p className="text-sm text-gray-500 mb-4">
+          Si necesitás ayuda de otro técnico o reportar una falla interna, generá el ticket aquí.
+        </p>
+
+        <form onSubmit={handleCrearTicket} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Título / Asunto</label>
+            <input
+              type="text"
+              required
+              value={asunto}
+              onChange={(e) => setAsunto(e.target.value)}
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Ej: Falla en enlace de fibra óptica / switch secundario"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Descripción detallada</label>
+            <textarea
+              required
+              rows={3}
+              value={descripcion}
+              onChange={(e) => setDescripcion(e.target.value)}
+              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Explicá el problema y qué asistencia se requiere..."
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={creando}
+            className="px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition disabled:opacity-50"
+          >
+            {creando ? "Enviando..." : "Generar Ticket"}
+          </button>
+        </form>
+      </section>
+
+      {/* Bandeja de tickets activos */}
       <section className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
         <div className="flex justify-between items-center mb-6">
           <div>
@@ -140,6 +221,12 @@ export const TecnicoPage: React.FC = () => {
                 color: "bg-gray-100 text-gray-800 border-gray-200",
               };
 
+              const solicitante =
+                t.usuarioDni ||
+                t.usuario_dni ||
+                (typeof t.usuario === "object" ? t.usuario?.dni || t.usuario?.nombre : t.usuario) ||
+                "Desconocido";
+
               return (
                 <div
                   key={t.id}
@@ -151,9 +238,12 @@ export const TecnicoPage: React.FC = () => {
                       <h3 className="text-lg font-semibold text-gray-800">{t.asunto || t.title}</h3>
                     </div>
                     <p className="text-sm text-gray-600">{t.descripcion || t.description}</p>
-                    <div className="flex gap-2 pt-2 text-xs">
+                    <div className="flex flex-wrap items-center gap-2 pt-2 text-xs">
                       <span className={`px-2.5 py-0.5 rounded-full font-medium border ${estadoInfo.color}`}>
                         {estadoInfo.label}
+                      </span>
+                      <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+                        Solicitante: <strong className="font-semibold text-slate-900">{solicitante}</strong>
                       </span>
                     </div>
                   </div>

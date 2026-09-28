@@ -9,7 +9,11 @@ export const crearTicket = async (datosTicket: any) => {
   const resJson = await response.json();
 
   if (!response.ok) {
-    throw new Error(resJson.message || "Error al registrar el ticket");
+    const errorMsg =
+      typeof resJson.errors === "object"
+        ? JSON.stringify(resJson.errors)
+        : resJson.errors || resJson.message || "Error al registrar el ticket";
+    throw new Error(errorMsg);
   }
 
   return resJson.data || resJson;

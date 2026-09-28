@@ -63,16 +63,23 @@ export const UserDashboardPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      // Obtenemos el DNI del usuario logueado en la sesión
+      const dniUsuario = String(usuario?.dni || usuario?.id || "").trim();
+
+      if (!dniUsuario || dniUsuario.length < 8) {
+        alert("El usuario de la sesión debe tener un DNI numérico válido de al menos 8 dígitos.");
+        return;
+      }
+
       await crearTicket({
         title: asunto,
-        asunto: asunto,
         description: descripcion,
-        descripcion: descripcion,
-        categoria: 1,
-        prioridad: 1,
         estado: 1,
-        status: 1,
+        prioridad: 1,
+        categoria: 1,
+        usuario: dniUsuario,
       });
+
       setAsunto("");
       setDescripcion("");
       await cargarTickets();

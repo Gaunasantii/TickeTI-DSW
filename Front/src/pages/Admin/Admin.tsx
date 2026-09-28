@@ -12,7 +12,9 @@ interface Ticket {
   estado?: { id?: number; nombre: string } | number | string;
   prioridadId?: number;
   prioridad?: { nombre: string } | number | string;
-  usuario?: { nombre: string } | string;
+  usuario?: { nombre?: string; dni?: string } | string;
+  usuarioDni?: string;
+  usuario_dni?: string;
 }
 
 const MAPA_ESTADOS: Record<number, { label: string; color: string }> = {
@@ -133,6 +135,7 @@ export const AdminPage: React.FC = () => {
                 <tr className="border-b text-sm font-semibold text-gray-600 bg-gray-50">
                   <th className="p-3">ID</th>
                   <th className="p-3">Asunto</th>
+                  <th className="p-3">Solicitante (DNI)</th>
                   <th className="p-3">Estado</th>
                 </tr>
               </thead>
@@ -145,10 +148,19 @@ export const AdminPage: React.FC = () => {
                     color: "bg-gray-100 text-gray-800",
                   };
 
+                  const solicitante =
+                    t.usuarioDni ||
+                    t.usuario_dni ||
+                    (typeof t.usuario === "object" ? t.usuario?.dni || t.usuario?.nombre : t.usuario) ||
+                    "-";
+
                   return (
                     <tr key={t.id} className="hover:bg-gray-50">
                       <td className="p-3 font-medium text-gray-900">#{t.id}</td>
                       <td className="p-3 text-gray-700">{t.asunto || t.title}</td>
+                      <td className="p-3 text-gray-600 font-mono text-xs">
+                        {solicitante}
+                      </td>
                       <td className="p-3">
                         <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${estadoInfo.color}`}>
                           {estadoInfo.label}
