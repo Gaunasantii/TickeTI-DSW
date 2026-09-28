@@ -7,6 +7,7 @@ import { CategoriaSchema } from '../categoria/categoria.entity.js';
 import { TecnicoSchema } from "../tecnico/tecnico.entity.js";
 import { asignacionSchema } from "../asignacion/asignacion.entity.js";
 import { PersonSchema } from "../persona/person.entity.js";
+import { EmpresaSchema } from "../empresa/empresa.entity.js";
 
 
 
@@ -20,7 +21,8 @@ export const TicketSchema = defineEntity({
         prioridad:() => p.manyToOne(PrioridadSchema),
         categoria:() => p.manyToOne(CategoriaSchema),
         usuario:() => p.manyToOne(PersonSchema),
-        asignaciones:() => p.oneToMany(asignacionSchema).mappedBy('ticket')
+        asignaciones:() => p.oneToMany(asignacionSchema).mappedBy('ticket'),
+        empresa:()=> p.manyToOne(EmpresaSchema)
     }
 })
 
