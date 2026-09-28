@@ -1,46 +1,20 @@
+import type { EntityType } from "@mikro-orm/core";
 import { NotFoundError } from "../utils/base.error.js";
-import { TecnicoDTO } from "./DTO/tecnico.dto.js";
 import { tecnicoDAO } from "./tecnico.DAO.js";
 
 export class TecnicoService {
   static async createTecnico(tecnicoInput: any) {
-    const newTecnico = await tecnicoDAO.createTecnico(tecnicoInput);
-
-    return new TecnicoDTO(
-      newTecnico.dni,
-      newTecnico.surName,
-      newTecnico.name,
-      newTecnico.tele,
-      newTecnico.mail
-    );
+    return await tecnicoDAO.createTecnico(tecnicoInput);
   }
 
   static async getAllTecnicos() {
-    const tecnicosRecovered = await tecnicoDAO.findAll({ populate: ['asignaciones'] });
-
-    return tecnicosRecovered.map((tecnico: any) =>
-      new TecnicoDTO(
-        tecnico.dni,
-        tecnico.surName,
-        tecnico.name,
-        tecnico.tele,
-        tecnico.mail
-      )
-    );
+    return await tecnicoDAO.findAll({ populate: ['asignaciones'] });
   }
 
   static async updateTecnico(dni: string, tecnicoInput: any) {
     const tecnicoFound = await tecnicoDAO.findOne({dni:dni})
     if(!tecnicoFound)throw new NotFoundError("Tecnico no encontrado",`Tecnico de dni ${dni} no encontrado`)
-    const updatedTecnico = await tecnicoDAO.updateTecnico(tecnicoInput, tecnicoFound);
-
-    return new TecnicoDTO(
-      updatedTecnico.dni,
-      updatedTecnico.surName,
-      updatedTecnico.name,
-      updatedTecnico.tele,
-      updatedTecnico.mail
-    );
+    return await tecnicoDAO.updateTecnico(tecnicoInput, tecnicoFound);
   }
 
   static async deleteTecnico(dni: string) {

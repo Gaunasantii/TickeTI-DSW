@@ -1,12 +1,14 @@
 import { type Request, type Response } from "express";
-import { tecnicoDAO } from "./tecnico.DAO.js";
-import { TecnicoDTO } from "./DTO/tecnico.dto.js";
 import { TecnicoService } from "./tecnico.service.js";
 import { ApiSuccessResponse } from "../utils/api.response.js";
+import { TecnicoOutSchema, type TecnicoOutDto } from "./DTO/TecnicoOut.dto.js";
+import { wrap } from "@mikro-orm/core";
+import type { CreateTecnicoInDto } from "./DTO/CreateTecnico.dto.js";
+import type { ModifyTecnicoBodyDTO, ModifyTecnicoParamsDTO } from "./DTO/ModifyTecnico.dto.js";
 
 class tecnicoController {
 
-  async createTecnico(req: Request, res: Response) {
+  async createTecnico(req: Request<any,any,CreateTecnicoInDto>, res: Response) {
       const tecnicoInput = req.body;
       await TecnicoService.createTecnico(tecnicoInput);
 
@@ -14,11 +16,12 @@ class tecnicoController {
   };
 
   async findAll(req: Request, res: Response) {
-      const tecnicosRecovered = await TecnicoService.getAllTecnicos()
-      res.status(200).json(new ApiSuccessResponse<TecnicoDTO[]>(tecnicosRecovered,"Tecnicos recuperados con exito"))
+      const tecnicosRecovered = await TecnicoService.getAllTecnicos();
+      const tecnicosDto=tecnicosRecovered.map(t=>TecnicoOutSchema.parse(wrap(t).toJSON()));
+      res.status(200).json(new ApiSuccessResponse<TecnicoOutDto[]>(tecnicosDto,"Tecnicos recuperados con exito"))
   }
 
-  async updateTecnico(req: Request, res: Response) {
+  async updateTecnico(req: Request<ModifyTecnicoParamsDTO,any,ModifyTecnicoBodyDTO>, res: Response) {
     
       const dni = req.params.dni as string;
       const tecnicoinput = req.body;
@@ -27,7 +30,7 @@ class tecnicoController {
       return res.status(200).json(new ApiSuccessResponse<null>(null,"Tecnico actualizado con exitos"));
   }
 
-  async deleteTecnico(req: Request, res: Response) {
+  async deleteTecnico(req: Request<ModifyTecnicoParamsDTO,any,any>, res: Response) {
       const dni = req.params.dni as string;
       await TecnicoService.deleteTecnico(dni)
       return res.status(200).json(new ApiSuccessResponse<null>(null,"Tecnico eliminado con exito"));

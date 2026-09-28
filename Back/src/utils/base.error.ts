@@ -3,7 +3,7 @@ export class AppError extends Error{
 
     public readonly details:any;
     
-    constructor(message:string,details?:any){
+    constructor(message:string,details?:string|string[]|any[]){
         super(message);
         this.name=this.constructor.name;
         this.details=details;

@@ -1,37 +1,19 @@
 import { NotFoundError } from "../utils/base.error.js";
-import { CategoriaDTO } from "./DTO/categoria.dto.js";
 import { categoriaDAO } from "./categoria.DAO.js";
 
 export class CategoriaService {
   static async createCategoria(categoriaInput: any) {
-    const newCategoria = await categoriaDAO.createCategoria(categoriaInput);
-
-    return new CategoriaDTO(
-      newCategoria.nombre,
-      newCategoria.id
-    );
+    return await categoriaDAO.createCategoria(categoriaInput);
   }
 
   static async getallCategorias() {
-    const categoriasRecovered = await categoriaDAO.findAll({});
-
-    return categoriasRecovered.map((categoria: any) =>
-      new CategoriaDTO(
-        categoria.nombre,
-        categoria.id
-      )
-    );
+    return await categoriaDAO.findAll({});
   }
 
   static async updateCategoria(categoriainput: any, id: number) {
     const categoriafound = await categoriaDAO.findOne({id:id})
     if(!categoriafound)throw new NotFoundError("Categoria no encontrada",`Categoria de id ${id} no hallada`)
-    const categoriaUpdated= await categoriaDAO.updateCategoria(categoriainput,categoriafound)
-
-    return new CategoriaDTO(
-      categoriaUpdated.nombre,
-      categoriaUpdated.id
-    );
+    return await categoriaDAO.updateCategoria(categoriainput,categoriafound)
   }
 
   static async deleteCategoria(id: Number) {

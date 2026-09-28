@@ -1,8 +1,12 @@
 import { Router } from "express";
 export const oficinarouter:Router = Router();
 import { oficinacontroller } from "./oficina.controller.js";
+import { ValidationMiddleware } from "../middlewares/validateInput.middleware.js";
+import { CreateOficinaSchema } from "./DTO/CreateOficina.dto.ts.js";
+import { ModifyOficinaSchema } from "./DTO/ModifyOficina.dto.js";
+import { DeleteOficinaSchema } from "./DTO/DeleteOficina.dto.js";
 
-oficinarouter.post("/oficinas", oficinacontroller.createOficina);
+oficinarouter.post("/oficinas",ValidationMiddleware(CreateOficinaSchema), oficinacontroller.createOficina);
 oficinarouter.get("/oficinas", oficinacontroller.findAll);
-oficinarouter.put("/oficinas/:id", oficinacontroller.updateOficina);
-oficinarouter.delete("/oficinas/:id", oficinacontroller.deleteOficina);
+oficinarouter.put("/oficinas/:id",ValidationMiddleware(ModifyOficinaSchema), oficinacontroller.updateOficina);
+oficinarouter.delete("/oficinas/:id",ValidationMiddleware(DeleteOficinaSchema), oficinacontroller.deleteOficina);
