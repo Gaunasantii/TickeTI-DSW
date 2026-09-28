@@ -9,9 +9,17 @@ interface Ticket {
   title?: string;
   descripcion?: string;
   description?: string;
-  estado?: { nombre: string } | string;
+  estadoId?: number;
+  estado?: { id?: number; nombre: string } | number | string;
   createdAt?: string;
 }
+
+const MAPA_ESTADOS: Record<number, { label: string; color: string }> = {
+  1: { label: "Abierto", color: "bg-blue-100 text-blue-800" },
+  2: { label: "En Progreso", color: "bg-amber-100 text-amber-800" },
+  3: { label: "Resuelto", color: "bg-emerald-100 text-emerald-800" },
+  4: { label: "Cerrado", color: "bg-gray-100 text-gray-800" },
+};
 
 export const UserDashboardPage: React.FC = () => {
   const navigate = useNavigate();
@@ -22,7 +30,6 @@ export const UserDashboardPage: React.FC = () => {
   const [asunto, setAsunto] = useState("");
   const [descripcion, setDescripcion] = useState("");
 
-  // Leemos la sesión activa de la pestaña
   const usuarioRaw = sessionStorage.getItem("usuario");
   let usuario = null;
   try {
@@ -63,7 +70,7 @@ export const UserDashboardPage: React.FC = () => {
         descripcion: descripcion,
         categoria: 1,
         prioridad: 1,
-        estado: 1,      // <-- ID del estado inicial (Abierto / Pendiente)
+        estado: 1,
         status: 1,
       });
       setAsunto("");
@@ -74,9 +81,14 @@ export const UserDashboardPage: React.FC = () => {
     }
   };
 
+  const ticketsActivos = tickets.filter((t) => {
+    const estadoId = Number(t.estadoId ?? (typeof t.estado === "object" ? t.estado?.id : t.estado)) || 1;
+    return estadoId !== 4;
+  });
+
   return (
     <div className="max-w-5xl mx-auto p-6 space-y-8">
-      {/* Encabezado con información del solicitante y botón Cerrar sesión */}
+      {/* Encabezado */}
       <header className="border-b pb-4 flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-gray-800">Panel de Solicitante</h1>
@@ -93,7 +105,7 @@ export const UserDashboardPage: React.FC = () => {
         </button>
       </header>
 
-      {/* Formulario de Nuevo Ticket */}
+      {/* Formulario */}
       <section className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
         <h2 className="text-lg font-semibold text-gray-700 mb-4">Crear Nuevo Ticket</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -128,28 +140,37 @@ export const UserDashboardPage: React.FC = () => {
         </form>
       </section>
 
-      {/* Listado de Tickets */}
+      {/* Listado de Tickets Activos */}
       <section>
-        <h2 className="text-lg font-semibold text-gray-700 mb-4">Mis Tickets</h2>
+        <h2 className="text-lg font-semibold text-gray-700 mb-4">Mis Tickets Activos</h2>
         {loading ? (
           <p className="text-gray-500">Cargando tickets...</p>
         ) : error ? (
           <p className="text-red-500">{error}</p>
-        ) : tickets.length === 0 ? (
-          <p className="text-gray-500">No hay tickets registrados todavía.</p>
+        ) : ticketsActivos.length === 0 ? (
+          <p className="text-gray-500">No hay tickets activos en este momento.</p>
         ) : (
           <div className="grid gap-4">
-            {tickets.map((t) => (
-              <div key={t.id} className="p-4 bg-white border rounded-lg shadow-sm flex justify-between items-center">
-                <div>
-                  <h3 className="font-semibold text-gray-800">{t.asunto || t.title}</h3>
-                  <p className="text-sm text-gray-600">{t.descripcion || t.description}</p>
+            {ticketsActivos.map((t) => {
+              const estadoId =
+                Number(t.estadoId ?? (typeof t.estado === "object" ? t.estado?.id : t.estado)) || 1;
+              const estadoInfo = MAPA_ESTADOS[estadoId] || {
+                label: `Estado ${estadoId}`,
+                color: "bg-gray-100 text-gray-800",
+              };
+
+              return (
+                <div key={t.id} className="p-4 bg-white border rounded-lg shadow-sm flex justify-between items-center">
+                  <div>
+                    <h3 className="font-semibold text-gray-800">{t.asunto || t.title}</h3>
+                    <p className="text-sm text-gray-600">{t.descripcion || t.description}</p>
+                  </div>
+                  <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${estadoInfo.color}`}>
+                    {estadoInfo.label}
+                  </span>
                 </div>
-                <span className="text-xs px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 font-medium">
-                  {typeof t.estado === "object" ? t.estado?.nombre : t.estado || "Abierto"}
-                </span>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </section>

@@ -8,10 +8,19 @@ interface Ticket {
   title?: string;
   descripcion?: string;
   description?: string;
-  estado?: { nombre: string } | string;
-  prioridad?: { nombre: string } | string;
+  estadoId?: number;
+  estado?: { id?: number; nombre: string } | number | string;
+  prioridadId?: number;
+  prioridad?: { nombre: string } | number | string;
   usuario?: { nombre: string } | string;
 }
+
+const MAPA_ESTADOS: Record<number, { label: string; color: string }> = {
+  1: { label: "Abierto", color: "bg-blue-100 text-blue-800" },
+  2: { label: "En Progreso", color: "bg-amber-100 text-amber-800" },
+  3: { label: "Resuelto", color: "bg-emerald-100 text-emerald-800" },
+  4: { label: "Cerrado", color: "bg-gray-100 text-gray-800" },
+};
 
 export const AdminPage: React.FC = () => {
   const navigate = useNavigate();
@@ -19,7 +28,6 @@ export const AdminPage: React.FC = () => {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Leemos los datos de la sesión activa en la pestaña
   const usuarioRaw = sessionStorage.getItem("usuario");
   let usuario = null;
   try {
@@ -50,9 +58,15 @@ export const AdminPage: React.FC = () => {
     cargarDatos();
   }, []);
 
+  // Filtramos los que no estén cerrados para el listado activo
+  const ticketsActivos = tickets.filter((t) => {
+    const estadoId = Number(t.estadoId ?? (typeof t.estado === "object" ? t.estado?.id : t.estado)) || 1;
+    return estadoId !== 4;
+  });
+
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-8">
-      {/* Encabezado con información de usuario y botón de Logout */}
+      {/* Encabezado */}
       <header className="border-b pb-4 flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold text-gray-800">Panel de Administración</h1>
@@ -69,7 +83,7 @@ export const AdminPage: React.FC = () => {
         </button>
       </header>
 
-      {/* Accesos rápidos a la gestión de entidades */}
+      {/* Accesos rápidos */}
       <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Link
           to="/usuarios"
@@ -97,7 +111,7 @@ export const AdminPage: React.FC = () => {
       {/* Tabla general de tickets */}
       <section className="bg-white border border-gray-200 rounded-lg shadow-sm p-6">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold text-gray-800">Todos los Tickets del Sistema</h2>
+          <h2 className="text-xl font-semibold text-gray-800">Tickets Activos del Sistema</h2>
           <button
             onClick={cargarDatos}
             className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md transition"
@@ -110,8 +124,8 @@ export const AdminPage: React.FC = () => {
           <p className="text-gray-500">Cargando tickets...</p>
         ) : error ? (
           <p className="text-red-500">{error}</p>
-        ) : tickets.length === 0 ? (
-          <p className="text-gray-500">No hay tickets registrados en el sistema.</p>
+        ) : ticketsActivos.length === 0 ? (
+          <p className="text-gray-500">No hay tickets activos registrados en el sistema.</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
@@ -120,24 +134,29 @@ export const AdminPage: React.FC = () => {
                   <th className="p-3">ID</th>
                   <th className="p-3">Asunto</th>
                   <th className="p-3">Estado</th>
-                  <th className="p-3">Prioridad</th>
                 </tr>
               </thead>
               <tbody className="divide-y text-sm">
-                {tickets.map((t) => (
-                  <tr key={t.id} className="hover:bg-gray-50">
-                    <td className="p-3 font-medium text-gray-900">#{t.id}</td>
-                    <td className="p-3 text-gray-700">{t.asunto || t.title}</td>
-                    <td className="p-3">
-                      <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                        {typeof t.estado === "object" ? t.estado?.nombre : t.estado || "Abierto"}
-                      </span>
-                    </td>
-                    <td className="p-3 text-gray-600">
-                      {typeof t.prioridad === "object" ? t.prioridad?.nombre : t.prioridad || "Normal"}
-                    </td>
-                  </tr>
-                ))}
+                {ticketsActivos.map((t) => {
+                  const estadoId =
+                    Number(t.estadoId ?? (typeof t.estado === "object" ? t.estado?.id : t.estado)) || 1;
+                  const estadoInfo = MAPA_ESTADOS[estadoId] || {
+                    label: `Estado ${estadoId}`,
+                    color: "bg-gray-100 text-gray-800",
+                  };
+
+                  return (
+                    <tr key={t.id} className="hover:bg-gray-50">
+                      <td className="p-3 font-medium text-gray-900">#{t.id}</td>
+                      <td className="p-3 text-gray-700">{t.asunto || t.title}</td>
+                      <td className="p-3">
+                        <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${estadoInfo.color}`}>
+                          {estadoInfo.label}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
