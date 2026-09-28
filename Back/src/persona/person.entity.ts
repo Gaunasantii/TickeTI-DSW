@@ -1,5 +1,5 @@
 import { defineEntity , p, type EventArgs, type InferEntity } from "@mikro-orm/core";
-
+import { TicketSchema } from "../ticket/ticket.entity.js";
 
 export const PersonSchema=defineEntity({
     name:'person',
@@ -13,6 +13,7 @@ export const PersonSchema=defineEntity({
         mail:p.string(),
         pass:p.string(),
         type:p.string(),
+        tickets:() => p.oneToMany(TicketSchema).mappedBy('usuario').nullable()
     },
 });
 
