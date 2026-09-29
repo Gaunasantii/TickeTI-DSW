@@ -1,4 +1,3 @@
-import { date } from "zod";
 import { NotFoundError } from "../utils/base.error.js";
 import { ticketDAO } from "./ticket.DAO.js";
 
@@ -8,7 +7,7 @@ export class TicketService {
   }
 
   static async createTicket(ticketInput: any) {
-    ticketInput={...ticketInput,fechaCreacion:date()}
+    ticketInput={...ticketInput,fechaCreacion:new Date()}
     return await ticketDAO.createTicket(ticketInput);
   }
 
