@@ -1,4 +1,3 @@
-import { orm } from "../config/db.js";
 import { defineEntity , p, type EventArgs, type InferEntity } from "@mikro-orm/core";
 import { UserSchema } from "../usuario/usuario.entity.js";
 import { EstadoSchema } from "../estado/estado.entity.js";
@@ -17,6 +16,7 @@ export const TicketSchema = defineEntity({
         id:p.integer().primary().autoincrement(),
         title:p.string(),
         description:p.string(),
+        fechaCreacion:p.datetime(),
         estado:() => p.manyToOne(EstadoSchema),
         prioridad:() => p.manyToOne(PrioridadSchema),
         categoria:() => p.manyToOne(CategoriaSchema),
@@ -25,37 +25,3 @@ export const TicketSchema = defineEntity({
         empresa:()=> p.manyToOne(EmpresaSchema)
     }
 })
-
-
-
-/*
-const Ticket = sequelize.define('Ticket', {
-    titulo: { 
-        type: DataTypes.STRING, 
-        allowNull: false 
-    },
-    descripcion: { 
-        type: DataTypes.TEXT, 
-        allowNull: false 
-    },
-    prioridad: { 
-        type: DataTypes.ENUM('Baja', 'Media', 'Alta', 'Urgente'), // Agregué Urgente para que coincida con el Front
-        defaultValue: 'Baja' 
-    },
-    categoria: { 
-        type: DataTypes.ENUM('', 'Hardware', 'Software', 'Redes', 'Accesos'), 
-        allowNull: false 
-    },
-    estado: { 
-        type: DataTypes.ENUM('Abierto', 'En Proceso', 'Cerrado'), 
-        defaultValue: 'Abierto' 
-    },
-    dni: { 
-        type: DataTypes.INTEGER,
-        allowNull: false 
-    }
-});
-
-module.exports = Ticket;
-
-*/

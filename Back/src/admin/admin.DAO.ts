@@ -1,4 +1,4 @@
-import { orm } from "../config/db.js";
+import { orm } from "../config/DataBase/db.js";
 import { ConflictError, DatabaseError, NotFoundError } from "../utils/base.error.js";
 import { adminSchema } from "./admin.entity.js";
 import { mapDbErrorToAppError } from "../utils/DbErrorMapper.js";

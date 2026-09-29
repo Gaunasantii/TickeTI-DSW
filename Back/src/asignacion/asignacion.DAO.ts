@@ -1,4 +1,4 @@
-import { orm } from "../config/db.js";
+import { orm } from "../config/DataBase/db.js";
 import { mapDbErrorToAppError } from "../utils/DbErrorMapper.js";
 import { asignacionSchema } from "./asignacion.entity.js";
 

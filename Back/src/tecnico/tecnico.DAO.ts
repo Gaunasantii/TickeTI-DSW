@@ -1,4 +1,4 @@
-import { orm } from "../config/db.js";
+import { orm } from "../config/DataBase/db.js";
 import { mapDbErrorToAppError } from "../utils/DbErrorMapper.js";
 import { TecnicoSchema } from "./tecnico.entity.js";
 

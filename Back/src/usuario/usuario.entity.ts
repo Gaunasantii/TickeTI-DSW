@@ -1,4 +1,3 @@
-import { orm } from "../config/db.js";
 import { defineEntity , p, type EventArgs, type InferEntity } from "@mikro-orm/core";
 import { TicketSchema } from "../ticket/ticket.entity.js";
 import { OficinaSchema } from "../oficinas/oficina.entity.js";

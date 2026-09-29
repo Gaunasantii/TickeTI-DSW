@@ -1,4 +1,4 @@
-import { orm } from "../config/db.js";
+import { orm } from "../config/DataBase/db.js";
 import { PersonSchema } from "../persona/person.entity.js";
 
 export class authDAO {
