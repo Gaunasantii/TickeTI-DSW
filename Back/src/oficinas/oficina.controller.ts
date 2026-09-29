@@ -9,7 +9,7 @@ import type { ModifyOficinaInBodyDto, ModifyOficinaInParamsDto } from "./DTO/Mod
 class oficinaController {
 
   async createOficina(req: Request<any,any,CreateOficinaInDto>, res: Response) {
-      const oficinaInput = req.body;
+      const oficinaInput = {...req.body,empresa:req.user.empresa};
       await OficinaService.createOficina(oficinaInput)
       res.status(201).json(new ApiSuccessResponse<null>(null,"Oficina Creada con exito"));
     
