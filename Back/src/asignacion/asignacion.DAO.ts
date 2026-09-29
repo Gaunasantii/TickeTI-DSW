@@ -13,7 +13,7 @@ export class asignacionDAO {
 
   static async findAll(filters: any) {
       const em = orm.em ;
-      const asignacionRecovered = await em.findAll(asignacionSchema, filters);
+      const asignacionRecovered = await em.find(asignacionSchema, filters);
       return asignacionRecovered;
   }
 

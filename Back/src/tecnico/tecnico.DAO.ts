@@ -13,7 +13,7 @@ export class tecnicoDAO {
 
   static async findAll(filters: any) {
       const em = orm.em;
-      const tecnicoRecovered = await em.findAll(TecnicoSchema, filters);
+      const tecnicoRecovered = await em.find(TecnicoSchema, filters);
       return tecnicoRecovered;
   }
 

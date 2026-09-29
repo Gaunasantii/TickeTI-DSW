@@ -5,7 +5,7 @@ import { PrioridadSchema } from "./prioridad.entity.js";
 export class prioridadDAO {
   static async findAll(filters: any) {
     const em = orm.em ;
-    const prioridadRecovered = await em.findAll(PrioridadSchema, filters);
+    const prioridadRecovered = await em.find(PrioridadSchema, filters);
     return prioridadRecovered;
   }
 

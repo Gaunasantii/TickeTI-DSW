@@ -5,7 +5,7 @@ import { CategoriaSchema } from "./categoria.entity.js";
 export class categoriaDAO {
   static async findAll(filters: any) {
       const em = orm.em ;
-      const categoriaRecovered = await em.findAll(CategoriaSchema, filters);
+      const categoriaRecovered = await em.find(CategoriaSchema, filters);
       return categoriaRecovered;
   }
 

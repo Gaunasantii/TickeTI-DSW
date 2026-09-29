@@ -13,7 +13,7 @@ export class userDAO {
 
   static async findAll(filters: any) {
       const em = orm.em ;
-      const usersRecovered = await em.findAll(UserSchema, filters);
+      const usersRecovered = await em.find(UserSchema, filters);
       return usersRecovered;
     
   }

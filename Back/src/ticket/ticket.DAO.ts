@@ -6,7 +6,7 @@ import { TicketSchema } from "./ticket.entity.js";
 export class ticketDAO {
   static async findAll(filters: any) {
       const em = orm.em ;
-      const ticketRecovered = await em.findAll(TicketSchema, filters);
+      const ticketRecovered = await em.find(TicketSchema, filters);
       return ticketRecovered;
   }
 

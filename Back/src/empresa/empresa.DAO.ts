@@ -5,7 +5,7 @@ import { EmpresaSchema } from "./empresa.entity.js";
 export class empresaDAO {
   static async findAll(filters: any) {
       const em = orm.em ;
-      const empresaRecovered = await em.findAll(EmpresaSchema, filters);
+      const empresaRecovered = await em.find(EmpresaSchema, filters);
       return empresaRecovered;
   }
 

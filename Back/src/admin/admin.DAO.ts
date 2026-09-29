@@ -14,7 +14,7 @@ export class adminDAO {
 
   static async findAll(filters: any) {
       const em = orm.em ;
-      const adminRecovered = await em.findAll(adminSchema, filters);
+      const adminRecovered = await em.find(adminSchema, filters);
       return adminRecovered;
   }
 
