@@ -1,58 +1,35 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
-import { crearTicket } from "../../services/TicketServices/CrearTicket";
+import React, { useEffect, useMemo, useState } from "react";
+import { DashboardLayout } from "../../components/Layout/DashboardLayout";
+import { TicketDashboardView, TicketItem } from "../../components/tickets/TicketDashboardView";
 import { obtenerTickets } from "../../services/TicketServices/ObtenerTickets";
-
-interface Ticket {
-  id: string | number;
-  asunto?: string;
-  title?: string;
-  descripcion?: string;
-  description?: string;
-  estadoId?: number;
-  estado?: { id?: number; nombre: string } | number | string;
-  createdAt?: string;
-}
-
-const MAPA_ESTADOS: Record<number, { label: string; color: string }> = {
-  1: { label: "Abierto", color: "bg-blue-100 text-blue-800" },
-  2: { label: "En Progreso", color: "bg-amber-100 text-amber-800" },
-  3: { label: "Resuelto", color: "bg-emerald-100 text-emerald-800" },
-  4: { label: "Cerrado", color: "bg-gray-100 text-gray-800" },
-};
+import { crearTicket } from "../../services/TicketServices/CrearTicket";
 
 export const UserDashboardPage: React.FC = () => {
-  const navigate = useNavigate();
-  const [tickets, setTickets] = useState<Ticket[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [todosLosTickets, setTodosLosTickets] = useState<TicketItem[]>([]);
+  const [cargando, setCargando] = useState(true);
 
+  const [mostrarForm, setMostrarForm] = useState(false);
   const [asunto, setAsunto] = useState("");
   const [descripcion, setDescripcion] = useState("");
+  const [creando, setCreando] = useState(false);
 
   const usuarioRaw = sessionStorage.getItem("usuario");
-  let usuario = null;
+  let usuario: any = null;
   try {
     usuario = usuarioRaw ? JSON.parse(usuarioRaw) : null;
   } catch {
     usuario = null;
   }
 
-  const handleLogout = () => {
-    sessionStorage.removeItem("usuario");
-    navigate("/login");
-  };
-
   const cargarTickets = async () => {
     try {
-      setLoading(true);
-      setError(null);
+      setCargando(true);
       const res = await obtenerTickets();
-      setTickets(res);
+      setTodosLosTickets(res);
     } catch (err: any) {
-      setError(err.message || "Error al cargar los tickets");
+      console.error("Error al cargar tickets:", err);
     } finally {
-      setLoading(false);
+      setCargando(false);
     }
   };
 
@@ -60,14 +37,29 @@ export const UserDashboardPage: React.FC = () => {
     cargarTickets();
   }, []);
 
+  const misTickets = useMemo(() => {
+    const miDni = String(usuario?.dni || "").trim();
+    if (!miDni) return todosLosTickets;
+
+    return todosLosTickets.filter((t) => {
+      const ticketDni = String(
+        t.usuarioDni ||
+        t.usuario_dni ||
+        (typeof t.usuario === "object" ? t.usuario?.dni : t.usuario) ||
+        ""
+      ).trim();
+      return ticketDni === miDni;
+    });
+  }, [todosLosTickets, usuario]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // Obtenemos el DNI del usuario logueado en la sesión
+      setCreando(true);
       const dniUsuario = String(usuario?.dni || usuario?.id || "").trim();
 
       if (!dniUsuario || dniUsuario.length < 8) {
-        alert("El usuario de la sesión debe tener un DNI numérico válido de al menos 8 dígitos.");
+        alert("El usuario debe tener un DNI numérico válido de al menos 8 dígitos.");
         return;
       }
 
@@ -82,106 +74,97 @@ export const UserDashboardPage: React.FC = () => {
 
       setAsunto("");
       setDescripcion("");
+      setMostrarForm(false);
       await cargarTickets();
+      alert("Ticket reportado exitosamente.");
     } catch (err: any) {
       alert(err.message || "Error al crear el ticket");
+    } finally {
+      setCreando(false);
     }
   };
 
-  const ticketsActivos = tickets.filter((t) => {
-    const estadoId = Number(t.estadoId ?? (typeof t.estado === "object" ? t.estado?.id : t.estado)) || 1;
-    return estadoId !== 4;
-  });
-
   return (
-    <div className="max-w-5xl mx-auto p-6 space-y-8">
-      {/* Encabezado */}
-      <header className="border-b pb-4 flex justify-between items-center">
+    <DashboardLayout>
+      <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">Panel de Solicitante</h1>
-          <p className="text-sm text-gray-500">
-            Reportá incidencias y seguí el avance de tus tickets | Usuario:{" "}
-            <strong className="text-gray-700 capitalize">{usuario?.name || "Usuario"}</strong>
+          <h1 className="text-2xl font-bold text-slate-800">Centro de Asistencia</h1>
+          <p className="text-sm text-slate-500">
+            Reportá incidentes técnicos y hacé el seguimiento de tus solicitudes
           </p>
         </div>
-        <button
-          onClick={handleLogout}
-          className="px-4 py-2 text-sm font-semibold text-red-600 border border-red-200 rounded-md hover:bg-red-50 transition active:scale-95"
-        >
-          Cerrar sesión
-        </button>
-      </header>
 
-      {/* Formulario */}
-      <section className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-        <h2 className="text-lg font-semibold text-gray-700 mb-4">Crear Nuevo Ticket</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">Asunto</label>
-            <input
-              type="text"
-              required
-              value={asunto}
-              onChange={(e) => setAsunto(e.target.value)}
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Ej: Falla de red en oficina 2"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-600 mb-1">Descripción</label>
-            <textarea
-              required
-              rows={3}
-              value={descripcion}
-              onChange={(e) => setDescripcion(e.target.value)}
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              placeholder="Describí los detalles de la falla..."
-            />
-          </div>
+        {/* Barra alargada a lo ancho para desplegar el formulario */}
+        <div className="w-full">
           <button
-            type="submit"
-            className="px-4 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition"
+            onClick={() => setMostrarForm(!mostrarForm)}
+            className="w-full py-3.5 px-6 bg-white hover:bg-slate-50 border-2 border-dashed border-blue-300 hover:border-blue-500 text-blue-600 rounded-2xl font-semibold text-sm transition-all shadow-sm flex items-center justify-between"
           >
-            Enviar Ticket
+            <span>{mostrarForm ? "Ocultar formulario de ticket" : "+ Reportar nuevo problema o incidencia"}</span>
+            <span className="text-xs bg-blue-50 px-3 py-1 rounded-full">
+              {mostrarForm ? "Cerrar" : "Crear ticket"}
+            </span>
           </button>
-        </form>
-      </section>
+        </div>
 
-      {/* Listado de Tickets Activos */}
-      <section>
-        <h2 className="text-lg font-semibold text-gray-700 mb-4">Mis Tickets Activos</h2>
-        {loading ? (
-          <p className="text-gray-500">Cargando tickets...</p>
-        ) : error ? (
-          <p className="text-red-500">{error}</p>
-        ) : ticketsActivos.length === 0 ? (
-          <p className="text-gray-500">No hay tickets activos en este momento.</p>
-        ) : (
-          <div className="grid gap-4">
-            {ticketsActivos.map((t) => {
-              const estadoId =
-                Number(t.estadoId ?? (typeof t.estado === "object" ? t.estado?.id : t.estado)) || 1;
-              const estadoInfo = MAPA_ESTADOS[estadoId] || {
-                label: `Estado ${estadoId}`,
-                color: "bg-gray-100 text-gray-800",
-              };
+        {mostrarForm && (
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+            <h2 className="text-lg font-bold text-slate-800">Generar Solicitud de Soporte</h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">Título del problema</label>
+                <input
+                  type="text"
+                  required
+                  value={asunto}
+                  onChange={(e) => setAsunto(e.target.value)}
+                  placeholder="Ej: Falla al encender equipo o conexión de red"
+                  className="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
+                />
+              </div>
 
-              return (
-                <div key={t.id} className="p-4 bg-white border rounded-lg shadow-sm flex justify-between items-center">
-                  <div>
-                    <h3 className="font-semibold text-gray-800">{t.asunto || t.title}</h3>
-                    <p className="text-sm text-gray-600">{t.descripcion || t.description}</p>
-                  </div>
-                  <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${estadoInfo.color}`}>
-                    {estadoInfo.label}
-                  </span>
-                </div>
-              );
-            })}
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">Descripción detallada</label>
+                <textarea
+                  required
+                  rows={3}
+                  value={descripcion}
+                  onChange={(e) => setDescripcion(e.target.value)}
+                  placeholder="Describí los detalles de la falla que estás experimentando..."
+                  className="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
+                />
+              </div>
+
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => setMostrarForm(false)}
+                  className="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-100 rounded-xl transition"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={creando}
+                  className="px-5 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition disabled:opacity-50"
+                >
+                  {creando ? "Enviando..." : "Enviar Solicitud"}
+                </button>
+              </div>
+            </form>
           </div>
         )}
-      </section>
-    </div>
+
+        {/* Listado de tickets sin las métricas superiores */}
+        <TicketDashboardView
+          tickets={misTickets}
+          cargando={cargando}
+          onRefresh={cargarTickets}
+          mostrarAccionesEstado={false}
+          mostrarMetricas={false}
+        />
+      </div>
+    </DashboardLayout>
   );
 };
 
