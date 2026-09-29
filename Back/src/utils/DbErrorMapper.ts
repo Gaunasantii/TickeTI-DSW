@@ -23,11 +23,5 @@ export function mapDbErrorToAppError(error: any):never {
     if(error instanceof NotNullConstraintViolationException){
         throw new DatabaseError("Se ha intentado insertar un valor nulo en una columna que no permite nulos.", error.message);
     }
-
-    //Nota para quien no nosotros lo haga, al incorporar
-    //un validator este error debe ser removido
-    if(error instanceof MikroORMvalidationError){
-        throw new ValidationError("Error de validación en la base de datos", error.message);
-    }
     throw new DatabaseError("Error en la base de datos",error.stack);
 }

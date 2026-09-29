@@ -19,6 +19,7 @@ export class asignacionDAO {
 
   static async updateAsignacion(asignacionInput: any, asignacionFound: any) {
       const em = orm.em ;
+      console.log("DATA RECIBIDA DEL CONTROLLER:", asignacionInput);
       em.assign(asignacionFound, asignacionInput);
       await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
       return asignacionFound;

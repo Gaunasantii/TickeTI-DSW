@@ -1,6 +1,8 @@
 import Express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import zod from 'zod';
+import {es} from 'zod/locales';
 import { initOrm, orm, checkDb, syncSchema } from './config/db.js';
 import { userrouter } from './usuario/usuario.routes.js';
 import { estadoRouter } from './estado/estado.routes.js';
@@ -26,6 +28,7 @@ await initOrm();
 syncSchema();
 await checkDb();
 
+zod.config(es());
 // Middlewares
 app.use(cors({
     origin: "http://localhost:5173",
