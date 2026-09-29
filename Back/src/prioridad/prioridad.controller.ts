@@ -10,7 +10,6 @@ class prioridadController {
   async createPrioridad(req: Request<any,any,CreatePrioridadInDto>, res: Response) {
     const prioridadInput = {...req.body,empresa:req.user.empresa};
     await PrioridadService.createPrioridad(prioridadInput)
-
     res.status(201).json(new ApiSuccessResponse<null>(null,"Nueva prioridad creada"));
   };
 
