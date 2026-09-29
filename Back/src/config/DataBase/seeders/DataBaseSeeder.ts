@@ -10,10 +10,12 @@ import { TecnicoSeeder } from './TecnicoSeeder.js';
 import { UsuarioSeeder } from './UsuarioSeeder.js';
 import { TicketSeeder } from './TicketSeeder.js';
 import { AsignacionSeeder } from './AsignacionSchema.js';
+import { SuperAdminSeeder } from './SuperAdminSeeder.js';
 
 export class DatabaseSeeder extends Seeder {
   async run(em: EntityManager): Promise<void> {
     return this.call(em, [
+      SuperAdminSeeder,
       EmpresaSeeder,
       PrioridadSeeder,
       EstadoSeeder,
