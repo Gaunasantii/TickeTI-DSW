@@ -3,18 +3,8 @@ import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../utils/jwt.js";
 import { UnauthorizedError, ForbiddenError } from "../utils/base.error.js";
 
-export interface AuthRequest extends Request {
-  user?: {
-    dni: string;
-    rol: string;
-    email: string;
-    name: string;
-    [key: string]: any;
-  };
-}
-
 export const authenticateToken = (
-  req: AuthRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
@@ -25,7 +15,7 @@ export const authenticateToken = (
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as AuthRequest["user"];
+    const decoded = jwt.verify(token, JWT_SECRET);
     req.user = decoded as any;
     next();
   } catch (error: any) {
