@@ -1,4 +1,4 @@
-import { orm } from "../config/db.js";
+import { orm } from "../config/DataBase/db.js";
 import { mapDbErrorToAppError } from "../utils/DbErrorMapper.js";
 import { asignacionSchema } from "./asignacion.entity.js";
 
@@ -13,7 +13,7 @@ export class asignacionDAO {
 
   static async findAll(filters: any) {
       const em = orm.em ;
-      const asignacionRecovered = await em.findAll(asignacionSchema, filters);
+      const asignacionRecovered = await em.find(asignacionSchema, filters);
       return asignacionRecovered;
   }
 

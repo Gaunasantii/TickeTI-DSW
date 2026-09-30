@@ -3,7 +3,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import zod from 'zod';
 import {es} from 'zod/locales';
-import { initOrm, orm, checkDb, syncSchema } from './config/db.js';
+import { initOrm, orm, checkDb, syncSchema } from './config/DataBase/db.js';
 import { userrouter } from './usuario/usuario.routes.js';
 import { estadoRouter } from './estado/estado.routes.js';
 import { adminrouter } from './admin/admin.routes.js';

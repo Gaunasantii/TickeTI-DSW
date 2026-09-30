@@ -8,7 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx tsx src/app.ts",
     "build": "tsc",
-    "start": "node dist/app.js"
+    "start": "node dist/app.js",
+    "poblar":"mikro-orm seeder:run --config ./src/config/DataBase/db.config.ts"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +17,7 @@
   "dependencies": {
     "@mikro-orm/core": "7.0.11",
     "@mikro-orm/mysql": "7.0.11",
+    "@mikro-orm/seeder": "7.0.11",
     "@types/cors": "2.8.19",
     "cookie-parser": "^1.4.7",
     "cors": "2.8.6",
@@ -27,6 +29,7 @@
     "zod": "4.6.5"
   },
   "devDependencies": {
+    "@mikro-orm/cli": "7.0.11",
     "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
