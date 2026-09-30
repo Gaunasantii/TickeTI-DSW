@@ -16,14 +16,26 @@ type AuthContextType = {
 const authContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-    const [usuario, setUsuario] = useState<Usuario | null>(null);
+    const [usuario, setUsuario] = useState<Usuario | null>(() => {
+    const usuarioGuardado = sessionStorage.getItem("usuario");
+    if (usuarioGuardado) {
+      try {
+        return JSON.parse(usuarioGuardado);
+      } catch {
+        return null;
+      }
+    }
+    return null;
+    });
 
     const login = (nuevoUsuario: Usuario) => {
         setUsuario(nuevoUsuario);
+        sessionStorage.setItem("usuario", JSON.stringify(nuevoUsuario));
     };
 
     const logout = () => {
         setUsuario(null);
+        sessionStorage.removeItem("usuario");
     };
 
     return (
