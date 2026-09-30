@@ -14,34 +14,14 @@ export const OficinaPage: React.FC = () => {
   const [nombre, setNombre] = useState("");
   const [editandoId, setEditandoId] = useState<number | string | null>(null);
   const [guardando, setGuardando] = useState(false);
-  const [empresaIdRespaldo, setEmpresaIdRespaldo] = useState<number | null>(null);
 
-  // Recuperar empresa del usuario en sesión
-  const usuarioRaw = sessionStorage.getItem("usuario");
-  const usuario = usuarioRaw ? JSON.parse(usuarioRaw) : null;
-  const miEmpresaId = Number(
-    usuario?.empresaId ||
-    usuario?.empresa?.id ||
-    usuario?.empresa_id ||
-    (typeof usuario?.empresa === "number" ? usuario.empresa : null)
-  );
-
-  const cargarDatos = async () => {
+  const cargarOficinas = async () => {
     try {
       setCargando(true);
-      const resOficinas = await api("/oficinas").catch(() => api("/oficina"));
-      const dataOficinas = await resOficinas.json();
-      setOficinas(Array.isArray(dataOficinas) ? dataOficinas : dataOficinas.data || []);
-
-      // Si el usuario no tiene la empresa en su sessionStorage, obtenemos la primera registrada
-      if (!miEmpresaId) {
-        const resEmpresas = await api("/empresas").catch(() => api("/empresa"));
-        const dataEmpresas = await resEmpresas.json();
-        const lista = Array.isArray(dataEmpresas) ? dataEmpresas : dataEmpresas.data || [];
-        if (lista.length > 0) {
-          setEmpresaIdRespaldo(Number(lista[0].id));
-        }
-      }
+      const res = await api("/oficinas").catch(() => api("/oficina"));
+      const json = await res.json();
+      const lista: OficinaItem[] = Array.isArray(json) ? json : json?.data || [];
+      setOficinas(lista);
     } catch (err) {
       console.error("Error al cargar oficinas:", err);
     } finally {
@@ -50,29 +30,36 @@ export const OficinaPage: React.FC = () => {
   };
 
   useEffect(() => {
-    cargarDatos();
+    cargarOficinas();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!nombre.trim()) return;
 
-    const idEmpresaFinal = miEmpresaId || empresaIdRespaldo || 1;
-
     try {
       setGuardando(true);
 
+      // Enviamos nombre y un fallback numérico para que el validador Zod no tire 400.
+      // El backend sobreescribe 'empresa' con req.user.empresa desde el token.
       const payload = {
         nombre: nombre.trim(),
-        empresa: Number(idEmpresaFinal),
+        empresa: 1,
       };
 
       const url = editandoId ? `/oficinas/${editandoId}` : "/oficinas";
       const fallbackUrl = editandoId ? `/oficina/${editandoId}` : "/oficina";
       const method = editandoId ? "PUT" : "POST";
 
-      const res = await api(url, { method, body: JSON.stringify(payload) })
-        .catch(() => api(fallbackUrl, { method, body: JSON.stringify(payload) }));
+      const res = await api(url, {
+        method,
+        body: JSON.stringify(payload),
+      }).catch(() =>
+        api(fallbackUrl, {
+          method,
+          body: JSON.stringify(payload),
+        })
+      );
 
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
@@ -81,7 +68,7 @@ export const OficinaPage: React.FC = () => {
 
       setNombre("");
       setEditandoId(null);
-      await cargarDatos();
+      await cargarOficinas();
     } catch (err: any) {
       alert(err.message || "Error al guardar");
     } finally {
@@ -92,8 +79,10 @@ export const OficinaPage: React.FC = () => {
   const handleEliminar = async (id: number | string) => {
     if (!window.confirm("¿Deseás eliminar esta oficina?")) return;
     try {
-      await api(`/oficinas/${id}`, { method: "DELETE" }).catch(() => api(`/oficina/${id}`, { method: "DELETE" }));
-      await cargarDatos();
+      await api(`/oficinas/${id}`, { method: "DELETE" }).catch(() =>
+        api(`/oficina/${id}`, { method: "DELETE" })
+      );
+      await cargarOficinas();
     } catch (err: any) {
       alert(err.message || "Error al eliminar");
     }
@@ -101,7 +90,9 @@ export const OficinaPage: React.FC = () => {
 
   const oficinasFiltradas = useMemo(() => {
     const q = busqueda.toLowerCase().trim();
-    return oficinas.filter((o) => !q || o.nombre.toLowerCase().includes(q) || String(o.id).includes(q));
+    return oficinas.filter(
+      (o) => !q || o.nombre?.toLowerCase().includes(q) || String(o.id).includes(q)
+    );
   }, [oficinas, busqueda]);
 
   return (
@@ -109,24 +100,36 @@ export const OficinaPage: React.FC = () => {
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-800">Gestión de Oficinas</h1>
-          <p className="text-sm text-slate-500">Administrá las dependencias y sedes de tu empresa</p>
+          <p className="text-sm text-slate-500">
+            Administrá las dependencias y sedes de la empresa
+          </p>
         </div>
 
-        {/* Formulario compacto de alta / edición */}
-        <form onSubmit={handleSubmit} className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row gap-3">
+        {/* Formulario de alta / edición */}
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row gap-3"
+        >
           <input
             type="text"
             required
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
-            placeholder={editandoId ? `Editando oficina #${editandoId}...` : "Nombre de la nueva oficina (ej: Sistemas - Piso 1)"}
+            placeholder={
+              editandoId
+                ? `Editando oficina #${editandoId}...`
+                : "Nombre de la nueva oficina (ej: Piso 1 - Soporte Técnico)"
+            }
             className="flex-1 px-4 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
           />
           <div className="flex gap-2">
             {editandoId && (
               <button
                 type="button"
-                onClick={() => { setEditandoId(null); setNombre(""); }}
+                onClick={() => {
+                  setEditandoId(null);
+                  setNombre("");
+                }}
                 className="px-4 py-2 text-xs font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition"
               >
                 Cancelar
@@ -148,10 +151,13 @@ export const OficinaPage: React.FC = () => {
             type="text"
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
-            placeholder="Filtrar por nombre o ID..."
+            placeholder="Filtrar oficina por nombre o ID..."
             className="flex-1 px-3 py-1.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white"
           />
-          <button onClick={cargarDatos} className="px-3 py-1.5 text-xs font-semibold bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200">
+          <button
+            onClick={cargarOficinas}
+            className="px-3 py-1.5 text-xs font-semibold bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200"
+          >
             Refrescar
           </button>
         </div>
@@ -161,7 +167,9 @@ export const OficinaPage: React.FC = () => {
           {cargando ? (
             <p className="p-8 text-center text-slate-500 text-sm">Cargando oficinas...</p>
           ) : oficinasFiltradas.length === 0 ? (
-            <p className="p-8 text-center text-slate-500 text-sm">No se encontraron oficinas registradas.</p>
+            <p className="p-8 text-center text-slate-500 text-sm">
+              No se encontraron oficinas registradas.
+            </p>
           ) : (
             <table className="w-full text-left border-collapse text-sm">
               <thead>
@@ -178,7 +186,10 @@ export const OficinaPage: React.FC = () => {
                     <td className="p-4 font-medium text-slate-800">{ofi.nombre}</td>
                     <td className="p-4 text-right space-x-2">
                       <button
-                        onClick={() => { setEditandoId(ofi.id); setNombre(ofi.nombre); }}
+                        onClick={() => {
+                          setEditandoId(ofi.id);
+                          setNombre(ofi.nombre);
+                        }}
                         className="px-2.5 py-1 text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200 rounded-lg hover:bg-blue-100"
                       >
                         Editar
