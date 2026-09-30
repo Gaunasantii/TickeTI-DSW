@@ -9,4 +9,4 @@ import { authorizeRoles } from "../middlewares/role.middleware.js";
 
 ticketrouter.post("/tickets",authenticateToken,authorizeRoles('tecnico','user'),ValidationMiddleware(CreateTicketSchema), ticketcontroller.createTicket);
 ticketrouter.get("/tickets",authenticateToken, ticketcontroller.findAll);
-ticketrouter.put("/tickets/:id",ValidationMiddleware(ModifyTicketSchema), ticketcontroller.updateTicket);
+ticketrouter.put("/tickets/:id",authenticateToken,ValidationMiddleware(ModifyTicketSchema), ticketcontroller.updateTicket);

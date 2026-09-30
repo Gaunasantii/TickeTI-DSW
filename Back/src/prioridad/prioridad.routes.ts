@@ -10,5 +10,5 @@ import { authorizeRoles } from "../middlewares/role.middleware.js";
 
 prioridadrouter.post("/prioridad",authenticateToken,authorizeRoles('admin'),ValidationMiddleware(CreatePrioridadSchema), prioridadcontroller.createPrioridad);
 prioridadrouter.get("/prioridad",authenticateToken, prioridadcontroller.findAll);
-prioridadrouter.put("/prioridad/:id",ValidationMiddleware(ModifyPrioridadSchema), prioridadcontroller.updatePrioridad);
-prioridadrouter.delete("/prioridad/:id",ValidationMiddleware(DeletePrioridadSchema), prioridadcontroller.deletePrioridad);
+prioridadrouter.put("/prioridad/:id",authenticateToken,ValidationMiddleware(ModifyPrioridadSchema), prioridadcontroller.updatePrioridad);
+prioridadrouter.delete("/prioridad/:id",authenticateToken,ValidationMiddleware(DeletePrioridadSchema), prioridadcontroller.deletePrioridad);

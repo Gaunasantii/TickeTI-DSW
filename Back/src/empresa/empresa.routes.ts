@@ -11,5 +11,5 @@ export const empresarouter:Router = Router();
 
 empresarouter.post("/empresas",authenticateToken,authorizeRoles('S_ADMIN'),ValidationMiddleware(CreateEmpresaSchema), empresacontroller.createEmpresa);
 empresarouter.get("/empresas", authenticateToken,empresacontroller.findAll);
-empresarouter.put("/empresas/:id",ValidationMiddleware(ModifyEmpresaSchema) ,empresacontroller.updateEmpresa);
-empresarouter.delete("/empresas/:id",ValidationMiddleware(DeleteEmpresaSchema), empresacontroller.deleteEmpresa);
+empresarouter.put("/empresas/:id",authenticateToken,ValidationMiddleware(ModifyEmpresaSchema) ,empresacontroller.updateEmpresa);
+empresarouter.delete("/empresas/:id",authenticateToken,ValidationMiddleware(DeleteEmpresaSchema), empresacontroller.deleteEmpresa);
