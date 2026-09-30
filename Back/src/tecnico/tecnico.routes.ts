@@ -9,6 +9,6 @@ import { authenticateToken } from "../middlewares/auth.middleware.js";
 import { authorizeRoles } from "../middlewares/role.middleware.js";
 
 tecnicorouter.post("/tecnicos",authenticateToken,authorizeRoles('admin'),ValidationMiddleware(createTecnicoSchema), tecnicocontroller.createTecnico);
-tecnicorouter.get("/tecnicos", tecnicocontroller.findAll);
+tecnicorouter.get("/tecnicos",authenticateToken, tecnicocontroller.findAll);
 tecnicorouter.put("/tecnicos/:dni",ValidationMiddleware(ModifyTecnicoSchema) ,tecnicocontroller.updateTecnico);
 tecnicorouter.delete("/tecnicos/:dni",ValidationMiddleware(DeleteTecnicoSchema), tecnicocontroller.deleteTecnico);

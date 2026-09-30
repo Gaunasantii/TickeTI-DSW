@@ -9,6 +9,6 @@ import { authenticateToken } from "../middlewares/auth.middleware.js";
 import { authorizeRoles } from "../middlewares/role.middleware.js";
 
 categoriarouter.post("/categorias",authenticateToken,authorizeRoles('admin'),ValidationMiddleware(CreateCategoriaSchema), Categoriacontroller.createCategoria);
-categoriarouter.get("/categorias", Categoriacontroller.findAll);
+categoriarouter.get("/categorias",authenticateToken, Categoriacontroller.findAll);
 categoriarouter.put("/categorias/:id",ValidationMiddleware(ModifyCategoriaSchema), Categoriacontroller.updateCategoria);
 categoriarouter.delete("/categorias/:id",ValidationMiddleware(DeleteCategoriaSchema), Categoriacontroller.deleteCategoria);
