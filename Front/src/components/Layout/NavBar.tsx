@@ -8,7 +8,7 @@ export const NavBar = () => {
     <nav className="flex sticky top-0 w-full flex-row p-5 bg-white shadow-md justify-between items-center z-50">
       <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate("/")}>
         <LogoIcon />
-        <span className="text-lg font-semibold text-gray-800">TicketTI Support</span>
+        <span className="text-lg font-semibold text-gray-800">TickeTI Support</span>
       </div>
 
       <div className="flex flex-row justify-end items-center gap-6">
