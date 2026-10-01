@@ -37,6 +37,24 @@ const options:Options={
         pathTs:'./src/config/DataBase/seeders',
         defaultSeeder:'DatabaseSeeder',
         glob: '!(*.d).{js,ts}'
+      },
+      filters:{
+        empresa:{cond:args=>{
+          if (args.bypass) {
+            return {};
+          }
+          return { empresa: args.empresa }
+        },
+        default:true,
+        entity:[
+          'tecnico'
+          ,'user'
+          ,'oficina'
+          ,'estado'
+          ,'prioridad'
+          ,'asignacion'
+          ,'categoria'
+          ,'ticket']}
       }
     }
 

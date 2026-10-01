@@ -9,5 +9,5 @@ import { authorizeRoles } from "../middlewares/role.middleware.js";
 export const estadoRouter:Router = Router();
 
 estadoRouter.post('/estados',authenticateToken,authorizeRoles('admin'),ValidationMiddleware(CreateEstadoSchema),estadoController.createNew);
-estadoRouter.get('/estados',estadoController.findAll)
-estadoRouter.get('/estados/:id',ValidationMiddleware(FindOneEstadoSchema),estadoController.findOne)
+estadoRouter.get('/estados',authenticateToken,estadoController.findAll)
+estadoRouter.get('/estados/:id',authenticateToken,ValidationMiddleware(FindOneEstadoSchema),estadoController.findOne)

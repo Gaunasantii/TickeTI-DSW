@@ -9,6 +9,6 @@ import { authenticateToken } from "../middlewares/auth.middleware.js";
 import { authorizeRoles } from "../middlewares/role.middleware.js";
 
 adminrouter.post("/admins",authenticateToken,authorizeRoles('S_ADMIN'), ValidationMiddleware(createAdminSchema),admincontroller.createAdmin);
-adminrouter.get("/admins", admincontroller.findAll);
-adminrouter.put("/admins/:dni",ValidationMiddleware(ModifyAdminSchema), admincontroller.updateAdmin);
-adminrouter.delete("/admins/:dni",ValidationMiddleware(DeleteAdminSchema), admincontroller.deleteAdmin);
+adminrouter.get("/admins",authenticateToken,admincontroller.findAll);
+adminrouter.put("/admins/:dni",authenticateToken,ValidationMiddleware(ModifyAdminSchema), admincontroller.updateAdmin);
+adminrouter.delete("/admins/:dni",authenticateToken,ValidationMiddleware(DeleteAdminSchema), admincontroller.deleteAdmin);
