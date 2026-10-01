@@ -4,7 +4,7 @@ import { ListaEmpresas } from "./components/ListaEmpresas";
 import { OficinasDeEmpresa } from "./components/OficinasDeEmpresa";
 import { ListaCategorias } from "./components/ListaCategorias";
 import { ListaPrioridades } from "./components/ListaPrioridades";
-import { ListaUsuarios } from "./components/ListaUsuarios";
+import { ListaUsuarios } from "./pages/Usuario/listaUsuarios";
 import { TicketForm } from "./components/TicketForm.jsx";
 import { HomePage } from "./pages/Home/Home.js";
 import { ContactPage } from "./pages/Contact/Contact";
@@ -23,6 +23,11 @@ export const App = () => {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/contact" element={<ContactPage />} />
 
+      {/* Rutas Compartidas - Admin y Técnico */}
+      <Route element={<ProtectedRoute rolesPermitidos={["admin", "administrador", "tecnico"]} />}>
+        <Route path="/usuarios" element={<ListaUsuarios />} />
+      </Route>
+
       {/* Rutas Protegidas - Solo Administrador */}
       <Route element={<ProtectedRoute rolesPermitidos={["admin", "administrador"]} />}>
         <Route path="/admin" element={<AdminPage />} />
@@ -32,7 +37,6 @@ export const App = () => {
         <Route path="/Oficina" element={<OficinaPage />} />
         <Route path="/categorias" element={<ListaCategorias />} />
         <Route path="/prioridades" element={<ListaPrioridades />} />
-        <Route path="/usuarios" element={<ListaUsuarios />} />
       </Route>
 
       {/* Rutas Protegidas - Solo Técnico */}
@@ -40,8 +44,8 @@ export const App = () => {
         <Route path="/tecnico" element={<TecnicoPage />} />
       </Route>
 
-      {/* Rutas Protegidas - Usuario/Solicitante (y roles superiores con acceso a crear) */}
-      <Route element={<ProtectedRoute rolesPermitidos={["usuario", "solicitante", "cliente", "admin", "administrador"]} />}>
+      {/* Rutas Protegidas - Usuario / Solicitante */}
+      <Route element={<ProtectedRoute rolesPermitidos={["user", "solicitante", "cliente", "admin", "administrador"]} />}>
         <Route path="/usuario" element={<UserDashboardPage />} />
       </Route>
     </Routes>

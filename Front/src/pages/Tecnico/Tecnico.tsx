@@ -14,7 +14,7 @@ export const TecnicoPage: React.FC = () => {
   const [descripcion, setDescripcion] = useState("");
   const [creando, setCreando] = useState(false);
 
-  const usuarioRaw = sessionStorage.getItem("usuario");
+  const usuarioRaw = sessionStorage.getItem("user");
   let usuario: any = null;
   try {
     usuario = usuarioRaw ? JSON.parse(usuarioRaw) : null;

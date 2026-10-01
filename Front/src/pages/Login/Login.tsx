@@ -19,7 +19,7 @@ export const LoginPage = () => {
       const rol = (usuario?.rol || usuario?.role || usuario?.type || "").toLowerCase();
 
       // Guardamos la sesión en sessionStorage para que muera al cerrar la pestaña
-      sessionStorage.setItem("usuario", JSON.stringify(usuario));
+      sessionStorage.setItem("user", JSON.stringify(usuario));
 
       if (login) {
         login(usuario);

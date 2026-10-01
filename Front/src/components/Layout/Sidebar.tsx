@@ -5,7 +5,8 @@ export const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const usuarioRaw = sessionStorage.getItem("usuario");
+  // Leemos tanto 'user' como 'usuario' por compatibilidad con el Login
+  const usuarioRaw = sessionStorage.getItem("user") || sessionStorage.getItem("usuario");
   let usuario: any = null;
   try {
     usuario = usuarioRaw ? JSON.parse(usuarioRaw) : null;
@@ -13,17 +14,31 @@ export const Sidebar: React.FC = () => {
     usuario = null;
   }
 
-  // Detectamos el rol normalizando mayúsculas/minúsculas y diferentes nombres de propiedad
-  const rolRaw = (usuario?.rol || usuario?.role || usuario?.tipo || "").toLowerCase();
-  
-  // Si no está definido en el usuario, pero estamos en páginas exclusivas de admin (/Oficina, /empresas, /admin), asumimos admin
-  const esRutaAdmin = ["/admin", "/oficina", "/empresas", "/tecnicos"].some((r) =>
+  // Detectamos el rol normalizando strings
+  const rolRaw = (
+    usuario?.type ||
+    usuario?.rol ||
+    usuario?.role ||
+    usuario?.tipo ||
+    ""
+  ).toLowerCase();
+
+  // Rutas verdaderamente exclusivas de admin (quitamos /usuarios porque es compartida)
+  const esRutaAdmin = ["/admin", "/oficina", "/empresas"].some((r) =>
     location.pathname.toLowerCase().startsWith(r)
   );
 
-  const rol = rolRaw || (esRutaAdmin ? "admin" : "usuario");
+  let rol = "user";
+  if (rolRaw.includes("admin")) {
+    rol = "admin";
+  } else if (rolRaw.includes("tec")) {
+    rol = "tecnico";
+  } else if (esRutaAdmin) {
+    rol = "admin";
+  }
 
   const handleLogout = () => {
+    sessionStorage.removeItem("user");
     sessionStorage.removeItem("usuario");
     navigate("/login");
   };
@@ -37,7 +52,6 @@ export const Sidebar: React.FC = () => {
       return [
         commonDashboard,
         { label: "Usuarios", path: "/usuarios" },
-        { label: "Técnicos", path: "/tecnicos" },
         { label: "Oficinas", path: "/Oficina" },
         ajustesItem,
       ];
@@ -47,7 +61,6 @@ export const Sidebar: React.FC = () => {
       return [
         commonDashboard,
         { label: "Usuarios", path: "/usuarios" },
-        { label: "Mis Tickets", path: "/mis-tickets" },
         ajustesItem,
       ];
     }
@@ -101,7 +114,7 @@ export const Sidebar: React.FC = () => {
       <div className="p-4 border-t border-slate-100">
         <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/60 mb-2">
           <p className="text-xs font-semibold text-slate-800 truncate capitalize">
-            {usuario?.name || usuario?.nombre || "Administrador"}
+            {usuario?.name || usuario?.nombre || "Usuario"}
           </p>
           <p className="text-[11px] text-slate-500 font-mono">
             {usuario?.dni ? `DNI: ${usuario.dni}` : "Sesión activa"}
