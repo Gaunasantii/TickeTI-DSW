@@ -5,7 +5,8 @@ export const UsuarioOutSchema=zod.object({
     surName: zod.string(),
     name: zod.string(),
     tele: zod.string(),
-    mail: zod.string()
+    mail: zod.string(),
+    oficina: zod.number()
 })
 
 export type UsuarioOutDto = zod.infer<typeof UsuarioOutSchema>;
