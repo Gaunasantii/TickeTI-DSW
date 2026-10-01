@@ -6,9 +6,8 @@ interface ProtectedRouteProps {
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ rolesPermitidos }) => {
-  const usuarioRaw = sessionStorage.getItem("user");
+  const usuarioRaw = sessionStorage.getItem("usuario") || sessionStorage.getItem("user");
 
-  // Si no hay datos de usuario en sessionStorage, va al login
   if (!usuarioRaw) {
     return <Navigate to="/login" replace />;
   }
@@ -17,33 +16,38 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ rolesPermitidos 
   try {
     usuario = JSON.parse(usuarioRaw);
   } catch {
+    sessionStorage.removeItem("usuario");
     sessionStorage.removeItem("user");
     return <Navigate to="/login" replace />;
   }
 
-  const userRol = (usuario?.rol || usuario?.role || usuario?.type || "").toLowerCase();
+  const rolBruto = (usuario?.type || usuario?.rol || usuario?.role || usuario?.tipo || "").toLowerCase();
 
-  // Si el objeto no contiene un rol válido, limpiamos y va al login
-  if (!userRol) {
-    sessionStorage.removeItem("user");
-    return <Navigate to="/login" replace />;
+  let userRol = "user";
+  if (rolBruto.includes("s_admin") || rolBruto.includes("super")) {
+    userRol = "s_admin";
+  } else if (rolBruto.includes("admin")) {
+    userRol = "admin";
+  } else if (rolBruto.includes("tec")) {
+    userRol = "tecnico";
   }
 
-  // Si se definieron roles permitidos y el rol no coincide con la ruta
   if (rolesPermitidos && rolesPermitidos.length > 0) {
     const permitidosNormalizados = rolesPermitidos.map((r) => r.toLowerCase());
 
-    if (!permitidosNormalizados.includes(userRol)) {
-      if (userRol === "admin" || userRol === "administrador") {
-        return <Navigate to="/admin" replace />;
-      } else if (userRol === "tecnico") {
-        return <Navigate to="/tecnico" replace />;
-      } else if (userRol === "user" || userRol === "solicitante" || userRol === "cliente") {
-        return <Navigate to="/usuario" replace />;
-      } else {
-        sessionStorage.removeItem("user");
-        return <Navigate to="/login" replace />;
-      }
+    const tienePermiso = permitidosNormalizados.some((p) => {
+      if ((p.includes("s_admin") || p.includes("super")) && userRol === "s_admin") return true;
+      if (p.includes("admin") && !p.includes("super") && !p.includes("s_") && userRol === "admin") return true;
+      if (p.includes("tec") && userRol === "tecnico") return true;
+      if ((p === "user" || p === "usuario" || p === "solicitante" || p === "cliente") && userRol === "user") return true;
+      return p === userRol;
+    });
+
+    if (!tienePermiso) {
+      if (userRol === "s_admin") return <Navigate to="/superadmin" replace />;
+      if (userRol === "admin") return <Navigate to="/admin" replace />;
+      if (userRol === "tecnico") return <Navigate to="/tecnico" replace />;
+      return <Navigate to="/usuario" replace />;
     }
   }
 
