@@ -1,15 +1,13 @@
-const API_URL = 'http://localhost:3000/api';
+const baseUrl = import.meta.env.VITE_API_URL + '/';
 
 export const api = (relativePath: string, options: { method?: string, body?: any, } = {}) => {
-  const baseUrl = 'http://localhost:3000/api/';
   return fetch(
     `${baseUrl}${relativePath}`,
     {
+      ...options,
       headers: {
         ['Content-Type']: 'application/json'
-
       },
-      ...options,
       credentials: "include"
     }
   );

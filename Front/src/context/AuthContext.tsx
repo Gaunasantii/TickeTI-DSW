@@ -2,7 +2,7 @@ import { createContext, useContext, useState, type ReactNode } from "react";
 
 type Usuario = {
     dni: string;
-    rol: string;
+    type: string; //rol
     name: string;
 };
 
