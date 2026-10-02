@@ -23,17 +23,17 @@ export class TicketService {
   static async resolveTicket(solucion: string, id: number) {
     const ticketToResolve = await ticketDAO.findOne({ id: id });
     if(!ticketToResolve)throw new NotFoundError("Ticket no encontrado")
-    if(!ticketToResolve.fechaCierre)throw new ConflictError("Ticket ya cerrado","El ticket ya fue cerrado previamente")
+    if(ticketToResolve.fechaCierre)throw new ConflictError("Ticket ya cerrado","El ticket ya fue cerrado previamente")
     const lastAsignacion= await asignacionDAO.findOne({ticket:ticketToResolve.id,estado:true})
     if(!lastAsignacion)throw new ConflictError("No hay asignaciones activas para este ticket","El ticket debe ser asignado previo a ser resuelto")
     var newInputTicket= wrap(ticketToResolve).toJSON();
     newInputTicket.solucion=solucion;
     newInputTicket.fechaCierre=new Date();
-    var newInputAsignacion= wrap(lastAsignacion).toJSON();;
+    var newInputAsignacion= wrap(lastAsignacion).toObject();;
     newInputAsignacion.fechaCierre=new Date();
 
-    await ticketDAO.updateTicket(ticketToResolve,newInputTicket);
-    await asignacionDAO.updateAsignacion(lastAsignacion,newInputAsignacion);
+    await ticketDAO.updateTicket(newInputTicket,ticketToResolve);
+    await asignacionDAO.updateAsignacion(newInputAsignacion,lastAsignacion);
 
     return newInputTicket;
   }
