@@ -8,7 +8,7 @@ export class UsuarioService {
     const userFound= await userDAO.findOne({dni:usuarioInput.dni})
     if(userFound)throw new ConflictError("Usuario ya existente");
     const OficinaFound= await oficinaDAO.findOne({id:usuarioInput.oficina})
-    if(OficinaFound)throw new NotFoundError("Oficina Inexistente");
+    if(!OficinaFound)throw new NotFoundError("Oficina Inexistente");
     return await userDAO.createUser(usuarioInput);
   }
 
