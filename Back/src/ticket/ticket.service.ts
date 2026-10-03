@@ -1,4 +1,6 @@
 import { asignacionDAO } from "../asignacion/asignacion.DAO.js";
+import { categoriaDAO } from "../categoria/categoria.DAO.js";
+import { EstadoDAO } from "../estado/estado.DAO.js";
 import { NotFoundError, ConflictError } from "../utils/base.error.js";
 import type { ModifyTicketInBodyDto } from "./DTO/ModifyTicket.dto.js";
 import { ticketDAO } from "./ticket.DAO.js";
@@ -36,5 +38,9 @@ export class TicketService {
     await asignacionDAO.updateAsignacion(newInputAsignacion,lastAsignacion);
 
     return newInputTicket;
+  }
+
+  static async getPaginatedByStateAndCategory(page:number,limit:number,estadoId:number,categoriaId:number){
+    return ticketDAO.GetAllPaginated({estado:estadoId,categoria:categoriaId},page,limit);
   }
 }
