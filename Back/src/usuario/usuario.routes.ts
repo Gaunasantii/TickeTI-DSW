@@ -10,7 +10,7 @@ import { DeleteUsuarioSchema } from "./DTO/DeleteUsuario.dto.js";
 
 // Solo un administrador autenticado puede listar o crear usuarios
 userrouter.post("/usuarios", authenticateToken, authorizeRoles("admin"),ValidationMiddleware(createUsuarioSchema), usercontroller.createUser);
-userrouter.get("/usuarios", authenticateToken, authorizeRoles("admin"), usercontroller.findAll);
+userrouter.get("/usuarios", authenticateToken, authorizeRoles("admin", "tecnico"), usercontroller.findAll);
 
 // Rutas de modificación y baja protegidas para admin
 userrouter.put("/usuarios/:dni", authenticateToken, authorizeRoles("admin"),ValidationMiddleware(ModifyUsuarioSchema), usercontroller.updateUser);

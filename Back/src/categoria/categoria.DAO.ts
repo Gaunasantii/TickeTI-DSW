@@ -1,11 +1,11 @@
-import { orm } from "../config/db.js";
+import { orm } from "../config/DataBase/db.js";
 import { mapDbErrorToAppError } from "../utils/DbErrorMapper.js";
 import { CategoriaSchema } from "./categoria.entity.js";
 
 export class categoriaDAO {
   static async findAll(filters: any) {
       const em = orm.em ;
-      const categoriaRecovered = await em.findAll(CategoriaSchema, filters);
+      const categoriaRecovered = await em.find(CategoriaSchema, filters);
       return categoriaRecovered;
   }
 

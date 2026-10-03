@@ -1,11 +1,11 @@
-import { orm } from "../config/db.js";
+import { orm } from "../config/DataBase/db.js";
 import { mapDbErrorToAppError } from "../utils/DbErrorMapper.js";
 import { PrioridadSchema } from "./prioridad.entity.js";
 
 export class prioridadDAO {
   static async findAll(filters: any) {
     const em = orm.em ;
-    const prioridadRecovered = await em.findAll(PrioridadSchema, filters);
+    const prioridadRecovered = await em.find(PrioridadSchema, filters);
     return prioridadRecovered;
   }
 

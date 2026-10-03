@@ -1,14 +1,14 @@
-const baseUrl = import.meta.env.VITE_API_URL + '/';
+const baseUrl = import.meta.env.VITE_API_URL;
 
-export const api = (relativePath: string, options: { method?: string, body?: any, } = {}) => {
-  return fetch(
-    `${baseUrl}${relativePath}`,
-    {
-      ...options,
-      headers: {
-        ['Content-Type']: 'application/json'
-      },
-      credentials: "include"
-    }
-  );
-}
+export const api = (relativePath: string, options: RequestInit = {}) => {
+  const cleanPath = relativePath.startsWith('/') ? relativePath : `/${relativePath}`;
+
+  return fetch(`${baseUrl}${cleanPath}`, {
+    ...options,
+    credentials: "include",
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+};

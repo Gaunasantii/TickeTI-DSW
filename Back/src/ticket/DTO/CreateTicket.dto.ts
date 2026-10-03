@@ -7,7 +7,6 @@ export const CreateTicketSchema=zod.object({
         estado:zod.number().min(1),
         prioridad:zod.number().min(1),
         categoria:zod.number().min(1),
-        usuario:zod.string().min(8).regex(/^\d+$/,"Solo se admiten numeros")
     })
 })
 

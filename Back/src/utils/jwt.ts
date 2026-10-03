@@ -11,6 +11,7 @@ export class JWToken {
         rol: user.type,
         email: user.mail,
         name: user.name,
+        empresa:user.empresa?.id
       },
       JWT_SECRET,
       { expiresIn: "8h" }

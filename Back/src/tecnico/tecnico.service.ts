@@ -8,7 +8,7 @@ export class TecnicoService {
   }
 
   static async getAllTecnicos() {
-    return await tecnicoDAO.findAll({ populate: ['asignaciones'] });
+    return await tecnicoDAO.findAll({ });
   }
 
   static async updateTecnico(dni: string, tecnicoInput: any) {

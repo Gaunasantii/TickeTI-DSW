@@ -9,9 +9,8 @@ import type { ModifyTicketInBodyDto, ModifyTicketInParamsDto } from "./DTO/Modif
 class ticketController {
 
   async createTicket(req: Request<any,any,CreateTicketInDto>, res: Response) {
-      const ticketInput = req.body;
+      const ticketInput = {...req.body,usuario:req.user.dni,empresa:req.user.empresa};
       await TicketService.createTicket(ticketInput)
-
       res.status(201).json(new ApiSuccessResponse<null>(null,"Ticket creado Con exitos"));
   };
 
