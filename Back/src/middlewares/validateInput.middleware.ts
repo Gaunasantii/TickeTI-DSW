@@ -15,6 +15,5 @@ export const ValidationMiddleware=(Schema:ZodObject)=>(req:Request,res:Response,
     }
     if (result.data.body) req.body = result.data.body;
     if (result.data.params) req.params = result.data.params as any;
-    if (result.data.query) req.query = result.data.query as any;
     next();
 }

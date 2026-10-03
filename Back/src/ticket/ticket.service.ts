@@ -40,7 +40,11 @@ export class TicketService {
     return newInputTicket;
   }
 
-  static async getPaginatedByStateAndCategory(page:number,limit:number,estadoId:number,categoriaId:number){
-    return ticketDAO.GetAllPaginated({estado:estadoId,categoria:categoriaId},page,limit);
+  static async getPaginatedByStateAndCategory(page:number,limit:number,estadoId:number|undefined,categoriaId:number|undefined){
+    let filters={};
+    if(estadoId!=undefined)filters={...filters,estado:estadoId};
+    if(categoriaId!=undefined)filters={...filters,categoria:categoriaId};
+    const {tickets,count}=await ticketDAO.GetAllPaginated(filters,page,limit);
+    return {tickets,count};
   }
 }
