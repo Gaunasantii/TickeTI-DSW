@@ -27,4 +27,9 @@ export class UsuarioService {
     if(!userFound)throw new NotFoundError("Usuario no encontrado")
     await userDAO.deleteUser(userFound);
   }
+
+  static async getPaginated(page:number,limit:number){
+    const {usuarios,count}=await userDAO.Paginated({},page,limit)
+    return {usuarios,count};
+  }
 }
