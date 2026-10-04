@@ -48,6 +48,7 @@ const options:Options={
         default:true,
         entity:[
           'tecnico'
+          ,'person'
           ,'user'
           ,'oficina'
           ,'estado'
