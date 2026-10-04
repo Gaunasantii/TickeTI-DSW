@@ -4,8 +4,6 @@ import { oficinaDAO } from "./oficina.DAO.js";
 
 export class OficinaService {
   static async getAll() {
-    console.log('--- PARÁMETROS DEL FILTRO ANTES DEL FIND ---');
-    console.log(orm.em.getFilterParams('empresa'));
     return await oficinaDAO.findAll({});
   }
 
@@ -23,5 +21,9 @@ export class OficinaService {
     const oficinafound = await oficinaDAO.findOne({id:id})
      if(!oficinafound)throw new NotFoundError("Oficina no encontrada",`Oficina con id ${id} no encontrada`)
     return await oficinaDAO.updateOficina(oficinaInput,oficinafound)
+  }
+
+  static async getPaginado(page:number,cantPerPage:number){
+    return await oficinaDAO.Paginated({},cantPerPage,page,{populate:['usuarios']});
   }
 }

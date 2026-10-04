@@ -37,4 +37,10 @@ export class oficinaDAO {
       const oficinaFound = await em.findOne(OficinaSchema, filters);
       return oficinaFound;
   }
+
+  static async Paginated(filters:any,limit:number,page:number,options:any){
+    const em = orm.em;
+    const [oficinas,count]=await em.findAndCount(OficinaSchema,filters,{limit:limit,offset:(page-1)*limit,...options});
+    return {oficinas,count}
+  }
 }
