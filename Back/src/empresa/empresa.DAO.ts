@@ -35,4 +35,10 @@ export class empresaDAO {
       await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
       return empresaFound;
   }
+
+  static async paginated(page:number,limit:number,filters:any,options:any){
+    const em=orm.em;
+    const [empresas,count]=await em.findAndCount(EmpresaSchema,filters,{limit:limit,offset:(page-1)*limit,...options})
+    return {empresas,count}
+  }
 }
