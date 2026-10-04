@@ -1,6 +1,6 @@
 import zod from 'zod'
 
-export const UserOutPaginatedSchema=zod.object({
+export const PersonOutPaginatedSchema=zod.object({
     dni:zod.string(),
     surName: zod.string(),
     name: zod.string(),
@@ -10,7 +10,7 @@ export const UserOutPaginatedSchema=zod.object({
     oficina:zod.object({
         id:zod.number(),
         nombre:zod.string()
-    }).transform(o=>o.nombre).optional()
+    }).transform(o=>o.nombre).nullable()
 })
 
-export type usuarioPaginatedDto=zod.infer<typeof UserOutPaginatedSchema>;
+export type personPaginatedDto=zod.infer<typeof PersonOutPaginatedSchema>;
