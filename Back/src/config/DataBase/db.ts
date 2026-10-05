@@ -17,9 +17,10 @@ export let orm: MikroORM;
 
 export async function initOrm() {
   try {
-    orm = await MikroORM.init(options)
+    orm = await MikroORM.init(options);
   } catch (e) {
-    process.exit(1)
+    console.error("Error al inicializar ORM:", e);
+    process.exit(1);
   }
 }
 

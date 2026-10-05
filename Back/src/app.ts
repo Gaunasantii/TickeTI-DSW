@@ -26,7 +26,7 @@ const app = Express();
 
 // Conectar DB
 await initOrm();
-syncSchema();
+await syncSchema();
 await checkDb();
 
 zod.config(es());
