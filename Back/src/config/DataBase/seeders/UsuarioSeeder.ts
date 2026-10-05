@@ -8,7 +8,7 @@ export class UsuarioSeeder extends Seeder{
     async run(em:EntityManager){
         var empresas= await em.findAll(EmpresaSchema);
         for (const e of empresas) {
-            const oficinas = await em.find(OficinaSchema, { empresa: e.id });
+            const oficinas = await em.find(OficinaSchema,{empresa:e.id});
             for(const o of oficinas) {
                 em.create(UserSchema,{
                     dni: "401112"+e.id+o.id,
@@ -18,7 +18,8 @@ export class UsuarioSeeder extends Seeder{
                     mail: "",
                     pass: "pass",
                     type: "user",
-                    empresa:e.id
+                    empresa:e.id,
+                    oficina:o.id
                 })
 
                 await em.flush();

@@ -1,5 +1,8 @@
-import { NotFoundError } from "../utils/base.error.js";
+import { asignacionDAO } from "../asignacion/asignacion.DAO.js";
+import { NotFoundError, ConflictError } from "../utils/base.error.js";
+import type { ModifyTicketInBodyDto } from "./DTO/ModifyTicket.dto.js";
 import { ticketDAO } from "./ticket.DAO.js";
+import { wrap } from "@mikro-orm/core";
 
 export class TicketService {
   static async getAllTickets() {
@@ -11,9 +14,27 @@ export class TicketService {
     return await ticketDAO.createTicket(ticketInput);
   }
 
-  static async updateTicket(ticketInput: any, id: Number) {
+  static async updateTicket(ticketInput: ModifyTicketInBodyDto, id: Number) {
     const ticketToUpdate = await ticketDAO.findOne({ id: id });
     if(!ticketToUpdate)throw new NotFoundError("Ticket no encontrado")
-    return await ticketDAO.updateTicket(ticketInput,ticketToUpdate)
+    return await ticketDAO.updateTicket(ticketToUpdate, ticketInput);
+  }
+
+  static async resolveTicket(solucion: string, id: number) {
+    const ticketToResolve = await ticketDAO.findOne({ id: id });
+    if(!ticketToResolve)throw new NotFoundError("Ticket no encontrado")
+    if(ticketToResolve.fechaCierre)throw new ConflictError("Ticket ya cerrado","El ticket ya fue cerrado previamente")
+    const lastAsignacion= await asignacionDAO.findOne({ticket:ticketToResolve.id,estado:true})
+    if(!lastAsignacion)throw new ConflictError("No hay asignaciones activas para este ticket","El ticket debe ser asignado previo a ser resuelto")
+    var newInputTicket= wrap(ticketToResolve).toJSON();
+    newInputTicket.solucion=solucion;
+    newInputTicket.fechaCierre=new Date();
+    var newInputAsignacion= wrap(lastAsignacion).toObject();;
+    newInputAsignacion.fechaCierre=new Date();
+
+    await ticketDAO.updateTicket(newInputTicket,ticketToResolve);
+    await asignacionDAO.updateAsignacion(newInputAsignacion,lastAsignacion);
+
+    return newInputTicket;
   }
 }

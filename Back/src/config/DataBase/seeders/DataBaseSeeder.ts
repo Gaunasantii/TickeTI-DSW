@@ -14,6 +14,7 @@ import { SuperAdminSeeder } from './SuperAdminSeeder.js';
 
 export class DatabaseSeeder extends Seeder {
   async run(em: EntityManager): Promise<void> {
+    const empresas =em.setFilterParams('empresa',{bypass:true})
     return this.call(em, [
       SuperAdminSeeder,
       EmpresaSeeder,
