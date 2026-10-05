@@ -1,4 +1,4 @@
-import { orm } from "../config/db.js";
+import { orm } from "../config/DataBase/db.js";
 import { mapDbErrorToAppError } from "../utils/DbErrorMapper.js";
 import { OficinaSchema } from "./oficina.entity.js";
 
@@ -14,7 +14,7 @@ export class oficinaDAO {
 
   static async findAll(filters: any) {
       const em = orm.em ;
-      const oficinaRecovered = await em.findAll(OficinaSchema, filters);
+      const oficinaRecovered = await em.find(OficinaSchema, filters);
       return oficinaRecovered;
   }
 

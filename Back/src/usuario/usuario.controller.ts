@@ -10,7 +10,7 @@ import { UserOutPaginatedSchema, type usuarioPaginatedDto } from "./DTO/UsuarioP
 class userController {
 
   async createUser(req: Request<any,any,CreateUsuarioInDto>, res: Response) {
-      const userInput = req.body;
+      const userInput = {...req.body,empresa:req.user.empresa};
       await UsuarioService.createUsuario(userInput)
       res.status(201).json(new ApiSuccessResponse<null>(null,"Usuario creado Con exito"));
   };

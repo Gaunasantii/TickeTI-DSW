@@ -1,3 +1,4 @@
+import { orm } from "../config/DataBase/db.js";
 import { NotFoundError } from "../utils/base.error.js";
 import { oficinaDAO } from "./oficina.DAO.js";
 

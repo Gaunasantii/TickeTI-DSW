@@ -1,6 +1,7 @@
 import { defineEntity, type EventArgs, type InferEntity, p } from '@mikro-orm/core';
 import { TicketSchema } from '../ticket/ticket.entity.js';
 import { TecnicoSchema } from '../tecnico/tecnico.entity.js';
+import { EmpresaSchema } from '../empresa/empresa.entity.js';
 
 export const asignacionSchema = defineEntity({
   name:'asignacion',
@@ -11,6 +12,7 @@ export const asignacionSchema = defineEntity({
     estado:p.boolean().default(true),
     ticket:()=>p.manyToOne(TicketSchema),
     tecnico:()=>p.manyToOne(TecnicoSchema),
+    empresa:()=> p.manyToOne(EmpresaSchema)
   }
 })
 
