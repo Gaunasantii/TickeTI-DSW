@@ -9,7 +9,7 @@ import type { ModifyTecnicoBodyDTO, ModifyTecnicoParamsDTO } from "./DTO/ModifyT
 class tecnicoController {
 
   async createTecnico(req: Request<any,any,CreateTecnicoInDto>, res: Response) {
-      const tecnicoInput = {...req.body,empresa:req.user.empresa};
+      const tecnicoInput = req.body;
       await TecnicoService.createTecnico(tecnicoInput);
 
       res.status(201).json(new ApiSuccessResponse<null>(null,"Tecnico creado con exito"));

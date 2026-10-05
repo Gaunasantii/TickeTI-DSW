@@ -6,10 +6,11 @@ import type { CreateEstadoInDto } from "./DTO/CreateEstado.dto.js";
 import { EstadoOutSchema, type EstadoDto } from "./DTO/EstadoOut.dto.js";
 import { wrap } from "@mikro-orm/core";
 import type { FindOneEstadoInDto } from "./DTO/FindOneEstado.dto.js";
+
 class EstadoController {
   async createNew(req: Request<any,any,CreateEstadoInDto>, res: Response) {
-      const estadoInput = {...req.body,empresa:req.user.empresa}
-      await EstadoService.createEstado(estadoInput);
+      const estadoInput = req.body;
+      await EstadoDAO.createState(estadoInput);
       res.status(201).json(new ApiSuccessResponse<null>(null, "Estado creado correctamente"));
   }
 

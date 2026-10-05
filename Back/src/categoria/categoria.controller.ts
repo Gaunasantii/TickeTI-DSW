@@ -9,7 +9,7 @@ import type { ModifyCategoriaInBodyDto, ModifyCategoriaInParamsDto } from "./DTO
 class CategoriaController {
 
     async createCategoria(req: Request<any,any,CreateCategoriaInDto>, res: Response) {
-            const categoriaInput = {...req.body,empresa:req.user.empresa};
+            const categoriaInput = req.body;
             await CategoriaService.createCategoria(categoriaInput);
             res.status(201).json(new ApiSuccessResponse<null>(null,"Categoria creada exitosamente"));
         

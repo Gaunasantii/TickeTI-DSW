@@ -1,4 +1,4 @@
-import { orm } from "../config/DataBase/db.js";
+import { orm } from "../config/db.js";
 import { mapDbErrorToAppError } from "../utils/DbErrorMapper.js";
 import { TecnicoSchema } from "./tecnico.entity.js";
 
@@ -13,7 +13,7 @@ export class tecnicoDAO {
 
   static async findAll(filters: any) {
       const em = orm.em;
-      const tecnicoRecovered = await em.find(TecnicoSchema, filters);
+      const tecnicoRecovered = await em.findAll(TecnicoSchema, filters);
       return tecnicoRecovered;
   }
 

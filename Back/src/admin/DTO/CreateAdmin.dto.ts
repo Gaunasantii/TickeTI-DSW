@@ -7,7 +7,6 @@ export const createAdminSchema=zod.object({
     name:zod.string().max(64),
     tele: zod.string().regex(/^\+?[1-9]\d{1,14}$/, "Formato de teléfono inválido"),
     pass:zod.string().min(6),
-    empresa:zod.number().min(1)
   })
 })
 

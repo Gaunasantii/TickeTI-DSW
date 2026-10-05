@@ -1,11 +1,8 @@
-import { orm } from "../config/DataBase/db.js";
 import { NotFoundError } from "../utils/base.error.js";
 import { oficinaDAO } from "./oficina.DAO.js";
 
 export class OficinaService {
   static async getAll() {
-    console.log('--- PARÁMETROS DEL FILTRO ANTES DEL FIND ---');
-    console.log(orm.em.getFilterParams('empresa'));
     return await oficinaDAO.findAll({});
   }
 

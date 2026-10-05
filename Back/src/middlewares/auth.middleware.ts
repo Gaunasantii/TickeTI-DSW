@@ -2,10 +2,19 @@ import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../utils/jwt.js";
 import { UnauthorizedError, ForbiddenError } from "../utils/base.error.js";
-import { orm } from "../config/DataBase/db.js";
+
+export interface AuthRequest extends Request {
+  user?: {
+    dni: string;
+    rol: string;
+    email: string;
+    name: string;
+    [key: string]: any;
+  };
+}
 
 export const authenticateToken = (
-  req: Request,
+  req: AuthRequest,
   res: Response,
   next: NextFunction
 ) => {
@@ -16,10 +25,8 @@ export const authenticateToken = (
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET) as AuthRequest["user"];
     req.user = decoded as any;
-    if(req.user.empresa!=null){orm.em.setFilterParams('empresa',{bypass:false,empresa:req.user.empresa})}
-    else{orm.em.setFilterParams('empresa',{bypass:true})};
     next();
   } catch (error: any) {
     throw new ForbiddenError("Token de autenticación inválido o expirado","El token fue modificado o expiro");

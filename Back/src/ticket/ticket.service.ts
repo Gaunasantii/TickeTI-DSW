@@ -7,7 +7,6 @@ export class TicketService {
   }
 
   static async createTicket(ticketInput: any) {
-    ticketInput={...ticketInput,fechaCreacion:new Date()}
     return await ticketDAO.createTicket(ticketInput);
   }
 

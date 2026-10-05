@@ -8,7 +8,7 @@ import type { ModifyUsuarioBodyDTO, ModifyUsuarioParamsDTO } from "./DTO/ModifyU
 class userController {
 
   async createUser(req: Request<any,any,CreateUsuarioInDto>, res: Response) {
-      const userInput = {...req.body,empresa:req.user.empresa};
+      const userInput = req.body;
       await UsuarioService.createUsuario(userInput)
       res.status(201).json(new ApiSuccessResponse<null>(null,"Usuario creado Con exito"));
   };

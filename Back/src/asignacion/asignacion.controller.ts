@@ -10,13 +10,13 @@ import { ChangeStateAsignacionSchema, type ChangeStateAsignacionBodyDTO, type Ch
 
 class AsignacionController {
   async findAll(req: Request, res: Response) {
-      const asignacionesRecovered = await AsignacionService.getAllAsignaciones();
+      const asignacionesRecovered = await asignacionDAO.findAll({});
       const asignacionesDto=asignacionesRecovered.map(a=>AsignacionOutSchema.parse(wrap(a).toJSON()));
       res.status(200).json(new ApiSuccessResponse<AsignacionDto[]>(asignacionesDto, "Asignaciones recuperadas correctamente"));
   }
 
   async createAsignacion(req: Request<any,any,CreateAsignacionInDto>, res: Response) {
-      const asignacionInput = {...req.body,empresa:req.user.empresa};
+      const asignacionInput = req.body;
       await AsignacionService.createAsignacion(asignacionInput)
       res.status(201).json(new ApiSuccessResponse<null>(null, "Asignacion creada correctamente"));
   }
@@ -26,7 +26,7 @@ class AsignacionController {
       const asignacionInput = req.body;
       const asignacion = await AsignacionService.changeStateAsignacion(id, asignacionInput)
       const asignacionDto=AsignacionOutSchema.parse(wrap(asignacion).toJSON())
-      
+
       res.status(200).json(new ApiSuccessResponse<AsignacionDto>(asignacionDto, "Asignacion actualizada correctamente"));
   }
 

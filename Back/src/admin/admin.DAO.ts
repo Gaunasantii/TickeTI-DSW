@@ -1,4 +1,4 @@
-import { orm } from "../config/DataBase/db.js";
+import { orm } from "../config/db.js";
 import { ConflictError, DatabaseError, NotFoundError } from "../utils/base.error.js";
 import { adminSchema } from "./admin.entity.js";
 import { mapDbErrorToAppError } from "../utils/DbErrorMapper.js";
@@ -14,7 +14,7 @@ export class adminDAO {
 
   static async findAll(filters: any) {
       const em = orm.em ;
-      const adminRecovered = await em.find(adminSchema, filters);
+      const adminRecovered = await em.findAll(adminSchema, filters);
       return adminRecovered;
   }
 

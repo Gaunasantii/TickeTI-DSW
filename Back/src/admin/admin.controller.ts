@@ -8,32 +8,34 @@ import type { ModifyAdminBodyDTO, ModifyAdminParamsDTO } from "./DTO/ModifyAdmin
 import { wrap } from "@mikro-orm/core";
 
 class AdminController {
-  async createAdmin(req: Request<any, any, createAdminInDto>, res: Response) {
-    const adminInput = req.body;
-    await adminService.createAdmin(adminInput);
-    res.status(201).json(new ApiSuccessResponse<null>(null, "Administrador creado correctamente"));
-  }
 
-  async findAll(req: Request, res: Response) {
-    const admins = await adminService.getAllAdmins();
-    const adminsDtos = admins.map((admin) => AdminOutSchema.parse(wrap(admin).toJSON()));
-    res.status(200).json(new ApiSuccessResponse<Array<AdminOutDto>>(adminsDtos, "Administradores recuperados correctamente"));
-  }
+    async createAdmin(req: Request<any,any,createAdminInDto>, res: Response) {
+            const adminInput= req.body;
+            await adminService.createAdmin(adminInput)
+            res.status(201).json(new ApiSuccessResponse<null>(null,"Administrador creado correctamente"));
+        
+    }
 
-  async updateAdmin(req: Request<ModifyAdminParamsDTO, any, ModifyAdminBodyDTO>, res: Response) {
-    const dni = req.params.dni;
-    const admininput = req.body;
-    const updatedAdmin = await adminService.updateAdmin(admininput, dni);
-    const adminDto = AdminOutSchema.parse(wrap(updatedAdmin).toJSON());
+    async findAll(req: Request, res: Response) {
+            const admins = await adminService.getAllAdmins();
+            const adminsDtos = admins.map(admin=>AdminOutSchema.parse(wrap(admin).toJSON()))
+            res.status(200).json(new ApiSuccessResponse<Array<AdminOutDto>>(adminsDtos, "Administradores recuperados correctamente"));
+    }
 
-    res.status(200).json(new ApiSuccessResponse<AdminOutDto>(adminDto, "Administrador actualizado correctamente"));
-  }
+    async updateAdmin(req: Request<ModifyAdminParamsDTO,any,ModifyAdminBodyDTO>, res: Response) {
+            const dni = req.params.dni;
+            const admininput = req.body;
+            const updatedAdmin = await adminService.updateAdmin(admininput, dni);
+            const adminDto=AdminOutSchema.parse(wrap(updatedAdmin).toJSON())
 
-  async deleteAdmin(req: Request<ModifyAdminParamsDTO, any, any>, res: Response) {
-    const dni = req.params.dni;
-    await adminService.deleteAdmin(dni);
-    res.status(200).json(new ApiSuccessResponse<null>(null, "Administrador eliminado correctamente"));
-  }
+            res.status(200).json(new ApiSuccessResponse<AdminOutDto>(adminDto, "Administrador actualizado correctamente"));
+    }
+
+    async deleteAdmin(req: Request<ModifyAdminParamsDTO,any,any>, res: Response) {
+            const dni = req.params.dni;
+            await adminService.deleteAdmin(dni);
+            res.status(200).json(new ApiSuccessResponse<null>(null, "Administrador eliminado correctamente"));
+    }
 }
 
 export const admincontroller = new AdminController();
