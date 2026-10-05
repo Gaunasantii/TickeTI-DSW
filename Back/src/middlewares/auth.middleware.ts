@@ -10,6 +10,7 @@ export const authenticateToken = (
   next: NextFunction
 ) => {
   const token=req.cookies.AccessToken
+  console.log("Cookie recibida:", token ? "SÍ hay token" : "NO hay token");
 
   if (!token) {
     throw new UnauthorizedError("Token de autenticación no proporcionado","No inicio sesion");
@@ -22,6 +23,7 @@ export const authenticateToken = (
     else{orm.em.setFilterParams('empresa',{bypass:true})};
     next();
   } catch (error: any) {
+    console.error("Error verificando token:", error.message);
     throw new ForbiddenError("Token de autenticación inválido o expirado","El token fue modificado o expiro");
   }
 };

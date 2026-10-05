@@ -7,11 +7,13 @@ import { ValidationMiddleware } from "../middlewares/validateInput.middleware.js
 import { createUsuarioSchema } from "./DTO/CreateUsuario.dto.js";
 import { ModifyUsuarioSchema } from "./DTO/ModifyUsuario.dto.js";
 import { DeleteUsuarioSchema } from "./DTO/DeleteUsuario.dto.js";
+import { ChangePasswordSchema } from "./DTO/ChangePassword.dto.js";
 
 // Solo un administrador autenticado puede listar o crear usuarios
 userrouter.post("/usuarios", authenticateToken, authorizeRoles("admin"),ValidationMiddleware(createUsuarioSchema), usercontroller.createUser);
 userrouter.get("/usuarios", authenticateToken, authorizeRoles("admin", "tecnico"), usercontroller.findAll);
 
 // Rutas de modificación y baja protegidas para admin
+userrouter.put("/usuarios/cambiar-password", authenticateToken, ValidationMiddleware(ChangePasswordSchema), usercontroller.changePassword);
 userrouter.put("/usuarios/:dni", authenticateToken, authorizeRoles("admin"),ValidationMiddleware(ModifyUsuarioSchema), usercontroller.updateUser);
 userrouter.delete("/usuarios/:dni", authenticateToken, authorizeRoles("admin"),ValidationMiddleware(DeleteUsuarioSchema), usercontroller.deleteUser);

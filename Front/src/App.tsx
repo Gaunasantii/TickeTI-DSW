@@ -14,6 +14,7 @@ import { UserDashboardPage } from "./pages/Usuario/Usuario";
 import { AdminPage } from "./pages/Admin/Admin";
 import { TecnicoPage } from "./pages/Tecnico/Tecnico";
 import { SuperAdminPage } from "./pages/SuperAdmin/SuperAdmin";
+import { AjustesPage } from "./pages/Ajustes/Ajustes.js";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
 export const App = () => {
@@ -57,6 +58,11 @@ export const App = () => {
       {/* Rutas Solicitante / Usuario */}
       <Route element={<ProtectedRoute rolesPermitidos={["user", "usuario", "solicitante", "cliente", "admin", "administrador"]} />}>
         <Route path="/usuario" element={<UserDashboardPage />} />
+      </Route>
+
+      {/* Ruta ajustes para todos los usuarios */}
+      <Route element={<ProtectedRoute rolesPermitidos={["user", "usuario", "solicitante", "cliente", "admin", "administrador"]} />}>
+        <Route path="/ajustes" element={<AjustesPage />} />
       </Route>
     </Routes>
   );
