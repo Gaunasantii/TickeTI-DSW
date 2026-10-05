@@ -4,6 +4,7 @@ import { ApiSuccessResponse } from "../utils/api.response.js";
 import type { CreateTicketInDto } from "./DTO/CreateTicket.dto.js";
 import { TicketOutSchema, type TicketDto } from "./DTO/TicketOut.dto.js";
 import { wrap } from "@mikro-orm/core";
+import type { ResolveTicketInBodyDto } from "./DTO/ResolveTicket.dto.js";
 import type { ModifyTicketInBodyDto, ModifyTicketInParamsDto } from "./DTO/ModifyTicket.dto.js";
 
 class ticketController {
@@ -26,6 +27,14 @@ class ticketController {
       const ticketInput = req.body;
       await TicketService.updateTicket(ticketInput, id);
       res.status(200).json(new ApiSuccessResponse<null>(null,"Ticket Actualizado con exito"));
+  }
+
+  async resolveTicket(req: Request<ModifyTicketInParamsDto,any,ResolveTicketInBodyDto>, res: Response) {
+    const id = Number(req.params.id);
+    const solucion = req.body.solucion;
+    const ticketResolved = await TicketService.resolveTicket(solucion, id);
+    const ticketDto=TicketOutSchema.parse(wrap(ticketResolved).toJSON())
+    res.status(200).json(new ApiSuccessResponse<TicketDto>(ticketDto,"Ticket Resuelto con exito"));
   }
 
 }

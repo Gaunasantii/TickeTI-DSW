@@ -16,6 +16,12 @@ export const TicketSchema = defineEntity({
         id:p.integer().primary().autoincrement(),
         title:p.string(),
         description:p.string(),
+<<<<<<< HEAD
+=======
+        fechaCreacion:p.datetime(),
+        solucion:p.string().nullable(),
+        fechaCierre:p.datetime().nullable(),
+>>>>>>> feature/front-modulos-rol
         estado:() => p.manyToOne(EstadoSchema),
         prioridad:() => p.manyToOne(PrioridadSchema),
         categoria:() => p.manyToOne(CategoriaSchema),
