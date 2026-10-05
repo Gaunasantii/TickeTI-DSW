@@ -1,3 +1,4 @@
+import { populate } from "dotenv";
 import { NotFoundError } from "../utils/base.error.js";
 import { empresaDAO } from "./empresa.DAO.js";
 
@@ -20,5 +21,9 @@ export class EmpresaService {
     const empresafound = await empresaDAO.findOne({id:id});
     if(!empresafound)throw new NotFoundError("Empresa no encontrada",`Empresa de id ${id} no encontrado`)
     await empresaDAO.deleteEmpresa(empresafound);
+  }
+
+  static async getPaginated(page:number,limit:number){
+    return await empresaDAO.paginated(page,limit,{},{populate:['personas','admin']});
   }
 }

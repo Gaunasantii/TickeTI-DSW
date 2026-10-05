@@ -1,10 +1,12 @@
 import { type Request, type Response } from "express";
 import { OficinaService } from "./oficina.service.js";
-import { ApiSuccessResponse } from "../utils/api.response.js";
+import { ApiPaginationResponse, ApiSuccessResponse } from "../utils/api.response.js";
 import type { CreateOficinaInDto } from "./DTO/CreateOficina.dto.ts.js";
 import { OficinaOutSchema, type OficinaDto } from "./DTO/OficinaOut.dto.js";
 import { wrap } from '@mikro-orm/core'
 import type { ModifyOficinaInBodyDto, ModifyOficinaInParamsDto } from "./DTO/ModifyOficina.dto.js";
+import type { PaginatedOficinaInDto } from "./DTO/PaginateOficina.dto.js";
+import { OficinaPaginatedOutSchema, type OficinaOutDtoPag } from "./DTO/OficinaPaginatedOut.dto.js";
 
 class oficinaController {
 
@@ -35,7 +37,17 @@ class oficinaController {
       res.status(200).json(new ApiSuccessResponse<null>(null,"Oficina eliminada con exito"));
   }
 
+  async getOficinasPaginated(req:Request<any,any,any,PaginatedOficinaInDto>,res:Response){
+    const {page,cantPerPage}=req.query;
 
+    const pageNum=Number(page);
+    const limit=Number(cantPerPage);
+
+    const {oficinas,count}= await OficinaService.getPaginado(pageNum,limit);
+    const oficinasDto=oficinas.map(o=>OficinaPaginatedOutSchema.parse(wrap(o).toJSON()))
+
+    res.status(200).json(new ApiPaginationResponse<OficinaOutDtoPag>(oficinasDto,{currentPage:pageNum,itemsPerPage:limit,totalItems:count,totalPages:Math.ceil(count/limit)},"Oficinas Recuperadas con exito"))
+  }
 }
 
 export const oficinacontroller = new oficinaController();

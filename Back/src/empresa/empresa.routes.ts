@@ -6,6 +6,7 @@ import { ModifyEmpresaSchema } from "./DTO/ModifyEmpresa.dto.js";
 import {DeleteEmpresaSchema}  from "./DTO/DeleteEmpresa.dto.js";
 import { authenticateToken } from "../middlewares/auth.middleware.js";
 import { authorizeRoles } from "../middlewares/role.middleware.js";
+import { PaginatedEmpresaQuerySchema } from "./DTO/PaginateEmpresa.dto.js";
 
 export const empresarouter:Router = Router();
 
@@ -13,3 +14,4 @@ empresarouter.post("/empresas",authenticateToken,authorizeRoles('S_ADMIN'),Valid
 empresarouter.get("/empresas", authenticateToken,empresacontroller.findAll);
 empresarouter.put("/empresas/:id",authenticateToken,ValidationMiddleware(ModifyEmpresaSchema) ,empresacontroller.updateEmpresa);
 empresarouter.delete("/empresas/:id",authenticateToken,ValidationMiddleware(DeleteEmpresaSchema), empresacontroller.deleteEmpresa);
+empresarouter.get("/empresas/paginated",authenticateToken,authorizeRoles('S_ADMIN'),ValidationMiddleware(PaginatedEmpresaQuerySchema),empresacontroller.getPaginatedEmpresa);
