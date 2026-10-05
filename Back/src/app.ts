@@ -1,4 +1,5 @@
 import Express from 'express';
+import { personrouter } from './persona/persona.route.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import zod from 'zod';
@@ -54,6 +55,8 @@ app.use('/api', tecnicorouter);
 app.use('/api', ticketrouter);
 app.use('/api', asignacionrouter)
 app.use('/api/auth', authRouter);
+app.use('/api',personrouter)
+
 
 app.use(ErrorHander);
 

@@ -1,11 +1,12 @@
 import { type Request, type Response } from "express";
 import { TicketService } from "./ticket.service.js";
-import { ApiSuccessResponse } from "../utils/api.response.js";
+import { ApiPaginationResponse, ApiSuccessResponse } from "../utils/api.response.js";
 import type { CreateTicketInDto } from "./DTO/CreateTicket.dto.js";
 import { TicketOutSchema, type TicketDto } from "./DTO/TicketOut.dto.js";
 import { wrap } from "@mikro-orm/core";
 import type { ResolveTicketInBodyDto } from "./DTO/ResolveTicket.dto.js";
 import type { ModifyTicketInBodyDto, ModifyTicketInParamsDto } from "./DTO/ModifyTicket.dto.js";
+import type { ticketQueryParamsDto } from "./DTO/PaginatedTicket.dto.js";
 
 class ticketController {
 
@@ -35,6 +36,22 @@ class ticketController {
     const ticketResolved = await TicketService.resolveTicket(solucion, id);
     const ticketDto=TicketOutSchema.parse(wrap(ticketResolved).toJSON())
     res.status(200).json(new ApiSuccessResponse<TicketDto>(ticketDto,"Ticket Resuelto con exito"));
+  }
+
+  async GetAllPaginated(req:Request<any, any,any,ticketQueryParamsDto>,res:Response){
+
+    const { categoria, estado, page, cantPerPage } = req.query;
+
+    const categoriaId=categoria?Number(categoria):undefined;
+    const estadoId=estado?Number(estado):undefined;
+    const pageNum=Number(page);
+    const limit=Number(cantPerPage);
+
+
+    const {tickets,count}=await TicketService.getPaginatedByStateAndCategory(pageNum,limit,estadoId,categoriaId)
+    const ticketsDto=tickets.map(t=>TicketOutSchema.parse(wrap(t).toJSON()))
+
+    res.status(200).json(new ApiPaginationResponse<TicketDto>(ticketsDto,{currentPage:pageNum,itemsPerPage:limit,totalItems:count,totalPages:Math.ceil(count/limit)},"Tickets recuperados"))
   }
 
 }

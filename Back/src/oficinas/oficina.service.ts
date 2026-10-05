@@ -21,4 +21,8 @@ export class OficinaService {
      if(!oficinafound)throw new NotFoundError("Oficina no encontrada",`Oficina con id ${id} no encontrada`)
     return await oficinaDAO.updateOficina(oficinaInput,oficinafound)
   }
+
+  static async getPaginado(page:number,cantPerPage:number){
+    return await oficinaDAO.Paginated({},cantPerPage,page,{populate:['usuarios']});
+  }
 }

@@ -37,4 +37,10 @@ export class userDAO {
       const userfound = await em.findOne(UserSchema, filters)
       return userfound;
   }
+
+  static async Paginated(filters:any, page:number,limit:number){
+    const em=orm.em;
+    const [usuarios,count]= await em.findAndCount(UserSchema,filters,{limit:limit,offset:(page-1)*limit,populate:['oficina']})
+    return {usuarios,count};
+  }
 }

@@ -10,6 +10,5 @@ export const UserSchema = defineEntity({
     extends:PersonSchema,
     discriminatorValue:"user",
     properties:{ 
-        oficina:()=>p.manyToOne(OficinaSchema).inversedBy('usuarios').nullable(),
     }
 });

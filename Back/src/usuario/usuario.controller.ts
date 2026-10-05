@@ -1,10 +1,12 @@
 import { type Request, type Response } from "express";
 import { UsuarioService } from "./usuario.service.js";
-import { ApiSuccessResponse } from "../utils/api.response.js";
+import { ApiPaginationResponse, ApiSuccessResponse } from "../utils/api.response.js";
 import { UsuarioOutSchema, type UsuarioOutDto } from "./DTO/UsuarioOut.dto.js";
 import {wrap} from '@mikro-orm/core'
 import type { CreateUsuarioInDto } from "./DTO/CreateUsuario.dto.js";
 import type { ModifyUsuarioBodyDTO, ModifyUsuarioParamsDTO } from "./DTO/ModifyUsuario.dto.js";
+import type { PaginatedUserInDto } from "./DTO/PaginatedUser.dto.js";
+import { UserOutPaginatedSchema, type usuarioPaginatedDto } from "./DTO/UsuarioPaginatedOut.dto.js";
 class userController {
 
   async createUser(req: Request<any,any,CreateUsuarioInDto>, res: Response) {
@@ -28,12 +30,23 @@ class userController {
   }
 
   async deleteUser(req: Request<ModifyUsuarioParamsDTO,any,any>, res: Response) {
-      const dni = req.params.dni;
-      await UsuarioService.deleteUsuario(dni)
+    const dni = req.params.dni;
+    await UsuarioService.deleteUsuario(dni)
 
-      res.status(200).json(new ApiSuccessResponse<null>(null,"Usuario eliminado con exito"));
+    res.status(200).json(new ApiSuccessResponse<null>(null,"Usuario eliminado con exito"));
   }
 
+  async paginatedUsers(req:Request<any,any,any,PaginatedUserInDto>,res:Response){
+    const {page,cantPerPage}=req.query;
+
+    const pageNum=Number(page);
+    const limit=Number(cantPerPage);
+
+    const {usuarios,count}=await UsuarioService.getPaginated(pageNum,limit);
+    const usuariosDto=usuarios.map(u=>UserOutPaginatedSchema.parse(wrap(u).toJSON()))
+
+    res.status(200).json(new ApiPaginationResponse<usuarioPaginatedDto>(usuariosDto,{currentPage:pageNum,itemsPerPage:limit,totalItems:count,totalPages:Math.ceil(count/limit)},"Usuarios recuperados con exito"))
+  }
 }
 
 export const usercontroller = new userController();
