@@ -8,7 +8,7 @@ export const EmpresaSchema = defineEntity({
     id: p.integer().primary().autoincrement(),
     nombre: p.string(),
     personas: ()=>p.oneToMany(PersonSchema).mappedBy('empresa'),
-    admin: ()=>p.oneToMany(adminSchema).mappedBy('empresa')
+    admin: ()=>p.oneToMany(adminSchema).mappedBy('empresa').nullable()
   }
 });
 

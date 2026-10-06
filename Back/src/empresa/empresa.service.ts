@@ -1,10 +1,15 @@
 import { populate } from "dotenv";
 import { NotFoundError } from "../utils/base.error.js";
 import { empresaDAO } from "./empresa.DAO.js";
+import { EstadoDAO } from "../estado/estado.DAO.js";
 
 export class EmpresaService {
   static async createEmpresa(empresaInput: any) {
-    return await empresaDAO.createEmpresa(empresaInput);
+    const empresa=await empresaDAO.createEmpresa(empresaInput);
+    console.log("Aun no se crearon; estados iniciales para la empresa con id:", empresa.id);
+    await EstadoDAO.createInitialStates(empresa.id);
+    console.log("Se crearon los estados iniciales para la empresa con id:", empresa.id);
+    return empresa;
   }
 
   static async getAllEmpresas() {

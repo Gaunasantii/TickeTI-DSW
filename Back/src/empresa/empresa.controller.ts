@@ -11,7 +11,7 @@ class empresaController {
 
   async createEmpresa(req: Request<any,any,CreateEmpresaInDto>, res: Response) {
       const empresaInput = req.body;
-      EmpresaService.createEmpresa(empresaInput)
+      await EmpresaService.createEmpresa(empresaInput)
       res.status(201).json(new ApiSuccessResponse<null>(null,"Empresa creada con exito"));
   };
 
