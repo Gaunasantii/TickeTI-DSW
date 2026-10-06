@@ -46,8 +46,9 @@ export class TicketService {
     return newInputTicket;
   }
 
-  static async getPaginatedByStateAndCategory(page:number,limit:number,estadoId:number|undefined,categoriaId:number|undefined){
+  static async getPaginatedByStateAndCategory(user:any,page:number,limit:number,estadoId:number|undefined,categoriaId:number|undefined){
     let filters={};
+    if(user.rol==='tecnico')filters={...filters,usuario:{$ne:user.dni}};
     if(estadoId!=undefined)filters={...filters,estado:estadoId};
     if(categoriaId!=undefined)filters={...filters,categoria:categoriaId};
     const {tickets,count}=await ticketDAO.GetAllPaginated(filters,page,limit);

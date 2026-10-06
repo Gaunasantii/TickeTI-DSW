@@ -50,7 +50,7 @@ class ticketController {
     const limit=Number(cantPerPage);
 
 
-    const {tickets,count}=await TicketService.getPaginatedByStateAndCategory(pageNum,limit,estadoId,categoriaId)
+    const {tickets,count}=await TicketService.getPaginatedByStateAndCategory(req.user,pageNum,limit,estadoId,categoriaId)
     const ticketsDto=tickets.map(t=>TicketOutSchema.parse(wrap(t).toJSON()))
 
     res.status(200).json(new ApiPaginationResponse<TicketDto>(ticketsDto,{currentPage:pageNum,itemsPerPage:limit,totalItems:count,totalPages:Math.ceil(count/limit)},"Tickets recuperados"))
