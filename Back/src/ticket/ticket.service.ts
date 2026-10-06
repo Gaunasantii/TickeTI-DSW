@@ -69,4 +69,12 @@ export class TicketService {
     if(!newCategoria)throw new NotFoundError("Categoría no encontrada");
     return await ticketDAO.updateTicket({categoria:newCategoriaId}, ticketToUpdate);
   }
+
+  static async ChangeState(ticketId: number, newEstadoId: number) {
+    const ticketToUpdate = await ticketDAO.findOne({ id: ticketId });
+    if(!ticketToUpdate)throw new NotFoundError("Ticket no encontrado");
+    const newEstado = await EstadoDAO.findOne({ id: newEstadoId });
+    if(!newEstado)throw new NotFoundError("Estado no encontrado");
+    return await ticketDAO.updateTicket({estado:newEstadoId}, ticketToUpdate);
+  }
 }

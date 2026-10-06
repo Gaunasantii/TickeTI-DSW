@@ -9,6 +9,7 @@ import type { ModifyTicketInBodyDto, ModifyTicketInParamsDto } from "./DTO/Modif
 import type { ticketQueryParamsDto } from "./DTO/PaginatedTicket.dto.js";
 import type { ChangePriorityInBodyDto } from "./DTO/ChangePriority.dto.js";
 import type { ChangeCategoriaInBodyDto } from "./DTO/ChangeCategoria.dto.js";
+import type { ChangeStateInBodyDto } from "./DTO/ChangeState.dto.js";
 
 class ticketController {
 
@@ -69,6 +70,14 @@ class ticketController {
     const ticketUpdated = await TicketService.ChangeCategoria(id, newCategoriaId);
     const ticketDto=TicketOutSchema.parse(wrap(ticketUpdated).toJSON())
     res.status(200).json(new ApiSuccessResponse<TicketDto>(ticketDto,"Categoría del ticket actualizada con exito"));
+  }
+
+  async ChangeState(req: Request<ModifyTicketInParamsDto,any,ChangeStateInBodyDto>, res: Response) {
+    const id = Number(req.params.id);
+    const newEstadoId = req.body.estado;
+    const ticketUpdated = await TicketService.ChangeState(id, newEstadoId);
+    const ticketDto=TicketOutSchema.parse(wrap(ticketUpdated).toJSON())
+    res.status(200).json(new ApiSuccessResponse<TicketDto>(ticketDto,"Estado del ticket actualizado con exito"));
   }
 }
 
