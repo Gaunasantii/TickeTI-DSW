@@ -35,4 +35,25 @@ export class categoriaDAO {
       em.remove(categoriaFound)
       await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
   }
+
+  static async createInitialCategorias(idEmpresa:number) {
+      const em = orm.em ;
+      await em.create(CategoriaSchema,{
+                nombre: "Hardware",
+                empresa:idEmpresa
+      });
+
+      await em.create(CategoriaSchema,{
+                nombre: "Software",
+                empresa:idEmpresa
+      });
+
+      await em.create(CategoriaSchema,{
+                nombre: "Redes",
+                empresa:idEmpresa
+      });
+
+      await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
+      return;
+  }
 }

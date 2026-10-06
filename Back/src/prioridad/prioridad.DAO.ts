@@ -35,4 +35,28 @@ export class prioridadDAO {
       em.remove(prioridadFound);
       await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
   }
+
+  static async createInitialPrioridades(idEmpresa:number) {
+      const em = orm.em ;
+      await em.create(PrioridadSchema,{
+                nombre: "Alta",
+                tiempoLimiteResolucion: 86400, 
+                empresa:idEmpresa
+      });
+
+      await em.create(PrioridadSchema,{
+                nombre: "Media",
+                tiempoLimiteResolucion: 259200, 
+                empresa:idEmpresa
+      });
+
+      await em.create(PrioridadSchema,{
+                nombre: "Baja",
+                tiempoLimiteResolucion: 432000, 
+                empresa:idEmpresa
+      });
+
+      await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
+      return;
+  }
 }

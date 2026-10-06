@@ -2,11 +2,17 @@ import { populate } from "dotenv";
 import { NotFoundError } from "../utils/base.error.js";
 import { empresaDAO } from "./empresa.DAO.js";
 import { EstadoDAO } from "../estado/estado.DAO.js";
+import { prioridadDAO } from "../prioridad/prioridad.DAO.js";
+import { categoriaDAO } from "../categoria/categoria.DAO.js";
 
 export class EmpresaService {
   static async createEmpresa(empresaInput: any) {
     const empresa=await empresaDAO.createEmpresa(empresaInput);
-    await EstadoDAO.createInitialStates(empresa.id);
+    Promise.all([
+      EstadoDAO.createInitialStates(empresa.id),
+      prioridadDAO.createInitialPrioridades(empresa.id),
+      categoriaDAO.createInitialCategorias(empresa.id)
+    ]);
     return empresa;
   }
 
