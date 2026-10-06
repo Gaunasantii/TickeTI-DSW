@@ -4,6 +4,7 @@ import { TicketDashboardView, TicketItem } from "../../components/tickets/Ticket
 import { obtenerTickets } from "../../services/TicketServices/ObtenerTickets";
 import { actualizarTicket } from "../../services/TicketServices/ActualizarTicket";
 import { crearTicket } from "../../services/TicketServices/CrearTicket";
+import { api } from "../../services/api";
 
 export const TecnicoPage: React.FC = () => {
   const [tickets, setTickets] = useState<TicketItem[]>([]);
@@ -23,16 +24,20 @@ export const TecnicoPage: React.FC = () => {
   }
 
   const cargarTickets = async () => {
-    try {
-      setCargando(true);
-      const res = await obtenerTickets();
-      setTickets(res);
-    } catch (err: any) {
-      console.error("Error al cargar tickets:", err);
-    } finally {
-      setCargando(false);
-    }
-  };
+  try {
+    setCargando(true);
+    const res = await api("/tickets");
+    if (!res.ok) return setTickets([]);
+    const json = await res.json();
+    // El backend ya devuelve exactamente los tickets autorizados para la sesión actual
+    setTickets(json?.data || (Array.isArray(json) ? json : []));
+  } catch (err) {
+    console.error("Error al cargar tickets:", err);
+    setTickets([]);
+  } finally {
+    setCargando(false);
+  }
+};
 
   useEffect(() => {
     cargarTickets();
@@ -70,39 +75,34 @@ export const TecnicoPage: React.FC = () => {
     }
   };
 
-  const handleCambiarEstado = async (ticketId: string | number, nuevoEstadoId: number) => {
-    if (nuevoEstadoId === 4) {
-      const confirma = window.confirm(
-        "¿Estás seguro de que deseás cerrar este ticket?\nPasará a considerarse inactivo en la bandeja principal."
-      );
-      if (!confirma) return;
-    }
-
-    // Buscamos el ticket en memoria para conservar sus atributos
+  const handleCambiarEstado = async (ticketId: string | number, nuevoEstadoId: number | string) => {
     const ticketActual = tickets.find((t) => String(t.id) === String(ticketId));
     if (!ticketActual) return;
 
     try {
-      await actualizarTicket(ticketId, {
+      // Extraemos IDs numéricos de forma segura
+      const pId = typeof ticketActual.prioridad === "object" && ticketActual.prioridad !== null
+        ? Number((ticketActual.prioridad as any).id) || 1
+        : Number(ticketActual.prioridad) || 1;
+
+      const cId = typeof ticketActual.categoria === "object" && ticketActual.categoria !== null
+        ? Number((ticketActual.categoria as any).id) || 1
+        : Number(ticketActual.categoria) || 1;
+
+      // El body cumple de forma exacta con ModifyTicketSchema
+      const payload = {
         title: ticketActual.title || ticketActual.asunto || "Sin título",
         description: ticketActual.description || ticketActual.descripcion || "Sin descripción",
         estado: Number(nuevoEstadoId),
-        prioridad: Number(
-          ticketActual.prioridadId ??
-          (typeof ticketActual.prioridad === "object" ? (ticketActual.prioridad as any)?.id : ticketActual.prioridad) ??
-          1
-        ),
-        categoria: Number(
-          ticketActual.categoriaId ??
-          (typeof ticketActual.categoria === "object" ? (ticketActual.categoria as any)?.id : ticketActual.categoria) ??
-          1
-        ),
-      });
+        prioridad: pId,
+        categoria: cId,
+      };
 
+      await actualizarTicket(ticketId, payload);
       await cargarTickets();
     } catch (err: any) {
-      console.error("Error al cambiar estado:", err);
-      alert(err.message || "No se pudo cambiar el estado del ticket");
+      console.error("Detalle del error:", err);
+      alert(err.message || "Error al cambiar estado del ticket");
     }
   };
 

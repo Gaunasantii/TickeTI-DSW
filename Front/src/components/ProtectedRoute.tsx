@@ -25,7 +25,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ rolesPermitidos 
 
   let userRol = "user";
   if (rolBruto.includes("s_admin") || rolBruto.includes("super")) {
-    userRol = "s_admin";
+    userRol = "S_ADMIN";
   } else if (rolBruto.includes("admin")) {
     userRol = "admin";
   } else if (rolBruto.includes("tec")) {
@@ -36,7 +36,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ rolesPermitidos 
     const permitidosNormalizados = rolesPermitidos.map((r) => r.toLowerCase());
 
     const tienePermiso = permitidosNormalizados.some((p) => {
-      if ((p.includes("s_admin") || p.includes("super")) && userRol === "s_admin") return true;
+      if ((p.includes("S_ADMIN") || p.includes("super")) && userRol === "S_ADMIN") return true;
       if (p.includes("admin") && !p.includes("super") && !p.includes("s_") && userRol === "admin") return true;
       if (p.includes("tec") && userRol === "tecnico") return true;
       if ((p === "user" || p === "usuario" || p === "solicitante" || p === "cliente") && userRol === "user") return true;
@@ -44,7 +44,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ rolesPermitidos 
     });
 
     if (!tienePermiso) {
-      if (userRol === "s_admin") return <Navigate to="/superadmin" replace />;
+      if (userRol === "S_ADMIN") return <Navigate to="/superadmin" replace />;
       if (userRol === "admin") return <Navigate to="/admin" replace />;
       if (userRol === "tecnico") return <Navigate to="/tecnico" replace />;
       return <Navigate to="/usuario" replace />;

@@ -1,11 +1,11 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DashboardLayout } from "../../components/Layout/DashboardLayout";
 import { TicketDashboardView, TicketItem } from "../../components/tickets/TicketDashboardView";
-import { obtenerTickets } from "../../services/TicketServices/ObtenerTickets";
+import { api } from "../../services/api";
 import { crearTicket } from "../../services/TicketServices/CrearTicket";
 
 export const UserDashboardPage: React.FC = () => {
-  const [todosLosTickets, setTodosLosTickets] = useState<TicketItem[]>([]);
+  const [tickets, setTickets] = useState<TicketItem[]>([]);
   const [cargando, setCargando] = useState(true);
 
   const [mostrarForm, setMostrarForm] = useState(false);
@@ -13,7 +13,7 @@ export const UserDashboardPage: React.FC = () => {
   const [descripcion, setDescripcion] = useState("");
   const [creando, setCreando] = useState(false);
 
-  const usuarioRaw = sessionStorage.getItem("user");
+  const usuarioRaw = sessionStorage.getItem("user") || sessionStorage.getItem("usuario");
   let usuario: any = null;
   try {
     usuario = usuarioRaw ? JSON.parse(usuarioRaw) : null;
@@ -24,10 +24,18 @@ export const UserDashboardPage: React.FC = () => {
   const cargarTickets = async () => {
     try {
       setCargando(true);
-      const res = await obtenerTickets();
-      setTodosLosTickets(res);
-    } catch (err: any) {
+      const res = await api("/tickets");
+      if (!res.ok) {
+        setTickets([]);
+        return;
+      }
+      const json = await res.json();
+      const lista: TicketItem[] = json?.data || (Array.isArray(json) ? json : []);
+      // El backend ya devuelve exclusivamente los tickets correspondientes al usuario
+      setTickets(lista);
+    } catch (err) {
       console.error("Error al cargar tickets:", err);
+      setTickets([]);
     } finally {
       setCargando(false);
     }
@@ -36,21 +44,6 @@ export const UserDashboardPage: React.FC = () => {
   useEffect(() => {
     cargarTickets();
   }, []);
-
-  const misTickets = useMemo(() => {
-    const miDni = String(usuario?.dni || "").trim();
-    if (!miDni) return todosLosTickets;
-
-    return todosLosTickets.filter((t) => {
-      const ticketDni = String(
-        t.usuarioDni ||
-        t.usuario_dni ||
-        (typeof t.usuario === "object" ? t.usuario?.dni : t.usuario) ||
-        ""
-      ).trim();
-      return ticketDni === miDni;
-    });
-  }, [todosLosTickets, usuario]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -155,9 +148,9 @@ export const UserDashboardPage: React.FC = () => {
           </div>
         )}
 
-        {/* Listado de tickets sin las métricas superiores */}
+        {/* Listado directo sin métricas superiores */}
         <TicketDashboardView
-          tickets={misTickets}
+          tickets={tickets}
           cargando={cargando}
           onRefresh={cargarTickets}
           mostrarAccionesEstado={false}

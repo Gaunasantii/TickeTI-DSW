@@ -3,59 +3,60 @@ import { DashboardLayout } from "../../components/Layout/DashboardLayout";
 import { TicketDashboardView, TicketItem } from "../../components/tickets/TicketDashboardView";
 import { obtenerTickets } from "../../services/TicketServices/ObtenerTickets";
 import { actualizarTicket } from "../../services/TicketServices/ActualizarTicket";
+import { api } from "../../services/api";
 
 export const AdminPage: React.FC = () => {
   const [tickets, setTickets] = useState<TicketItem[]>([]);
   const [cargando, setCargando] = useState(true);
 
   const cargarDatos = async () => {
-    try {
-      setCargando(true);
-      const res = await obtenerTickets();
-      setTickets(res);
-    } catch (err: any) {
-      console.error("Error al cargar tickets:", err);
-    } finally {
-      setCargando(false);
-    }
-  };
+  try {
+    setCargando(true);
+    const res = await api("/tickets");
+    if (!res.ok) return setTickets([]);
+    const json = await res.json();
+    // El backend ya devuelve exactamente los tickets autorizados para la sesión actual
+    setTickets(json?.data || (Array.isArray(json) ? json : []));
+  } catch (err) {
+    console.error("Error al cargar tickets:", err);
+    setTickets([]);
+  } finally {
+    setCargando(false);
+  }
+};
 
   useEffect(() => {
     cargarDatos();
   }, []);
 
-  const handleCambiarEstado = async (ticketId: string | number, nuevoEstadoId: number) => {
-    if (nuevoEstadoId === 4) {
-      const confirma = window.confirm(
-        "¿Deseás archivar y marcar como cerrado este ticket?"
-      );
-      if (!confirma) return;
-    }
-
+  const handleCambiarEstado = async (ticketId: string | number, nuevoEstadoId: number | string) => {
     const ticketActual = tickets.find((t) => String(t.id) === String(ticketId));
     if (!ticketActual) return;
 
     try {
-      await actualizarTicket(ticketId, {
+      // Extraemos IDs numéricos de forma segura
+      const pId = typeof ticketActual.prioridad === "object" && ticketActual.prioridad !== null
+        ? Number((ticketActual.prioridad as any).id) || 1
+        : Number(ticketActual.prioridad) || 1;
+
+      const cId = typeof ticketActual.categoria === "object" && ticketActual.categoria !== null
+        ? Number((ticketActual.categoria as any).id) || 1
+        : Number(ticketActual.categoria) || 1;
+
+      // El body cumple de forma exacta con ModifyTicketSchema
+      const payload = {
         title: ticketActual.title || ticketActual.asunto || "Sin título",
         description: ticketActual.description || ticketActual.descripcion || "Sin descripción",
         estado: Number(nuevoEstadoId),
-        prioridad: Number(
-          ticketActual.prioridadId ??
-          (typeof ticketActual.prioridad === "object" ? (ticketActual.prioridad as any)?.id : ticketActual.prioridad) ??
-          1
-        ),
-        categoria: Number(
-          ticketActual.categoriaId ??
-          (typeof ticketActual.categoria === "object" ? (ticketActual.categoria as any)?.id : ticketActual.categoria) ??
-          1
-        ),
-      });
+        prioridad: pId,
+        categoria: cId,
+      };
 
+      await actualizarTicket(ticketId, payload);
       await cargarDatos();
     } catch (err: any) {
-      console.error("Error al cambiar estado:", err);
-      alert(err.message || "Error al cambiar estado");
+      console.error("Detalle del error:", err);
+      alert(err.message || "Error al cambiar estado del ticket");
     }
   };
 
