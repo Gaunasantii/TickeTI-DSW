@@ -6,9 +6,7 @@ import { EstadoDAO } from "../estado/estado.DAO.js";
 export class EmpresaService {
   static async createEmpresa(empresaInput: any) {
     const empresa=await empresaDAO.createEmpresa(empresaInput);
-    console.log("Aun no se crearon; estados iniciales para la empresa con id:", empresa.id);
     await EstadoDAO.createInitialStates(empresa.id);
-    console.log("Se crearon los estados iniciales para la empresa con id:", empresa.id);
     return empresa;
   }
 
