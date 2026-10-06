@@ -7,6 +7,7 @@ import { wrap } from "@mikro-orm/core";
 import type { ResolveTicketInBodyDto } from "./DTO/ResolveTicket.dto.js";
 import type { ModifyTicketInBodyDto, ModifyTicketInParamsDto } from "./DTO/ModifyTicket.dto.js";
 import type { ticketQueryParamsDto } from "./DTO/PaginatedTicket.dto.js";
+import type { ChangePriorityInBodyDto } from "./DTO/ChangePriority.dto.js";
 
 class ticketController {
 
@@ -53,6 +54,13 @@ class ticketController {
     res.status(200).json(new ApiPaginationResponse<TicketDto>(ticketsDto,{currentPage:pageNum,itemsPerPage:limit,totalItems:count,totalPages:Math.ceil(count/limit)},"Tickets recuperados"))
   }
 
+  async ChangePriority(req: Request<ModifyTicketInParamsDto,any,ChangePriorityInBodyDto>, res: Response) {
+    const id = Number(req.params.id);
+    const newPriorityId = req.body.prioridad;
+    const ticketUpdated = await TicketService.ChangePriority(id, newPriorityId);
+    const ticketDto=TicketOutSchema.parse(wrap(ticketUpdated).toJSON())
+    res.status(200).json(new ApiSuccessResponse<TicketDto>(ticketDto,"Prioridad del ticket actualizada con exito"));
+  }
 }
 
 export const ticketcontroller = new ticketController();

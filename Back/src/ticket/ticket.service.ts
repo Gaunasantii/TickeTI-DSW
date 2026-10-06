@@ -53,4 +53,12 @@ export class TicketService {
     const {tickets,count}=await ticketDAO.GetAllPaginated(filters,page,limit);
     return {tickets,count};
   }
+
+  static async ChangePriority(ticketId: number, newPriorityId: number) {
+    const ticketToUpdate = await ticketDAO.findOne({ id: ticketId });
+    if(!ticketToUpdate)throw new NotFoundError("Ticket no encontrado");
+    const newPriority = await prioridadDAO.findOne({ id: newPriorityId });
+    if(!newPriority)throw new NotFoundError("Prioridad no encontrada");
+    return await ticketDAO.updateTicket({prioridad:newPriorityId}, ticketToUpdate);
+  }
 }
