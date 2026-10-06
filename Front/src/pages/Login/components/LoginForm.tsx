@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { LoginValues } from '../../../types/LoginValues.ts';
 
-interface LoginProps{
-  onSubmit:(FormData:LoginValues)=>void
+interface LoginProps {
+  onSubmit: (FormData: LoginValues) => void
 }
 
-export const LoginForm = ({onSubmit}:LoginProps) => {
+export const LoginForm = ({ onSubmit }: LoginProps) => {
   const [formData, setFormData] = useState({ email: '', pass: '' });
   const [verPass, setVerPass] = useState(false);
 
@@ -15,21 +15,21 @@ export const LoginForm = ({onSubmit}:LoginProps) => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); 
+    e.preventDefault();
     onSubmit(formData)
   };
 
-return (
+  return (
     <>
-      <div className="flex flex-col items-center justify-center min-h-[70vh] px-4">
-        <div className="w-full max-w-sm flex flex-col gap-6 p-8 rounded-xl border border-gray-200 shadow-md bg-white">
-          <h2 className="text-2xl font-bold text-gray-900 text-center">
+      <div className="flex flex-col items-center justify-center min-h-[70vh] px-4 bg-white dark:bg-slate-900 transition-colors duration-300">
+        <div className="w-full max-w-sm flex flex-col gap-6 p-8 rounded-xl border border-gray-200 dark:border-slate-700 shadow-md bg-white dark:bg-slate-800">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100 text-center">
             Iniciar Sesión
           </h2>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-gray-700">
+              <label className="text-sm font-medium text-gray-700 dark:text-slate-300">
                 E-mail
               </label>
               <input
@@ -38,12 +38,12 @@ return (
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="px-3 py-2 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 transition-all duration-300"
+                className="px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-slate-400 transition-all duration-300"
               />
             </div>
 
             <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-gray-700">
+              <label className="text-sm font-medium text-gray-700 dark:text-slate-300">
                 Contraseña
               </label>
               <input
@@ -52,7 +52,7 @@ return (
                 value={formData.pass}
                 onChange={handleChange}
                 required
-                className="px-3 py-2 rounded-lg border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 transition-all duration-300"
+                className="px-3 py-2 rounded-lg border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-slate-400 transition-all duration-300"
               />
             </div>
 
@@ -61,13 +61,13 @@ return (
               className="
                 mt-2
                 px-6 py-3
-                bg-gray-950
-                text-white
+                bg-gray-950 dark:bg-slate-100
+                text-white dark:text-slate-900
                 text-sm font-medium
                 rounded-lg
                 transition-all
                 duration-300
-                hover:bg-gray-800
+                hover:bg-gray-800 dark:hover:bg-slate-300
                 hover:shadow-md
                 active:scale-95">
               Iniciar Sesión

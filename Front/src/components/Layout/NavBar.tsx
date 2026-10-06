@@ -5,10 +5,10 @@ export const NavBar = () => {
   const navigate = useNavigate();
 
   return (
-    <nav className="flex sticky top-0 w-full flex-row p-5 bg-white shadow-md justify-between items-center z-50">
+    <nav className="flex sticky top-0 w-full flex-row p-5 bg-white dark:bg-slate-900 shadow-md dark:shadow-slate-800 justify-between items-center z-50 transition-colors duration-300">
       <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate("/")}>
         <LogoIcon />
-        <span className="text-lg font-semibold text-gray-800">TickeTI Support</span>
+        <span className="text-lg font-semibold text-gray-800 dark:text-slate-100">TickeTI Support</span>
       </div>
 
       <div className="flex flex-row justify-end items-center gap-6">
