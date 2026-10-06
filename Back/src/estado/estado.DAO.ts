@@ -37,4 +37,24 @@ export class EstadoDAO {
       await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
       return stateToDelete;
   }
+
+  static async createInitialStates(idEmpresa:number) {
+      const em = orm.em ;
+      await em.create(EstadoSchema,{
+                nombre: "Abierto",
+                descripcion: "Ticket recién creado, pendiente de revisión",
+                esEstadoInicial: true,
+                empresa:idEmpresa
+      });
+
+      await em.create(EstadoSchema,{
+                nombre: "Cerrado",
+                descripcion: "Ticket cerrado",
+                esEstadoFinal:true,
+                empresa:idEmpresa
+      });
+
+      await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
+      return;
+  }
 }

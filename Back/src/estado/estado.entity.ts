@@ -7,6 +7,8 @@ export const EstadoSchema = defineEntity({
     id: p.integer().primary().autoincrement(),
     nombre: p.string(),
     descripcion: p.string(),
+    esEstadoInicial:p.boolean().default(false),
+    esEstadoFinal: p.boolean().default(false),
     empresa:()=> p.manyToOne(EmpresaSchema)
   }
 });

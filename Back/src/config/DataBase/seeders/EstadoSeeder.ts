@@ -10,6 +10,7 @@ export class EstadoSeeder extends Seeder{
             em.create(EstadoSchema,{
                 nombre: "Abierto",
                 descripcion: "Ticket recién creado, pendiente de revisión",
+                esEstadoInicial: true,
                 empresa:e.id
             })
             em.create(EstadoSchema,{
@@ -20,6 +21,7 @@ export class EstadoSeeder extends Seeder{
             em.create(EstadoSchema,{
                 nombre: "Cerrado",
                 descripcion: "Ticket resuelto y cerrado",
+                esEstadoFinal:true,
                 empresa:e.id
             })
 
