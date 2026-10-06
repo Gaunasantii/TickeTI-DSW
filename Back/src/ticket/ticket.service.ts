@@ -1,6 +1,7 @@
 import { asignacionDAO } from "../asignacion/asignacion.DAO.js";
 import { categoriaDAO } from "../categoria/categoria.DAO.js";
 import { EstadoDAO } from "../estado/estado.DAO.js";
+import { prioridadDAO } from "../prioridad/prioridad.DAO.js";
 import { NotFoundError, ConflictError } from "../utils/base.error.js";
 import type { ModifyTicketInBodyDto } from "./DTO/ModifyTicket.dto.js";
 import { ticketDAO } from "./ticket.DAO.js";
@@ -12,7 +13,12 @@ export class TicketService {
   }
 
   static async createTicket(ticketInput: any) {
-    ticketInput={...ticketInput,fechaCreacion:new Date()}
+    const cat=await categoriaDAO.findOne({id:ticketInput.categoria})
+    if(!cat)throw new NotFoundError("Categoría no encontrada");
+    const prioridad = await prioridadDAO.findOne({id:ticketInput.prioridad})
+    if(!prioridad)throw new NotFoundError("Prioridad no encontrada");
+    const initialState=await EstadoDAO.findOne({esEstadoInicial:true})
+    ticketInput={...ticketInput,fechaCreacion:new Date(),estado:initialState!.id}
     return await ticketDAO.createTicket(ticketInput);
   }
 
