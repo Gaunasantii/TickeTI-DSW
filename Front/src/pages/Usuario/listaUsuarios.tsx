@@ -45,24 +45,26 @@ export const ListaUsuarios: React.FC = () => {
   const cargarUsuarios = async () => {
     try {
       setCargando(true);
-      const [resU, resT, resA] = await Promise.allSettled([
+      const [resU, resT] = await Promise.allSettled([
         api("/usuarios").then((r) => (r.ok ? r.json() : [])),
         api("/tecnicos").then((r) => (r.ok ? r.json() : [])),
-        api("/admins").then((r) => (r.ok ? r.json() : [])),
       ]);
 
       const listaU = resU.status === "fulfilled" ? unwrap(resU.value) : [];
       const listaT = resT.status === "fulfilled" ? unwrap(resT.value) : [];
-      const listaA = resA.status === "fulfilled" ? unwrap(resA.value) : [];
 
       const normU = listaU.map((u) => ({ ...u, type: "USER" }));
       const normT = listaT.map((t) => ({ ...t, type: "TECNICO" }));
-      const normA = listaA.map((a) => ({ ...a, type: "ADMIN" }));
 
+      const listaFinal = [ ...normU, ...normT,];
+      
       // Unificar por DNI
       const mapa = new Map<string, UsuarioItem>();
-      [...normU, ...normT, ...normA].forEach((item) => {
-        if (item.dni) mapa.set(String(item.dni), item);
+
+      listaFinal.forEach((item) => {
+        if(item.dni){
+          mapa.set(String(item.dni), item);
+        }
       });
 
       setUsuarios(Array.from(mapa.values()));
