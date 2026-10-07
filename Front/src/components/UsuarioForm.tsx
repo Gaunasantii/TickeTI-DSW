@@ -1,109 +1,120 @@
+import React, { useEffect, useState } from "react";
+import { ListarOficinas } from "../services/OficinaService/ListarOficina";
 
-import { useState } from 'react';
-import { usuarioService } from '../services/api';
+interface OficinaItem {
+  id: number | string;
+  nombre: string;
+}
 
-export const UsuarioForm = () => {
-  const [formData, setFormData] = useState({
-    dni: '',
-    apellido: '',
-    nombre: '',
-    telefono: '',
-    pass:'',
-  });
+interface UsuarioFormProps {
+  onSubmit: (data: any) => Promise<void>;
+  cargando?: boolean;
+}
 
-  const handleSubmit = async (e) => {
+export const UsuarioForm: React.FC<UsuarioFormProps> = ({ onSubmit, cargando }) => {
+  const [dni, setDni] = useState("");
+  const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
+  const [telefono, setTelefono] = useState("");
+  const [oficinaId, setOficinaId] = useState<string>("");
+  const [oficinas, setOficinas] = useState<OficinaItem[]>([]);
+
+  useEffect(() => {
+    const fetchOficinas = async () => {
+      try {
+        const res: any = await ListarOficinas();
+        const lista = res?.data || (Array.isArray(res) ? res : []);
+        setOficinas(lista);
+      } catch (err) {
+        console.error("Error al cargar oficinas:", err);
+      }
+    };
+    fetchOficinas();
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const resultado = await usuarioService.crearUsuario(formData);
-      alert('Usuario guardado con exito: ' + resultado.titulo);
-      
-      // Limpiar formulario dejando los valores por defecto
-      setFormData({ 
-        dni: '',
-        apellido: '',
-        nombre: '',
-        telefono: '',
-        pass: '',
-      });
-    } catch (error) {
-      alert('Error: ' + error.message);
-    }
+    await onSubmit({
+      dni,
+      nombre,
+      apellido,
+      telefono,
+      oficina: oficinaId ? Number(oficinaId) : undefined,
+    });
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-xl shadow-md border border-gray-200">
-      <h2 className="text-2xl font-bold mb-5 text-gray-800">Registrar Usuario</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-
-       // DNI
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700">DNI</label>
-          <input 
-            type="text" 
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            value={formData.dni}
-            onChange={(e) => setFormData({...formData, dni: e.target.value})}
-            required
-          />
-          <p className="text-[10px] text-gray-400 mt-1">* Se utilizará para identificar el usuario en el sistema.</p>
-        </div>
-        
-        //  Nombre
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Nombre</label>
-          <textarea
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            value={formData.nombre}
-            onChange={(e) => setFormData({...formData, nombre: e.target.value})}
-            required
-          />
-        </div>
-
-        //  Apellido
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Apellido</label>
-          <textarea
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            value={formData.apellido}
-            onChange={(e) => setFormData({...formData, apellido: e.target.value})}
-            required
-          />
-        </div>
-
-        //  Telefono
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Telefono</label>
-          <input 
-            type="text" 
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            value={formData.telefono}
-            onChange={(e) => setFormData({...formData, telefono: e.target.value})}
-            required
-          />
-        </div>
-
-        //  Contraseña
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Contraseña</label>
+          <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">DNI</label>
           <input
-            type="password"
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            value={formData.pass}
-            onChange={(e) => setFormData({ ...formData, pass: e.target.value })}
+            type="text"
             required
-            placeholder="Ingrese una contraseña temporal"
+            value={dni}
+            onChange={(e) => setDni(e.target.value)}
+            className="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white"
           />
         </div>
 
-        <button 
-          type="submit" 
-          className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300 shadow-sm"
+        <div>
+          <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">Oficina / Área</label>
+          <select
+            value={oficinaId}
+            onChange={(e) => setOficinaId(e.target.value)}
+            className="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white text-slate-700"
+          >
+            <option value="">Seleccionar Oficina (Opcional)</option>
+            {oficinas.map((of) => (
+              <option key={of.id} value={of.id}>
+                {of.nombre}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">Nombre</label>
+          <input
+            type="text"
+            required
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+            className="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white"
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">Apellido</label>
+          <input
+            type="text"
+            required
+            value={apellido}
+            onChange={(e) => setApellido(e.target.value)}
+            className="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white"
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">Teléfono</label>
+          <input
+            type="text"
+            value={telefono}
+            onChange={(e) => setTelefono(e.target.value)}
+            className="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white"
+          />
+        </div>
+      </div>
+
+      <div className="flex justify-end pt-2">
+        <button
+          type="submit"
+          disabled={cargando}
+          className="px-5 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition disabled:opacity-50"
         >
-          Guardar Usuario
+          {cargando ? "Guardando..." : "Registrar Usuario"}
         </button>
-      </form>
-    </div>
+      </div>
+    </form>
   );
 };
-
-
