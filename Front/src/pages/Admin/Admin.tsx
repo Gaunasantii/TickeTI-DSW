@@ -4,6 +4,7 @@ import { TicketDashboardView, TicketItem } from "../../components/tickets/Ticket
 import { obtenerTickets } from "../../services/TicketServices/ObtenerTickets";
 import { actualizarTicket } from "../../services/TicketServices/ActualizarTicket";
 import { api } from "../../services/api";
+import { cambiarEstadoTicket } from "../../services/TicketServices/CambiarEstadoTicket";
 
 export const AdminPage: React.FC = () => {
   const [tickets, setTickets] = useState<TicketItem[]>([]);
@@ -30,33 +31,12 @@ export const AdminPage: React.FC = () => {
   }, []);
 
   const handleCambiarEstado = async (ticketId: string | number, nuevoEstadoId: number | string) => {
-    const ticketActual = tickets.find((t) => String(t.id) === String(ticketId));
-    if (!ticketActual) return;
-
     try {
-      // Extraemos IDs numéricos de forma segura
-      const pId = typeof ticketActual.prioridad === "object" && ticketActual.prioridad !== null
-        ? Number((ticketActual.prioridad as any).id) || 1
-        : Number(ticketActual.prioridad) || 1;
-
-      const cId = typeof ticketActual.categoria === "object" && ticketActual.categoria !== null
-        ? Number((ticketActual.categoria as any).id) || 1
-        : Number(ticketActual.categoria) || 1;
-
-      // El body cumple de forma exacta con ModifyTicketSchema
-      const payload = {
-        title: ticketActual.title || ticketActual.asunto || "Sin título",
-        description: ticketActual.description || ticketActual.descripcion || "Sin descripción",
-        estado: Number(nuevoEstadoId),
-        prioridad: pId,
-        categoria: cId,
-      };
-
-      await actualizarTicket(ticketId, payload);
+      await cambiarEstadoTicket(ticketId, nuevoEstadoId);
       await cargarDatos();
     } catch (err: any) {
-      console.error("Detalle del error:", err);
-      alert(err.message || "Error al cambiar estado del ticket");
+      console.error("Error al cambiar estado:", err);
+      alert(err.message || "Error al cambiar el estado del ticket");
     }
   };
 

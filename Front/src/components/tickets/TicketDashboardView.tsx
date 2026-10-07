@@ -329,7 +329,7 @@ export const TicketDashboardView: React.FC<TicketDashboardViewProps> = ({
                   </div>
                 </div>
 
-                {/* Botones dinámicos de cambio de estado */}
+                {/* Botones dinámicos de cambio de estado con confirmación */}
                 {mostrarAccionesEstado && onCambiarEstado && estadosEmpresa.length > 0 && (
                   <div className="flex flex-wrap items-center gap-1.5 shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-slate-100">
                     {estadosEmpresa.map((est) => {
@@ -339,7 +339,20 @@ export const TicketDashboardView: React.FC<TicketDashboardViewProps> = ({
                           key={est.id}
                           type="button"
                           disabled={esActual}
-                          onClick={() => onCambiarEstado(t.id, est.id)}
+                          onClick={() => {
+                            const esCierre =
+                              est.nombre.toLowerCase().includes("cerrad") ||
+                              est.nombre.toLowerCase().includes("cerrar");
+
+                            if (esCierre) {
+                              const confirma = window.confirm(
+                                "Esta seguro que desea cerrar este ticket?"
+                              );
+                              if (!confirma) return;
+                            }
+
+                            onCambiarEstado(t.id, est.id);
+                          }}
                           className={`px-2.5 py-1 text-xs font-medium rounded-lg border transition ${
                             esActual
                               ? "bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed"
