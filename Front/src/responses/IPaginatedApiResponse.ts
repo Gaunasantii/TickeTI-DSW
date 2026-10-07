@@ -6,9 +6,9 @@ import { IApiResponse } from './IApiResponse';
 
 export interface IPaginatedApiResponse<T> extends IApiResponse<T[]>{
     meta:{
-        total:number,
-        page:number,
-        per_page:number,
-        total_pages:number,
+        currentPage: number;
+        itemsPerPage: number;
+        totalItems: number;
+        totalPages: number;
     }
 }

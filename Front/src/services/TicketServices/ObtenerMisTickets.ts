@@ -11,7 +11,7 @@ export const obtenerMisTickets = async (params: IObtenerTicketsParams): Promise<
             ...(params.estado !== undefined ? { estado: params.estado.toString() } : {}),
             ...(params.categoria !== undefined ? { categoria: params.categoria.toString() } : {})
         });
-        const response=await api(`/My-tickets/paginated?${paramsUrl.toString()}`)
+        const response=await api(`/My-tickets/paginated?${paramsUrl.toString()}`,{method:"GET"});
         return await response.json();
     }catch(error){
         console.error(error);
