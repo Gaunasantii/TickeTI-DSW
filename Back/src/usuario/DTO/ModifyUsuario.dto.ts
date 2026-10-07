@@ -5,6 +5,7 @@ export const ModifyUsuarioSchema=zod.object({
         surName:zod.string().max(64),
         name:zod.string().max(64),
         tele: zod.string().regex(/^\+?[1-9]\d{1,14}$/, "Formato de teléfono inválido"),
+        oficina: zod.number().int().positive()
     }),
     params:zod.object({
         dni:zod.string().min(8).regex(/^\d+$/,"Solo se admiten numeros")
