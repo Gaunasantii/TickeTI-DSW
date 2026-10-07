@@ -79,6 +79,20 @@ class ticketController {
     const ticketDto=TicketOutSchema.parse(wrap(ticketUpdated).toJSON())
     res.status(200).json(new ApiSuccessResponse<TicketDto>(ticketDto,"Estado del ticket actualizado con exito"));
   }
+
+  async getMyTickets(req:Request<any, any,any,ticketQueryParamsDto>,res:Response){
+    const { categoria, estado, page, cantPerPage } = req.query;
+
+    const categoriaId=categoria?Number(categoria):undefined;
+    const estadoId=estado?Number(estado):undefined;
+    const pageNum=Number(page);
+    const limit=Number(cantPerPage);
+
+    const {tickets,count}=await TicketService.getMyTicketsByCatAndState(req.user.dni,pageNum,limit,estadoId,categoriaId)
+    const ticketsDto=tickets.map(t=>TicketOutSchema.parse(wrap(t).toJSON()))
+
+    res.status(200).json(new ApiPaginationResponse<TicketDto>(ticketsDto,{currentPage:pageNum,itemsPerPage:limit,totalItems:count,totalPages:Math.ceil(count/limit)},"Mis tickets recuperados"))
+  }
 }
 
 export const ticketcontroller = new ticketController();

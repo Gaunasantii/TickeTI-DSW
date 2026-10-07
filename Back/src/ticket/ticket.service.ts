@@ -55,6 +55,15 @@ export class TicketService {
     return {tickets,count};
   }
 
+  static async getMyTicketsByCatAndState(dni:string,page:number,limit:number,estadoId:number|undefined,categoriaId:number|undefined){
+    let filters={};
+    filters={...filters,usuario:dni};
+    if(estadoId!=undefined)filters={...filters,estado:estadoId};
+    if(categoriaId!=undefined)filters={...filters,categoria:categoriaId};
+    const {tickets,count}=await ticketDAO.GetAllPaginated(filters,page,limit);
+    return {tickets,count};
+  }
+
   static async ChangePriority(ticketId: number, newPriorityId: number) {
     const ticketToUpdate = await ticketDAO.findOne({ id: ticketId });
     if(!ticketToUpdate)throw new NotFoundError("Ticket no encontrado");
