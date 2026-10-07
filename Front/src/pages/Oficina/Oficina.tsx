@@ -174,7 +174,6 @@ export const OficinaPage: React.FC = () => {
             <table className="w-full text-left border-collapse text-sm">
               <thead>
                 <tr className="border-b border-slate-100 text-xs font-bold text-slate-500 uppercase bg-slate-50">
-                  <th className="p-4 w-24">ID</th>
                   <th className="p-4">Nombre</th>
                   <th className="p-4 text-right">Acciones</th>
                 </tr>
@@ -182,7 +181,6 @@ export const OficinaPage: React.FC = () => {
               <tbody className="divide-y divide-slate-100">
                 {oficinasFiltradas.map((ofi) => (
                   <tr key={ofi.id} className="hover:bg-slate-50/70">
-                    <td className="p-4 font-mono font-semibold text-slate-600">#{ofi.id}</td>
                     <td className="p-4 font-medium text-slate-800">{ofi.nombre}</td>
                     <td className="p-4 text-right space-x-2">
                       <button
