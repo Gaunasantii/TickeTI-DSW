@@ -3,7 +3,7 @@ import { LoginForm } from "./components/LoginForm.tsx";
 import { Footer } from "../../components/Layout/Footer.tsx";
 import { login as loginService } from "../../services/AuthServices/login.ts";
 import { useNavigate } from "react-router";
-import { LoginValues } from "../../types/LoginValues.ts";
+import { LoginValues } from "../../requests/LoginValues.ts";
 import { useAuth } from "../../context/AuthContext.tsx";
 
 export const LoginPage = () => {

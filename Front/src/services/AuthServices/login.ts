@@ -1,4 +1,4 @@
-import { LoginValues } from "../../types/LoginValues.ts"
+import { type LoginValues } from "../../requests/LoginValues";
 import { api } from "../api.ts"
 
 export const login = async (loginData: LoginValues) => {

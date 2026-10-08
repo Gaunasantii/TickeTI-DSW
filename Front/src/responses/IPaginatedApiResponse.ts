@@ -2,13 +2,13 @@
 //Esto es para poder manejar los errores de manera mas eficiente,
 //Yo voy a respetar esto en el back, por lo que eviten que se rompa la app por un error de este tipo,
 //y si lo hace, me avisan para que lo arregle
+import { IApiResponse } from './IApiResponse';
 
-export interface IPaginatedApiResponse<T>{
-    data:T[],
+export interface IPaginatedApiResponse<T> extends IApiResponse<T[]>{
     meta:{
-        total:number,
-        page:number,
-        per_page:number,
-        total_pages:number,
+        currentPage: number;
+        itemsPerPage: number;
+        totalItems: number;
+        totalPages: number;
     }
 }

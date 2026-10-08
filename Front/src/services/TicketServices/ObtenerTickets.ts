@@ -1,5 +1,7 @@
 import { api } from "../api.ts";
 
+
+//Metodo deprecada, usar obtenerTicketsPaginado en su lugar
 export const obtenerTickets = async () => {
   try {
     const response = await api("/tickets", { method: "GET" });
