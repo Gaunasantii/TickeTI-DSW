@@ -8,6 +8,10 @@ export const UserDashboardPage: React.FC = () => {
   const [tickets, setTickets] = useState<TicketItem[]>([]);
   const [cargando, setCargando] = useState(true);
 
+  // Categorías dinámicas
+  const [categorias, setCategorias] = useState<{ id: number | string; nombre: string }[]>([]);
+  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<string>("");
+
   const [mostrarForm, setMostrarForm] = useState(false);
   const [asunto, setAsunto] = useState("");
   const [descripcion, setDescripcion] = useState("");
@@ -31,7 +35,6 @@ export const UserDashboardPage: React.FC = () => {
       }
       const json = await res.json();
       const lista: TicketItem[] = json?.data || (Array.isArray(json) ? json : []);
-      // El backend ya devuelve exclusivamente los tickets correspondientes al usuario
       setTickets(lista);
     } catch (err) {
       console.error("Error al cargar tickets:", err);
@@ -43,6 +46,23 @@ export const UserDashboardPage: React.FC = () => {
 
   useEffect(() => {
     cargarTickets();
+
+    // Cargar categorías de la empresa
+    const cargarCategorias = async () => {
+      try {
+        const res = await api("/categorias").catch(() => api("/categoria"));
+        if (!res.ok) return;
+        const json = await res.json();
+        const lista = json?.data || (Array.isArray(json) ? json : []);
+        setCategorias(lista);
+        if (lista.length > 0) {
+          setCategoriaSeleccionada(String(lista[0].id));
+        }
+      } catch (err) {
+        console.error("Error al cargar categorías:", err);
+      }
+    };
+    cargarCategorias();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -56,12 +76,17 @@ export const UserDashboardPage: React.FC = () => {
         return;
       }
 
+      if (!categoriaSeleccionada) {
+        alert("Por favor seleccioná una categoría para el ticket.");
+        return;
+      }
+
       await crearTicket({
         title: asunto,
         description: descripcion,
         estado: 1,
         prioridad: 1,
-        categoria: 1,
+        categoria: Number(categoriaSeleccionada),
         usuario: dniUsuario,
       });
 
@@ -87,7 +112,6 @@ export const UserDashboardPage: React.FC = () => {
           </p>
         </div>
 
-        {/* Barra alargada a lo ancho para desplegar el formulario */}
         <div className="w-full">
           <button
             onClick={() => setMostrarForm(!mostrarForm)}
@@ -114,6 +138,22 @@ export const UserDashboardPage: React.FC = () => {
                   placeholder="Ej: Falla al encender equipo o conexión de red"
                   className="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
                 />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">Categoría del Incidente</label>
+                <select
+                  required
+                  value={categoriaSeleccionada}
+                  onChange={(e) => setCategoriaSeleccionada(e.target.value)}
+                  className="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-slate-700"
+                >
+                  {categorias.map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.nombre}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>
@@ -148,7 +188,6 @@ export const UserDashboardPage: React.FC = () => {
           </div>
         )}
 
-        {/* Listado directo sin métricas superiores */}
         <TicketDashboardView
           tickets={tickets}
           cargando={cargando}
