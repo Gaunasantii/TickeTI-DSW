@@ -9,11 +9,12 @@ export const TecnicoPage: React.FC = () => {
   const [tickets, setTickets] = useState<TicketItem[]>([]);
   const [cargando, setCargando] = useState(true);
 
-  // Categorías dinámicas
+  // Parámetros dinámicos de la empresa
   const [categorias, setCategorias] = useState<{ id: number | string; nombre: string }[]>([]);
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<string>("");
+  const [estadoInicialId, setEstadoInicialId] = useState<number | null>(null);
+  const [prioridadInicialId, setPrioridadInicialId] = useState<number | null>(null);
 
-  // Formulario de creación de ticket
   const [mostrarForm, setMostrarForm] = useState(false);
   const [asunto, setAsunto] = useState("");
   const [descripcion, setDescripcion] = useState("");
@@ -49,21 +50,52 @@ export const TecnicoPage: React.FC = () => {
   useEffect(() => {
     cargarTickets();
 
-    const cargarCategorias = async () => {
+    const cargarParametrosEmpresa = async () => {
       try {
-        const res = await api("/categorias").catch(() => api("/categoria"));
-        if (!res.ok) return;
-        const json = await res.json();
-        const lista = json?.data || (Array.isArray(json) ? json : []);
-        setCategorias(lista);
-        if (lista.length > 0) {
-          setCategoriaSeleccionada(String(lista[0].id));
+        const [resCat, resEst, resPrio] = await Promise.allSettled([
+          api("/categorias").catch(() => api("/categoria")),
+          api("/estados").catch(() => api("/estado")),
+          api("/prioridad").catch(() => api("/prioridad")),
+        ]);
+
+        // 1. Categorías
+        if (resCat.status === "fulfilled" && resCat.value.ok) {
+          const jsonCat = await resCat.value.json();
+          const listaCat = jsonCat?.data || (Array.isArray(jsonCat) ? jsonCat : []);
+          setCategorias(listaCat);
+          if (listaCat.length > 0) setCategoriaSeleccionada(String(listaCat[0].id));
+        }
+
+        // 2. Estado inicial por flag booleano (es_estado_inicial = 1 / true)
+        if (resEst.status === "fulfilled" && resEst.value.ok) {
+          const jsonEst = await resEst.value.json();
+          const listaEst: any[] = jsonEst?.data || (Array.isArray(jsonEst) ? jsonEst : []);
+          if (listaEst.length > 0) {
+            const inicial = listaEst.find(
+              (e) => e.es_estado_inicial === true || e.es_estado_inicial === 1
+            ) || listaEst[0];
+            setEstadoInicialId(Number(inicial.id));
+          }
+        }
+
+        // 3. Prioridad baja dentro de la empresa
+        if (resPrio.status === "fulfilled" && resPrio.value.ok) {
+          const jsonPrio = await resPrio.value.json();
+          const listaPrio: any[] = jsonPrio?.data || (Array.isArray(jsonPrio) ? jsonPrio : []);
+          if (listaPrio.length > 0) {
+            const baja = listaPrio.find((p) => {
+              const n = (p.nombre || "").trim().toLowerCase();
+              return n.includes("baja") || n.includes("bajo");
+            }) || listaPrio[0];
+            setPrioridadInicialId(Number(baja.id));
+          }
         }
       } catch (err) {
-        console.error("Error al cargar categorías:", err);
+        console.error("Error al cargar parámetros:", err);
       }
     };
-    cargarCategorias();
+
+    cargarParametrosEmpresa();
   }, []);
 
   const handleCambiarEstado = async (ticketId: string | number, nuevoEstadoId: number | string) => {
@@ -83,7 +115,7 @@ export const TecnicoPage: React.FC = () => {
       const dniTecnico = String(usuario?.dni || usuario?.id || "").trim();
 
       if (!dniTecnico || dniTecnico.length < 8) {
-        alert("El técnico debe contar con un DNI válido de al menos 8 dígitos.");
+        alert("El técnico debe contar con un DNI numérico válido de al menos 8 dígitos.");
         return;
       }
 
@@ -92,11 +124,16 @@ export const TecnicoPage: React.FC = () => {
         return;
       }
 
+      if (!estadoInicialId || !prioridadInicialId) {
+        alert("No se pudieron determinar el estado o la prioridad inicial de la empresa.");
+        return;
+      }
+
       await crearTicket({
         title: asunto,
         description: descripcion,
-        estado: 1,
-        prioridad: 1,
+        estado: estadoInicialId,
+        prioridad: prioridadInicialId,
         categoria: Number(categoriaSeleccionada),
         usuario: dniTecnico,
       });
