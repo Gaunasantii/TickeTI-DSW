@@ -1,5 +1,4 @@
 import { Routes, Route } from "react-router";
-import { Dashboard } from "./components/Dashboard";
 import { ListaEmpresas } from "./components/ListaEmpresas";
 import { OficinasDeEmpresa } from "./components/OficinasDeEmpresa";
 import { ListaCategorias } from "./components/ListaCategorias";
@@ -42,7 +41,6 @@ export const App = () => {
       {/* Rutas exclusivas Administrador */}
       <Route element={<ProtectedRoute rolesPermitidos={["admin", "administrador"]} />}>
         <Route path="/admin" element={<AdminPage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/Oficina" element={<OficinaPage />} />
         <Route path="/categorias" element={<ListaCategorias />} />
         <Route path="/prioridades" element={<ListaPrioridades />} />
