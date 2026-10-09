@@ -2,6 +2,11 @@ import React, { useEffect, useMemo, useState } from "react";
 import { DashboardLayout } from "../../components/Layout/DashboardLayout";
 import { api } from "../../services/api";
 
+interface OficinaItem {
+  id: number | string;
+  nombre: string;
+}
+
 interface UsuarioItem {
   dni: string;
   name: string;
@@ -158,7 +163,7 @@ export const ListaUsuarios: React.FC = () => {
                 setPass("");
                 setMostrarModal(true);
               }}
-              className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold shadow-sm transition"
+              className="w-full sm:w-auto px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold shadow-sm transition"
             >
               + Nuevo Usuario
             </button>
@@ -264,32 +269,55 @@ export const ListaUsuarios: React.FC = () => {
             <p className="p-8 text-center text-slate-500 text-sm">No se encontraron usuarios.</p>
           ) : (
             <div className="divide-y divide-slate-100">
-              <div className="grid grid-cols-12 px-5 py-3 text-xs font-bold text-slate-500 uppercase bg-slate-50">
-                <div className="col-span-3">DNI</div>
-                <div className="col-span-6">Nombre y Apellido</div>
-                <div className="col-span-3 text-right">Rol</div>
+              <div className="grid grid-cols-12 gap-2 px-4 sm:px-5 py-3 text-xs font-bold text-slate-500 uppercase bg-slate-50">
+                <div className="hidden md:block md:col-span-3">DNI</div>
+                <div className="col-span-7 md:col-span-4 pl-5 md:pl-0">Nombre y Apellido</div>
+                <div className="col-span-5 md:col-span-3">Oficina</div>
+                <div className="hidden md:block md:col-span-2 text-right">Rol</div>
               </div>
               {usuariosFiltrados.map((u) => {
                 const abierta = filaExpandida === u.dni;
                 const r = (u.type || u.rol || "USER").toUpperCase();
+                const nombreOf = u.oficina?.nombre || "Sin oficina";
                 return (
                   <div key={u.dni}>
                     <div
                       onClick={() => setFilaExpandida(abierta ? null : u.dni)}
-                      className={`grid grid-cols-12 px-5 py-3.5 items-center cursor-pointer text-sm ${
+                      className={`grid grid-cols-12 gap-2 px-4 sm:px-5 py-3.5 items-center cursor-pointer text-sm ${
                         abierta ? "bg-blue-50/40" : "hover:bg-slate-50"
                       }`}
                     >
-                      <div className="col-span-3 font-mono font-semibold text-slate-700 flex items-center gap-2">
-                        <span className={`text-xs ${abierta ? "rotate-90 text-blue-600" : "text-slate-400"}`}>▶</span>
+                      
+                      <div className="hidden md:flex md:col-span-3 items-center gap-2 font-mono font-semibold text-slate-700">
+                        <span className={`inline-block text-xs transition-transform ${abierta ? "rotate-90 text-blue-600" : "text-slate-400"}`}>▶</span>
                         {u.dni}
                       </div>
-                      <div className="col-span-6 font-medium text-slate-800">
-                        {u.name} {u.surName || ""}
+                      
+                      <div className="col-span-7 md:col-span-4 flex items-start md:items-center gap-2 min-w-0">
+                        <svg
+                          className={`md:hidden w-3 h-3 shrink-0 mt-1.5 transition-transform ${abierta ? "rotate-90 text-blue-600" : "text-slate-400"}`}
+                          viewBox="0 0 10 10"
+                          fill="currentColor"
+                        >
+                          <path d="M2 1l7 4-7 4z" />
+                        </svg>
+                        <div className="min-w-0">
+                          <p className="font-medium text-slate-800 break-words">
+                            {u.name} {u.surName || ""}
+                          </p>
+                          <p className="md:hidden text-xs font-mono text-slate-500">{u.dni}</p>
+                        </div>
                       </div>
-                      <div className="col-span-3 text-right">
+                      
+                    <div className="col-span-5 md:col-span-3 min-w-0 text-xs text-slate-600">
+                        <span className="px-2 py-0.5 rounded-md bg-slate-100 border border-slate-200">
+                          {nombreOf}
+                        </span>
+                    </div>
+                      
+                      <div className="col-span-4 md:col-span-2 text-right">
                         <span
-                          className={`px-2 py-0.5 text-xs font-semibold rounded-full border ${
+                          className={`inline-block whitespace-nowrap px-2 py-0.5 text-xs font-semibold rounded-full border ${
                             r.includes("ADMIN")
                               ? "bg-purple-50 text-purple-700 border-purple-200"
                               : r.includes("TEC")
@@ -301,10 +329,11 @@ export const ListaUsuarios: React.FC = () => {
                         </span>
                       </div>
                     </div>
+
                     {abierta && (
-                      <div className="px-6 py-4 bg-slate-50/70 border-t border-slate-100 text-xs flex flex-wrap justify-between items-center gap-3">
-                        <div className="flex gap-6 text-slate-600">
-                          <div><strong>Email:</strong> {u.mail || "Automático"}</div>
+                      <div className="px-4 sm:px-6 py-4 bg-slate-50/70 border-t border-slate-100 text-xs flex flex-col sm:flex-row sm:flex-wrap sm:justify-between sm:items-center gap-3">
+                        <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-6 text-slate-600 min-w-0">
+                          <div className="break-all"><strong>Email:</strong> {u.mail || "Automático"}</div>
                           <div><strong>Teléfono:</strong> {u.tele || "N/A"}</div>
                           <div><strong>Oficina:</strong> {u.oficina?.nombre || "Sin oficina"}</div>
                         </div>

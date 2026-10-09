@@ -1,7 +1,12 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 
-export const Sidebar: React.FC = () => {
+interface SidebarProps {
+  abierto?: boolean;
+  onCerrar?: () => void;
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ abierto = false, onCerrar }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -34,6 +39,7 @@ export const Sidebar: React.FC = () => {
   const handleLogout = () => {
     sessionStorage.removeItem("user");
     sessionStorage.removeItem("usuario");
+    onCerrar?.();
     navigate("/login");
   };
 
@@ -81,7 +87,11 @@ export const Sidebar: React.FC = () => {
   const menuItems = getMenuItems();
 
   return (
-    <aside className="w-64 h-screen fixed top-0 left-0 bg-white border-r border-slate-200 flex flex-col justify-between z-30 shrink-0 select-none">
+    <aside
+      className={`w-64 h-screen fixed top-0 left-0 bg-white border-r border-slate-200 flex flex-col justify-between z-40 shrink-0 select-none overflow-y-auto transition-transform duration-300 md:translate-x-0 ${
+        abierto ? "translate-x-0" : "-translate-x-full"
+      }`}
+    >
       <div>
         <div className="p-6 border-b border-slate-100 flex items-center gap-3">
           <div className="w-9 h-9 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-base shadow-sm">
@@ -102,6 +112,7 @@ export const Sidebar: React.FC = () => {
               <Link
                 key={item.path}
                 to={item.path}
+                onClick={onCerrar}
                 className={`block px-4 py-2.5 rounded-lg text-sm font-medium transition-all ${
                   activo
                     ? "bg-blue-600 text-white shadow-sm"
