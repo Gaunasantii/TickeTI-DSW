@@ -4,11 +4,13 @@
 //y si lo hace, me avisan para que lo arregle
 import { IApiResponse } from './IApiResponse';
 
-export interface IPaginatedApiResponse<T> extends IApiResponse<T[]>{
-    meta:{
-        currentPage: number;
+export interface IMeta{
+    currentPage: number;
         itemsPerPage: number;
         totalItems: number;
         totalPages: number;
-    }
+}
+
+export interface IPaginatedApiResponse<T> extends IApiResponse<T[]>{
+    meta:IMeta;
 }
