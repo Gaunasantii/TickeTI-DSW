@@ -1,22 +1,12 @@
 import { api } from "../api";
+import type { ICreateTicketRequest } from "../../requests/ICreateTicketRequest";
 
-export interface CrearTicketInput {
-  title: string;
-  description: string;
-  estado?: number | string;
-  prioridad?: number | string;
-  categoria: number | string;
-  usuario: string;
-}
-
-export const crearTicket = async (data: CrearTicketInput) => {
+export const crearTicket = async (data: ICreateTicketRequest) => {
   const payload = {
     title: data.title.trim(),
     description: data.description.trim(),
-    estado: Number(data.estado ?? 1),
-    prioridad: Number(data.prioridad ?? 1),
+    prioridad: Number(data.prioridad),
     categoria: Number(data.categoria),
-    usuario: String(data.usuario).trim(),
   };
 
   const res = await api("/tickets", {

@@ -1,23 +1,47 @@
 import React, { useEffect, useState } from "react";
+import { getAllCategorias } from "../../services/CategoriaService/GetAllCategorias";
+import type { ICreateTicketRequest } from "../../requests/ICreateTicketRequest";
 import { DashboardLayout } from "../../components/Layout/DashboardLayout";
-import { TicketDashboardView, TicketItem } from "../../components/tickets/TicketDashboardView";
-import { api } from "../../services/api";
+import { TicketDashboardView } from "../../components/tickets/TicketDashboardView";
+import { cambiarEstadoTicket } from "../../services/TicketServices/CambiarEstadoTicket";
 import { crearTicket } from "../../services/TicketServices/CrearTicket";
+import { CategoriaModel } from "../../models/categoria.model";
+import { estadoModel } from "../../models/estado.model";
+import { api } from "../../services/api";
+import { obtenerMisTickets } from "../../services/TicketServices/ObtenerMisTickets";
+import { obtenerTicketsPaginado } from "../../services/TicketServices/ObtenerTicketsPaginado";
+import { IPaginadoParams } from "../../interfaces/IPaginado.params";
+import { IObtenerTicketsParams } from "../../interfaces/IObtenerTickets.params";
+import { ticketPaginatedModel } from "../../models/ticket.model";
+import { getAllEstados } from "../../services/EstadoServices/GetAllEstados";
+import {type IMeta } from "../../responses/IPaginatedApiResponse";
+import { getAllPrioridades } from "../../services/PrioridadServices/getAllPrioridades";
+import type { prioridadModel } from "../../models/prioridad.model";
+
 
 export const UserDashboardPage: React.FC = () => {
-  const [tickets, setTickets] = useState<TicketItem[]>([]);
+  const [tickets, setTickets] = useState<ticketPaginatedModel[]>([]);
   const [cargando, setCargando] = useState(true);
 
-  // Parámetros dinámicos de la empresa
-  const [categorias, setCategorias] = useState<{ id: number | string; nombre: string }[]>([]);
-  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<string>("");
-  const [estadoInicialId, setEstadoInicialId] = useState<number | null>(null);
-  const [prioridadInicialId, setPrioridadInicialId] = useState<number | null>(null);
+  const [categorias, setCategorias] = useState<CategoriaModel[]>([]);
+  const [prioridades, setPrioridades] = useState<prioridadModel[]>([]);
+
+  const [estados,setEstados]=useState<estadoModel[]>([]);
+  const [meta, setMeta] = useState<IMeta>({
+      currentPage: 1,
+      itemsPerPage: 10,
+      totalItems: 0,
+      totalPages: 1,
+    });
 
   const [mostrarForm, setMostrarForm] = useState(false);
-  const [asunto, setAsunto] = useState("");
-  const [descripcion, setDescripcion] = useState("");
-  const [creando, setCreando] = useState(false);
+    const [creando, setCreando] = useState(false);
+    const [ticketValues, setTicketValue] = useState<ICreateTicketRequest>({
+      title: "",
+      description: "",
+      prioridad: 0,
+      categoria: 0,
+    });
 
   const usuarioRaw = sessionStorage.getItem("user") || sessionStorage.getItem("usuario");
   let usuario: any = null;
@@ -27,112 +51,76 @@ export const UserDashboardPage: React.FC = () => {
     usuario = null;
   }
 
-  const cargarTickets = async () => {
-    try {
-      setCargando(true);
-      const res = await api("/tickets");
-      if (!res.ok) {
-        setTickets([]);
-        return;
-      }
-      const json = await res.json();
-      const lista: TicketItem[] = json?.data || (Array.isArray(json) ? json : []);
-      setTickets(lista);
-    } catch (err) {
-      console.error("Error al cargar tickets:", err);
-      setTickets([]);
-    } finally {
-      setCargando(false);
-    }
-  };
-
-  useEffect(() => {
-    cargarTickets();
-
-    const cargarParametrosEmpresa = async () => {
-      try {
-        const [resCat, resEst, resPrio] = await Promise.allSettled([
-          api("/categorias").catch(() => api("/categoria")),
-          api("/estados").catch(() => api("/estado")),
-          api("/prioridad").catch(() => api("/prioridad")),
-        ]);
-
-        // 1. Categorías de la empresa
-        if (resCat.status === "fulfilled" && resCat.value.ok) {
-          const jsonCat = await resCat.value.json();
-          const listaCat = jsonCat?.data || (Array.isArray(jsonCat) ? jsonCat : []);
-          setCategorias(listaCat);
-          if (listaCat.length > 0) {
-            setCategoriaSeleccionada(String(listaCat[0].id));
+  const cargarTickets = async (filters:IObtenerTicketsParams) => {
+          try {
+            console.log("Cargando tickets con filtros:", filters);
+            const lista = await obtenerMisTickets(filters);
+            setTickets(lista.data||[]);
+            setMeta(lista.meta || {
+              currentPage: 1,
+              itemsPerPage: 10,
+              totalItems: 0,
+              totalPages: 1,
+            });
+            setCargando(false);
+          } catch (err) {
+            console.error("Error al cargar tickets:", err);
           }
-        }
-
-        // 2. Estado inicial por flag booleano (es_estado_inicial = 1 / true)
-        if (resEst.status === "fulfilled" && resEst.value.ok) {
-          const jsonEst = await resEst.value.json();
-          const listaEst: any[] = jsonEst?.data || (Array.isArray(jsonEst) ? jsonEst : []);
-          if (listaEst.length > 0) {
-            const inicial = listaEst.find(
-              (e) => e.es_estado_inicial === true || e.es_estado_inicial === 1
-            ) || listaEst[0];
-            setEstadoInicialId(Number(inicial.id));
+        };
+      
+    const cargarEstados = async () => {
+            try {
+              const lista= await getAllEstados();
+              setEstados(lista.data || []);
+            } catch (err) {
+              console.error("Error al cargar estados de la empresa:", err);
+            }
+      };
+          
+      const cargarCategorias = async () => {
+        try {
+          const lista = await getAllCategorias();
+          setCategorias(lista.data || []);
+          } catch (err) {
+            console.error("Error al cargar categorías:", err);
           }
+        };
+      
+      const cargarPrioridades = async () => {
+        try {
+          const lista = await getAllPrioridades();
+          setPrioridades(lista.data || []);
+        } catch (err) {
+          console.error("Error al cargar prioridades:", err);
         }
-
-        // 3. Prioridad baja dentro de la empresa
-        if (resPrio.status === "fulfilled" && resPrio.value.ok) {
-          const jsonPrio = await resPrio.value.json();
-          const listaPrio: any[] = jsonPrio?.data || (Array.isArray(jsonPrio) ? jsonPrio : []);
-          if (listaPrio.length > 0) {
-            const baja = listaPrio.find((p) => {
-              const n = (p.nombre || "").trim().toLowerCase();
-              return n.includes("baja") || n.includes("bajo");
-            }) || listaPrio[0];
-            setPrioridadInicialId(Number(baja.id));
-          }
-        }
-      } catch (err) {
-        console.error("Error al cargar configuración de la empresa:", err);
-      }
-    };
-
-    cargarParametrosEmpresa();
-  }, []);
+      };
+    
+      useEffect(() => {
+        cargarEstados();
+        cargarPrioridades();
+        cargarCategorias();
+        cargarTickets({ pagina: 1, cantidad: 10 });
+      }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       setCreando(true);
-      const dniUsuario = String(usuario?.dni || usuario?.id || "").trim();
 
-      if (!dniUsuario || dniUsuario.length < 8) {
-        alert("El usuario debe tener un DNI numérico válido de al menos 8 dígitos.");
-        return;
-      }
-
-      if (!categoriaSeleccionada) {
+      if (!ticketValues.categoria) {
         alert("Por favor seleccioná una categoría para el ticket.");
         return;
       }
 
-      if (!estadoInicialId || !prioridadInicialId) {
-        alert("No se pudieron determinar el estado o la prioridad inicial de la empresa.");
-        return;
-      }
+      await crearTicket(ticketValues);
 
-      await crearTicket({
-        title: asunto,
-        description: descripcion,
-        estado: estadoInicialId,
-        prioridad: prioridadInicialId,
-        categoria: Number(categoriaSeleccionada),
-        usuario: dniUsuario,
+      setTicketValue({
+        title: "",
+        description: "",
+        prioridad: 0,
+        categoria: 0,
       });
-
-      setAsunto("");
-      setDescripcion("");
       setMostrarForm(false);
-      await cargarTickets();
       alert("Ticket reportado exitosamente.");
     } catch (err: any) {
       alert(err.message || "Error al crear el ticket");
@@ -144,47 +132,47 @@ export const UserDashboardPage: React.FC = () => {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800">Centro de Asistencia</h1>
-          <p className="text-sm text-slate-500">
-            Reportá incidentes técnicos y hacé el seguimiento de tus solicitudes
-          </p>
-        </div>
-
-        <div className="w-full">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-800">Panel Técnico</h1>
+            <p className="text-sm text-slate-500">
+              Gestioná las solicitudes de soporte y reportá nuevas incidencias
+            </p>
+          </div>
           <button
             onClick={() => setMostrarForm(!mostrarForm)}
-            className="w-full py-3.5 px-6 bg-white hover:bg-slate-50 border-2 border-dashed border-blue-300 hover:border-blue-500 text-blue-600 rounded-2xl font-semibold text-sm transition-all shadow-sm flex items-center justify-between"
+            className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold shadow-sm transition self-start sm:self-auto"
           >
-            <span>{mostrarForm ? "Ocultar formulario de ticket" : "+ Reportar nuevo problema o incidencia"}</span>
-            <span className="text-xs bg-blue-50 px-3 py-1 rounded-full">
-              {mostrarForm ? "Cerrar" : "Crear ticket"}
-            </span>
+            {mostrarForm ? "Cerrar formulario" : "+ Reportar nuevo ticket"}
           </button>
         </div>
 
         {mostrarForm && (
           <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-            <h2 className="text-lg font-bold text-slate-800">Generar Solicitud de Soporte</h2>
+            <h2 className="text-lg font-bold text-slate-800">Generar Solicitud de Incidencia</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">Título del problema</label>
+                <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">
+                  Título del problema
+                </label>
                 <input
                   type="text"
                   required
-                  value={asunto}
-                  onChange={(e) => setAsunto(e.target.value)}
-                  placeholder="Ej: Falla al encender equipo o conexión de red"
+                  value={ticketValues.title}
+                  onChange={(e) => setTicketValue({ ...ticketValues, title: e.target.value })}
+                  placeholder="Ej: Falla en switch de planta o reinstalación de SO"
                   className="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">Categoría del Incidente</label>
+                <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">
+                  Categoría del Incidente
+                </label>
                 <select
                   required
-                  value={categoriaSeleccionada}
-                  onChange={(e) => setCategoriaSeleccionada(e.target.value)}
+                  value={ticketValues.categoria}
+                  onChange={(e) => setTicketValue({ ...ticketValues, categoria: Number(e.target.value) })}
                   className="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-slate-700"
                 >
                   {categorias.map((cat) => (
@@ -196,13 +184,33 @@ export const UserDashboardPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">Descripción detallada</label>
+                <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">
+                  Prioridad del Incidente
+                </label>
+                <select
+                  required
+                  value={ticketValues.prioridad}
+                  onChange={(e) => setTicketValue({ ...ticketValues, prioridad: Number(e.target.value) })}
+                  className="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-slate-700"
+                >
+                  {prioridades.map((prio) => (
+                    <option key={prio.id} value={prio.id}>
+                      {prio.nombre}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 uppercase mb-1">
+                  Descripción detallada
+                </label>
                 <textarea
                   required
                   rows={3}
-                  value={descripcion}
-                  onChange={(e) => setDescripcion(e.target.value)}
-                  placeholder="Describí los detalles de la falla que estás experimentando..."
+                  value={ticketValues.description}
+                  onChange={(e) => setTicketValue({ ...ticketValues, description: e.target.value })}
+                  placeholder="Describí los detalles técnicos observados..."
                   className="w-full px-3.5 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white"
                 />
               </div>
@@ -220,7 +228,7 @@ export const UserDashboardPage: React.FC = () => {
                   disabled={creando}
                   className="px-5 py-2 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition disabled:opacity-50"
                 >
-                  {creando ? "Enviando..." : "Enviar Solicitud"}
+                  {creando ? "Enviando..." : "Crear Ticket"}
                 </button>
               </div>
             </form>
@@ -228,6 +236,9 @@ export const UserDashboardPage: React.FC = () => {
         )}
 
         <TicketDashboardView
+          meta={meta}
+          categorias={categorias}
+          estados={estados}
           tickets={tickets}
           cargando={cargando}
           onRefresh={cargarTickets}
