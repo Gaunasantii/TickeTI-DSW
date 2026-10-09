@@ -10,7 +10,12 @@ export const PersonOutPaginatedSchema=zod.object({
     oficina:zod.object({
         id:zod.number(),
         nombre:zod.string()
-    }).transform(o=>o.nombre).nullable()
+    }).nullable().transform(o=>{
+        if(!o){
+            return "No asignada"
+        }
+        return o.nombre
+    })
 })
 
 export type personPaginatedDto=zod.infer<typeof PersonOutPaginatedSchema>;
