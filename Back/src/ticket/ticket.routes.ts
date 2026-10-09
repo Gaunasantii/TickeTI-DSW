@@ -20,4 +20,4 @@ ticketrouter.get("/tickets/paginated",authenticateToken,ValidationMiddleware(Pag
 ticketrouter.patch("/tickets/:id/priority",authenticateToken,authorizeRoles('admin'),ValidationMiddleware(ChangePrioritySchema),ticketcontroller.ChangePriority);
 ticketrouter.patch("/tickets/:id/categoria",authenticateToken,authorizeRoles('admin','tecnico'),ValidationMiddleware(ChangeCategoriaSchema),ticketcontroller.ChangeCategoria);
 ticketrouter.patch("/tickets/:id/state",authenticateToken,authorizeRoles('admin','tecnico'),ValidationMiddleware(ChangeStateSchema),ticketcontroller.ChangeState);
-ticketrouter.get("/My-tickets/paginated",authenticateToken,ValidationMiddleware(PaginatedTicket),ticketcontroller.GetAllPaginated)
+ticketrouter.get("/My-tickets/paginated",authenticateToken,ValidationMiddleware(PaginatedTicket),ticketcontroller.getMyTickets)
