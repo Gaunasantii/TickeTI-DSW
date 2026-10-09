@@ -22,7 +22,7 @@ export const TicketSchema = defineEntity({
         estado:() => p.manyToOne(EstadoSchema),
         prioridad:() => p.manyToOne(PrioridadSchema),
         categoria:() => p.manyToOne(CategoriaSchema),
-        usuario:() => p.manyToOne(PersonSchema),
+        usuario:() => p.manyToOne(PersonSchema).deleteRule('cascade'),
         asignaciones:() => p.oneToMany(asignacionSchema).mappedBy('ticket'),
         empresa:()=> p.manyToOne(EmpresaSchema)
     }

@@ -17,7 +17,7 @@ export const PersonSchema=defineEntity({
         type:p.string(),
         tickets:() => p.oneToMany(TicketSchema).mappedBy('usuario').nullable(),
         empresa:()=> p.manyToOne(EmpresaSchema).nullable(),
-        oficina:()=>p.manyToOne(OficinaSchema).inversedBy('usuarios').nullable(),
+        oficina:()=>p.manyToOne(OficinaSchema).deleteRule("set null").inversedBy('usuarios').nullable(),
     },
 });
 

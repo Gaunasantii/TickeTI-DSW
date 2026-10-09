@@ -1,6 +1,7 @@
+import { ICreateOficinaRequest } from "../../requests/ICreateOficinaRequest.ts";
 import { api } from "../api.ts"
 
-export const crearOficina = async (oficinaData: any) => {
+export const crearOficina = async (oficinaData: ICreateOficinaRequest) => {
   try {
     const response = await api("oficinas", { method: "POST", body: JSON.stringify(oficinaData) });
     const data = await response.json();

@@ -1,29 +1,35 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DashboardLayout } from "../../components/Layout/DashboardLayout";
-import { api } from "../../services/api";
-
-interface OficinaItem {
-  id: number | string;
-  nombre: string;
-}
+import { Pagination } from "../../components/Pagination";
+import { OficinaSection } from "./components/OficinaSection";
+import { IPaginadoParams } from "../../interfaces/IPaginado.params";
+import { IMeta } from "../../responses/IPaginatedApiResponse";
+import { crearOficina } from "../../services/OficinaService/CrearOficina";
+import { eliminarOficina } from "../../services/OficinaService/EliminarOficina";
+import { oficinaPaginated } from "../../models/oficinaPaginated.model";
+import { listarOficinasPaginado } from "../../services/OficinaService/ListarOficinasPaginado";
+import { modificarOficina } from "../../services/OficinaService/ModificarOficina";
 
 export const OficinaPage: React.FC = () => {
-  const [oficinas, setOficinas] = useState<OficinaItem[]>([]);
+  const [oficinas, setOficinas] = useState<oficinaPaginated[]>([]);
   const [cargando, setCargando] = useState(true);
-  const [busqueda, setBusqueda] = useState("");
   const [nombre, setNombre] = useState("");
   const [editandoId, setEditandoId] = useState<number | string | null>(null);
   const [guardando, setGuardando] = useState(false);
+  const [paginadoParams, setPaginadoParams] = useState<IPaginadoParams>({
+    pagina: 1,
+    cantidad: 10,
+  });
+  const [meta, setMeta] = useState<IMeta|null>(null);
 
   const cargarOficinas = async () => {
     try {
       setCargando(true);
-      const res = await api("/oficinas").catch(() => api("/oficina"));
-      const json = await res.json();
-      const lista: OficinaItem[] = Array.isArray(json) ? json : json?.data || [];
-      setOficinas(lista);
-    } catch (err) {
-      console.error("Error al cargar oficinas:", err);
+      const list=await listarOficinasPaginado(paginadoParams);
+      setOficinas(list.data);
+      setMeta(list.meta);
+    }catch(err){
+      console.error("Error al cargar las oficinas:", err);
     } finally {
       setCargando(false);
     }
@@ -31,83 +37,68 @@ export const OficinaPage: React.FC = () => {
 
   useEffect(() => {
     cargarOficinas();
-  }, []);
+  }, [paginadoParams]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!nombre.trim()) return;
+  const handleNuevaOficina=async(e: React.FormEvent)=>{
+        e.preventDefault();
+        try {
+          const res= await crearOficina({ nombre });
+          setNombre("");
+          cargarOficinas();
+        } catch (err) {
+          console.error("Error al manejar la nueva oficina:", err);
+        }
+  }
 
-    try {
-      setGuardando(true);
-
-      // Enviamos nombre y un fallback numérico para que el validador Zod no tire 400.
-      // El backend sobreescribe 'empresa' con req.user.empresa desde el token.
-      const payload = {
-        nombre: nombre.trim(),
-        empresa: 1,
-      };
-
-      const url = editandoId ? `/oficinas/${editandoId}` : "/oficinas";
-      const fallbackUrl = editandoId ? `/oficina/${editandoId}` : "/oficina";
-      const method = editandoId ? "PUT" : "POST";
-
-      const res = await api(url, {
-        method,
-        body: JSON.stringify(payload),
-      }).catch(() =>
-        api(fallbackUrl, {
-          method,
-          body: JSON.stringify(payload),
-        })
-      );
-
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.message || "Error al procesar la oficina");
-      }
-
-      setNombre("");
-      setEditandoId(null);
-      await cargarOficinas();
-    } catch (err: any) {
-      alert(err.message || "Error al guardar");
-    } finally {
-      setGuardando(false);
-    }
-  };
-
-  const handleEliminar = async (id: number | string) => {
+  const handleEliminar = async (id: number) => {
     if (!window.confirm("¿Deseás eliminar esta oficina?")) return;
     try {
-      await api(`/oficinas/${id}`, { method: "DELETE" }).catch(() =>
-        api(`/oficina/${id}`, { method: "DELETE" })
-      );
-      await cargarOficinas();
+      await eliminarOficina(id);
+      cargarOficinas();
     } catch (err: any) {
       alert(err.message || "Error al eliminar");
     }
   };
 
-  const oficinasFiltradas = useMemo(() => {
-    const q = busqueda.toLowerCase().trim();
-    return oficinas.filter(
-      (o) => !q || o.nombre?.toLowerCase().includes(q) || String(o.id).includes(q)
-    );
-  }, [oficinas, busqueda]);
+  const handleActualizarOficina = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try{
+      await modificarOficina({ id: editandoId as number, nombre });
+      cargarOficinas();
+    }catch(err){
+      console.error("Error al actualizar la oficina:", err);
+    }
+    setEditandoId(null);
+    setNombre("");
+  };
+
+  const handleEditar = (oficina: oficinaPaginated) => {
+    setEditandoId(oficina.id);
+    setNombre(oficina.nombre);
+  };
 
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800">Gestión de Oficinas</h1>
-          <p className="text-sm text-slate-500">
-            Administrá las dependencias y sedes de la empresa
-          </p>
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-800">Gestión de Oficinas</h1>
+            <p className="text-sm text-slate-500">
+              Administrá las dependencias y sedes de la empresa
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={cargarOficinas}
+            className="px-3 py-1.5 text-xs font-semibold bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200"
+          >
+            Refrescar
+          </button>
         </div>
 
         {/* Formulario de alta / edición */}
         <form
-          onSubmit={handleSubmit}
+          onSubmit={editandoId ? handleActualizarOficina : handleNuevaOficina}
           className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row gap-3"
         >
           <input
@@ -144,67 +135,24 @@ export const OficinaPage: React.FC = () => {
             </button>
           </div>
         </form>
-
-        {/* Buscador */}
-        <div className="bg-white p-3 rounded-2xl border border-slate-200/80 shadow-sm flex items-center gap-3">
-          <input
-            type="text"
-            value={busqueda}
-            onChange={(e) => setBusqueda(e.target.value)}
-            placeholder="Filtrar oficina por nombre o ID..."
-            className="flex-1 px-3 py-1.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white"
+        <OficinaSection
+          oficinas={oficinas}
+          cargando={cargando}
+          onEditar={handleEditar}
+          onEliminar={handleEliminar}
+        />
+        {meta && meta.totalPages > 1 && (
+          <Pagination
+            cantidad={meta.totalItems}
+            cantidadVisible={meta.itemsPerPage}
+            paginaActual={paginadoParams.pagina}
+            totalPaginas={meta.totalPages}
+            onAnterior={() => setPaginadoParams((prev) => ({ ...prev, pagina: Math.max(prev.pagina - 1, 1) }))}
+            onSiguiente={() =>
+              setPaginadoParams((prev) => ({ ...prev, pagina: Math.min(prev.pagina + 1, meta.totalPages) }))
+            }
           />
-          <button
-            onClick={cargarOficinas}
-            className="px-3 py-1.5 text-xs font-semibold bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200"
-          >
-            Refrescar
-          </button>
-        </div>
-
-        {/* Tabla */}
-        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
-          {cargando ? (
-            <p className="p-8 text-center text-slate-500 text-sm">Cargando oficinas...</p>
-          ) : oficinasFiltradas.length === 0 ? (
-            <p className="p-8 text-center text-slate-500 text-sm">
-              No se encontraron oficinas registradas.
-            </p>
-          ) : (
-            <table className="w-full text-left border-collapse text-sm">
-              <thead>
-                <tr className="border-b border-slate-100 text-xs font-bold text-slate-500 uppercase bg-slate-50">
-                  <th className="p-4">Nombre</th>
-                  <th className="p-4 text-right">Acciones</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {oficinasFiltradas.map((ofi) => (
-                  <tr key={ofi.id} className="hover:bg-slate-50/70">
-                    <td className="p-4 font-medium text-slate-800">{ofi.nombre}</td>
-                    <td className="p-4 text-right space-x-2">
-                      <button
-                        onClick={() => {
-                          setEditandoId(ofi.id);
-                          setNombre(ofi.nombre);
-                        }}
-                        className="px-2.5 py-1 text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200 rounded-lg hover:bg-blue-100"
-                      >
-                        Editar
-                      </button>
-                      <button
-                        onClick={() => handleEliminar(ofi.id)}
-                        className="px-2.5 py-1 text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200 rounded-lg hover:bg-rose-100"
-                      >
-                        Eliminar
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
+        )}
       </div>
     </DashboardLayout>
   );
