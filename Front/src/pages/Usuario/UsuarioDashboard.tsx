@@ -3,14 +3,10 @@ import { getAllCategorias } from "../../services/CategoriaService/GetAllCategori
 import type { ICreateTicketRequest } from "../../requests/ICreateTicketRequest";
 import { DashboardLayout } from "../../components/Layout/DashboardLayout";
 import { TicketDashboardView } from "../../components/tickets/TicketDashboardView";
-import { cambiarEstadoTicket } from "../../services/TicketServices/CambiarEstadoTicket";
 import { crearTicket } from "../../services/TicketServices/CrearTicket";
 import { CategoriaModel } from "../../models/categoria.model";
 import { estadoModel } from "../../models/estado.model";
-import { api } from "../../services/api";
 import { obtenerMisTickets } from "../../services/TicketServices/ObtenerMisTickets";
-import { obtenerTicketsPaginado } from "../../services/TicketServices/ObtenerTicketsPaginado";
-import { IPaginadoParams } from "../../interfaces/IPaginado.params";
 import { IObtenerTicketsParams } from "../../interfaces/IObtenerTickets.params";
 import { ticketPaginatedModel } from "../../models/ticket.model";
 import { getAllEstados } from "../../services/EstadoServices/GetAllEstados";

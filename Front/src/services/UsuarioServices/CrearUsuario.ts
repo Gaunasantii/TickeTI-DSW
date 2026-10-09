@@ -1,20 +1,11 @@
 import { api } from "../api";
+import type { ICreatePersonRequest } from "../../requests/ICreatePersonRequest";
 
-export interface CreateUsuarioInput {
-  dni: string;
-  nombre: string;
-  apellido: string;
-  telefono?: string;
-  mail?: string;
-  contrasenia?: string;
-  oficina?: number | string;
-}
-
-export const crearUsuario = async (data: CreateUsuarioInput) => {
+export const crearUsuario = async (data: ICreatePersonRequest) => {
   const payload: any = {
     ...data,
     dni: String(data.dni).trim(),
-    oficina: data.oficina ? Number(data.oficina) : undefined,
+    oficina: Number(data.oficina)
   };
 
   const res = await api("/usuarios", {

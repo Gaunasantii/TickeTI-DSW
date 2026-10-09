@@ -4,15 +4,14 @@ import { ListaEmpresas } from "./components/ListaEmpresas";
 import { OficinasDeEmpresa } from "./components/OficinasDeEmpresa";
 import { ListaCategorias } from "./components/ListaCategorias";
 import { ListaPrioridades } from "./components/ListaPrioridades";
-import { ListaUsuarios } from "./pages/Usuario/listaUsuarios";
-import { TicketForm } from "./components/TicketForm.jsx";
+import {UsuarioCrudPage} from "./pages/Usuario/UsuarioCrud.js";
 import { HomePage } from "./pages/Home/Home.js";
 import { ContactPage } from "./pages/Contact/Contact";
 import { LoginPage } from "./pages/Login/Login.js";
 import { OficinaPage } from "./pages/Oficina/Oficina.js";
-import { UserDashboardPage } from "./pages/Usuario/Usuario";
-import { AdminPage } from "./pages/Admin/Admin";
-import { TecnicoPage } from "./pages/Tecnico/Tecnico";
+import { UserDashboardPage } from "./pages/Usuario/UsuarioDashboard.js";
+import { AdminPage } from "./pages/Admin/AdminDashboard.js";
+import { TecnicoPage } from "./pages/Tecnico/TecnicoDashboard.js";
 import { SuperAdminPage } from "./pages/SuperAdmin/SuperAdmin";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 
@@ -37,7 +36,7 @@ export const App = () => {
 
       {/* Rutas compartidas Admin y Técnico */}
       <Route element={<ProtectedRoute rolesPermitidos={["admin", "administrador", "tecnico"]} />}>
-        <Route path="/usuarios" element={<ListaUsuarios />} />
+        <Route path="/usuarios" element={<UsuarioCrudPage />} />
       </Route>
 
       {/* Rutas exclusivas Administrador */}

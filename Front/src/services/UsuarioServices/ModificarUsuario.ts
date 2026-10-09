@@ -1,22 +1,13 @@
 import { api } from "../api";
+import type { IModifyPersonRequest } from "../../requests/IModifyPersonRequest";
 
-export interface ModifyUsuarioInput {
-  nombre?: string;
-  apellido?: string;
-  telefono?: string;
-  oficina?: number | string | null;
-}
 
-export const modificarUsuario = async (dni: string | number, data: ModifyUsuarioInput) => {
-  const payload: any = {
-    ...data,
-    oficina: data.oficina !== undefined && data.oficina !== "" ? Number(data.oficina) : null,
-  };
+export const modificarUsuario = async (dni: string | number, data: IModifyPersonRequest) => {
 
   const res = await api(`/usuarios/${dni}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(data),
   });
 
   if (!res.ok) {

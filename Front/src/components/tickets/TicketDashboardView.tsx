@@ -5,7 +5,7 @@ import type { CategoriaModel } from "../../models/categoria.model";
 import { TicketFilters } from "./TicketDashboardView/components/TicketFilters";
 import { TicketList } from "./TicketDashboardView/components/TicketList";
 import { TicketMetrics } from "./TicketDashboardView/components/TicketMetrics";
-import { TicketPagination } from "./TicketDashboardView/components/TicketPagination";
+import { Pagination } from "../Pagination";
 import type { ticketPaginatedModel } from "../../models/ticket.model";
 import { estadoModel } from "../../models/estado.model";
 
@@ -68,6 +68,17 @@ export const TicketDashboardView: React.FC<TicketDashboardViewProps> = ({
         }}
       />
 
+      {totalItems > itemsPorPagina && (
+        <Pagination
+          cantidad={totalItems}
+          cantidadVisible={itemsPorPagina}
+          paginaActual={currentPage}
+          totalPaginas={totalPages}
+          onAnterior={() => onRefresh({ ...filtro, pagina: Math.max(currentPage - 1, 1) })}
+          onSiguiente={() => onRefresh({ ...filtro, pagina: Math.min(currentPage + 1, totalPages) })}
+        />
+      )}
+
       <TicketList
         tickets={tickets}
         cargando={cargando}
@@ -76,8 +87,8 @@ export const TicketDashboardView: React.FC<TicketDashboardViewProps> = ({
       />
 
       {totalItems > itemsPorPagina && (
-        <TicketPagination
-          cantidadTickets={totalItems}
+        <Pagination
+          cantidad={totalItems}
           cantidadVisible={itemsPorPagina}
           paginaActual={currentPage}
           totalPaginas={totalPages}

@@ -1,7 +1,7 @@
 import React from "react";
 
-interface TicketPaginationProps {
-  cantidadTickets: number;
+interface PaginationProps {
+  cantidad: number;
   cantidadVisible: number;
   paginaActual: number;
   totalPaginas: number;
@@ -9,8 +9,8 @@ interface TicketPaginationProps {
   onSiguiente: () => void;
 }
 
-export const TicketPagination: React.FC<TicketPaginationProps> = ({
-  cantidadTickets,
+export const Pagination: React.FC<PaginationProps> = ({
+  cantidad,
   cantidadVisible,
   paginaActual,
   totalPaginas,
@@ -19,7 +19,7 @@ export const TicketPagination: React.FC<TicketPaginationProps> = ({
 }) => (
   <div className="flex items-center justify-between bg-white px-4 py-3 rounded-2xl border border-slate-200 shadow-sm text-xs text-slate-600">
     <span>
-      Mostrando {cantidadVisible} de {cantidadTickets}
+      Mostrando {cantidadVisible} de {cantidad}
     </span>
     <div className="flex items-center gap-2">
       <button
