@@ -8,8 +8,8 @@ export const obtenerTicketsPaginado = async (params: IObtenerTicketsParams): Pro
         const paramsUrl= new URLSearchParams({
             page: params.pagina.toString(),
             cantPerPage: params.cantidad.toString(),
-            ...(params.estado !== undefined ? { estado: params.estado.toString() } : {}),
-            ...(params.categoria !== undefined ? { categoria: params.categoria.toString() } : {})
+            ...(params.estado ? { estado: params.estado.toString() } : {}),
+            ...(params.categoria ? { categoria: params.categoria.toString() } : {})
         });
         const response=await api(`/tickets/paginated?${paramsUrl.toString()}`,{method:"GET"});
         return response.json();
