@@ -59,4 +59,13 @@ export class prioridadDAO {
       await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
       return;
   }
+
+  static async findPaginated(filters: any, page: number, cantPerPage: number) {
+      const em = orm.em ;
+      const [prioridades, total] = await em.findAndCount(PrioridadSchema, filters, {
+          limit: cantPerPage,
+          offset: (page - 1) * cantPerPage,
+      });
+      return { data: prioridades, total };
+  }
 }

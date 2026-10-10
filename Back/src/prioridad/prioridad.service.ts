@@ -21,4 +21,8 @@ export class PrioridadService {
     if(!prioridadFound)throw new NotFoundError("Prioridad no encontrada",`prioridad con id ${id} no hallada`)
     await prioridadDAO.deletePrioridad(prioridadFound);
   }
+
+  static async getPaginatedPrioridades( page: number, cantPerPage: number) {
+    return await prioridadDAO.findPaginated({}, page, cantPerPage);
+  }
 }
