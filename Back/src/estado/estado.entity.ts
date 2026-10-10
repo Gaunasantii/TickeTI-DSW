@@ -9,7 +9,7 @@ export const EstadoSchema = defineEntity({
     descripcion: p.string(),
     esEstadoInicial:p.boolean().default(false),
     esEstadoFinal: p.boolean().default(false),
-    empresa:()=> p.manyToOne(EmpresaSchema)
+    empresa:()=> p.manyToOne(EmpresaSchema).deleteRule('cascade')
   }
 });
 

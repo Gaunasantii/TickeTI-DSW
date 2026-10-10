@@ -7,7 +7,7 @@ export const PrioridadSchema = defineEntity({
     id: p.integer().primary().autoincrement(),
     nombre: p.string(),
     tiempoLimiteResolucion: p.integer(), 
-    empresa:()=> p.manyToOne(EmpresaSchema)
+    empresa:()=> p.manyToOne(EmpresaSchema).deleteRule('cascade')
   }
 });
 

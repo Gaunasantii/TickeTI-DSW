@@ -6,7 +6,7 @@ export const CategoriaSchema = defineEntity({
   properties: {
     id: p.integer().primary().autoincrement(),
     nombre: p.string(),
-    empresa:()=> p.manyToOne(EmpresaSchema)
+    empresa:()=> p.manyToOne(EmpresaSchema).deleteRule('cascade')
   }
 });
 
