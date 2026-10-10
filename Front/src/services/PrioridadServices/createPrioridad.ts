@@ -4,7 +4,7 @@ import { IApiResponse } from "../../responses/IApiResponse";
 import { api } from "../api";
 
 export const createPrioridad=async(data: ICreatePrioridadRequest):Promise<IApiResponse<prioridadModel>>=>{
-    const res= await api("/prioridad",{method:"POST",body: JSON.stringify(data)})
+    const res= await api("/prioridad",{method:"POST",body: JSON.stringify({...data,tiempoLimiteResolucion: Number(data.tiempoLimiteResolucion)})})
     if(!res.ok){
         throw new Error("Error al crear la prioridad");
     }

@@ -118,7 +118,7 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement|HTMLSelectElement>) 
             type="text"
             required
             name="nombre"
-            value={updatedPrioridad? updatedPrioridad.nombre : ""}
+            value={updatedPrioridad? updatedPrioridad.nombre : prioridadNew?.nombre}
             onChange={handleChange}
             placeholder={
               updatedPrioridad
@@ -131,7 +131,7 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement|HTMLSelectElement>) 
             type="number"
             required
             name="tiempoLimiteResolucion"
-            value={updatedPrioridad? updatedPrioridad.tiempoLimiteResolucion : ""}
+            value={updatedPrioridad? updatedPrioridad.tiempoLimiteResolucion : prioridadNew?.tiempoLimiteResolucion}
             onChange={handleChange}
             placeholder={
               updatedPrioridad

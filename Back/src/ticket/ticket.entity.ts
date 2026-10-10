@@ -19,9 +19,9 @@ export const TicketSchema = defineEntity({
         fechaCreacion:p.datetime(),
         solucion:p.string().nullable(),
         fechaCierre:p.datetime().nullable(),
-        estado:() => p.manyToOne(EstadoSchema).deleteRule('set null'),
-        prioridad:() => p.manyToOne(PrioridadSchema).deleteRule('set null'),
-        categoria:() => p.manyToOne(CategoriaSchema).deleteRule('set null'),
+        estado:() => p.manyToOne(EstadoSchema).deleteRule('set null').nullable(),
+        prioridad:() => p.manyToOne(PrioridadSchema).deleteRule('set null').nullable(),
+        categoria:() => p.manyToOne(CategoriaSchema).deleteRule('set null').nullable(),
         usuario:() => p.manyToOne(PersonSchema).deleteRule('cascade'),
         asignaciones:() => p.oneToMany(asignacionSchema).mappedBy('ticket'),
         empresa:()=> p.manyToOne(EmpresaSchema).deleteRule('cascade')
