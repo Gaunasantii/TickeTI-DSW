@@ -7,5 +7,5 @@ import { PersonController } from "./person.controller.js";
 import { authenticateToken } from "../middlewares/auth.middleware.js";
 import { authorizeRoles } from "../middlewares/role.middleware.js";
 
-personrouter.get("/persons/paginate",authenticateToken,authorizeRoles('admin'),ValidationMiddleware(PaginatedPersonSchema),
+personrouter.get("/persons/paginate",authenticateToken,authorizeRoles('admin','tecnico'),ValidationMiddleware(PaginatedPersonSchema),
 PersonController.PaginateUserAndTecnicos);
