@@ -10,9 +10,9 @@ export const asignacionSchema = defineEntity({
     fechaCreacion:p.datetime(),
     fechaCierre:p.datetime().nullable(),
     estado:p.boolean().default(true),
-    ticket:()=>p.manyToOne(TicketSchema),
-    tecnico:()=>p.manyToOne(TecnicoSchema),
-    empresa:()=> p.manyToOne(EmpresaSchema)
+    ticket:()=>p.manyToOne(TicketSchema).deleteRule('cascade'),
+    tecnico:()=>p.manyToOne(TecnicoSchema).deleteRule('cascade'),
+    empresa:()=> p.manyToOne(EmpresaSchema).deleteRule('cascade')
   }
 })
 
