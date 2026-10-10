@@ -13,6 +13,7 @@ import { AdminPage } from "./pages/Admin/AdminDashboard.js";
 import { TecnicoPage } from "./pages/Tecnico/TecnicoDashboard.js";
 import { SuperAdminPage } from "./pages/SuperAdmin/SuperAdmin";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { PrioridadCrudPage } from "./pages/Prioridad/PrioridadCrudPage.js";
 
 export const App = () => {
   return (
@@ -43,7 +44,7 @@ export const App = () => {
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/Oficina" element={<OficinaPage />} />
         <Route path="/categorias" element={<ListaCategorias />} />
-        <Route path="/prioridades" element={<ListaPrioridades />} />
+        <Route path="/prioridades/crud" element={<PrioridadCrudPage />} />
       </Route>
 
       {/* Rutas exclusivas Técnico */}
