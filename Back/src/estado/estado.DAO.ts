@@ -30,14 +30,6 @@ export class EstadoDAO {
       return stateFound;
   }
 
-  static async deleteState(filters: any) {
-      const em = orm.em ;
-      const stateToDelete = await em.findOneOrFail(EstadoSchema, filters);
-      em.remove(stateToDelete);
-      await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
-      return stateToDelete;
-  }
-
   static async createInitialStates(idEmpresa:number) {
       const em = orm.em ;
       await em.create(EstadoSchema,{
@@ -56,5 +48,20 @@ export class EstadoDAO {
 
       await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
       return;
+  }
+
+  static async getEstadosPaginated(filters:any,page:number,limit:number){
+      const em = orm.em ;
+      const [estados, total] = await em.findAndCount(EstadoSchema, filters, {
+          limit: limit,
+          offset: (page - 1) * limit
+      });
+      return {estados,total};
+  }
+
+  static async delete(estado:any) {
+      const em = orm.em ;
+      em.remove(estado);
+      await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
   }
 }
