@@ -1,10 +1,11 @@
 import { type Request, type Response } from "express";
 import { type CategoriaDto ,CategoriaOutSchema } from "./DTO/CategoriaOut.dto.js";
 import { CategoriaService } from "./categoria.service.js";
-import { ApiSuccessResponse } from "../utils/api.response.js";
+import { ApiSuccessResponse, ApiPaginationResponse } from "../utils/api.response.js";
 import type { CreateCategoriaInDto } from "./DTO/CreateCategoria.dto.js";
 import { wrap } from "@mikro-orm/core";
 import type { ModifyCategoriaInBodyDto, ModifyCategoriaInParamsDto } from "./DTO/ModifyCategoria.dto.js";
+import type { PaginateCategoriaDTO } from "./DTO/PaginateCategoria.dto.js";
 
 class CategoriaController {
 
@@ -34,6 +35,14 @@ class CategoriaController {
             const id = Number(req.params.id);
             await CategoriaService.deleteCategoria(id);
             res.status(200).json(new ApiSuccessResponse<null>(null,"Categoria eliminada con exito"))
+    }
+
+    async getCategoriasPaginated(req: Request<any,any,any,PaginateCategoriaDTO>, res: Response) {
+            const page = Number(req.query.page);
+            const limit = Number(req.query.cantPerPage);
+            const { categorias, total } = await CategoriaService.getCategoriasPaginated(page, limit);
+            const categoriasDto=categorias.map(c=>CategoriaOutSchema.parse(wrap(c).toJSON()))
+            res.status(200).json(new ApiPaginationResponse<CategoriaDto>(categoriasDto,{totalItems: total,totalPages: Math.ceil(total / Number(limit)),currentPage: Number(page),itemsPerPage: Number(limit)},"Paginado de categorias recuperado"));
     }
 }
 

@@ -56,4 +56,14 @@ export class categoriaDAO {
       await em.flush().catch((error:any)=>mapDbErrorToAppError(error));
       return;
   }
+
+  static async getCategoriasPaginated(page: number, limit: number,filter:any) 
+  {
+      const em = orm.em ;
+      const [categorias, total] = await em.findAndCount(CategoriaSchema, filter, {
+          limit: limit,
+          offset: (page - 1) * limit,
+      });
+      return {categorias,total};
+  }
 }

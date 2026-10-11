@@ -21,4 +21,8 @@ export class CategoriaService {
     if(!categoriafound)throw new NotFoundError("Categoria no encontrada",`Categoria de id ${id} no hallada`)
     await categoriaDAO.deleteCategoria(categoriafound);
   }
+
+  static async getCategoriasPaginated(page: number, limit: number) {
+    return await categoriaDAO.getCategoriasPaginated(page, limit, {});
+  }
 }
