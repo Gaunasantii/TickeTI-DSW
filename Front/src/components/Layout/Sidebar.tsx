@@ -64,6 +64,7 @@ export const Sidebar: React.FC = () => {
         { label: "Usuarios", path: "/usuarios" },
         { label: "Oficinas", path: "/Oficina" },
         { label: "Prioridades", path: "/prioridades/crud" },
+        { label: "Categorías", path: "/categorias/crud" },
         ajustesItem,
       ];
     }
