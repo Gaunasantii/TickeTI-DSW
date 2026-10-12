@@ -10,15 +10,15 @@ export const PaginateEmpresaOutSchema=zod.object({
         name:zod.string(),
         surName:zod.string(),
         tele:zod.string()
-    })).min(1,"La empresa debe tener al menos un administrador").max(1,"La empresa solo puede tener un administrador")
+    })).max(1,"La empresa solo puede tener un administrador")
 }).transform(({nombre,admin,personas})=>{
 
     const administrador = admin[0]
 
     return({
         nombre:nombre,
-        nombreAdmin:`${administrador!.name} ${administrador!.surName}`,
-        telAdmin:administrador!.tele,
+        nombreAdmin:administrador?`${administrador!.name} ${administrador!.surName}`:"No asignado",
+        telAdmin:administrador?administrador!.tele:"No asignado",
         cantidadEmpleados:personas.length
     })
 })
