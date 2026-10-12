@@ -13,6 +13,7 @@ import { TecnicoPage } from "./pages/Tecnico/TecnicoDashboard.js";
 import { SuperAdminPage } from "./pages/SuperAdmin/SuperAdmin";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { PrioridadCrudPage } from "./pages/Prioridad/PrioridadCrudPage.js";
+import { EstadoCrudPage } from "./pages/Estado/EstadoCrudPage.js";
 
 export const App = () => {
   return (
@@ -44,6 +45,7 @@ export const App = () => {
         <Route path="/Oficina" element={<OficinaPage />} />
         <Route path="/categorias/crud" element={<CategoriasCrudPage />} />
         <Route path="/prioridades/crud" element={<PrioridadCrudPage />} />
+        <Route path="/estados/crud" element={<EstadoCrudPage />} />
       </Route>
 
       {/* Rutas exclusivas Técnico */}
