@@ -27,6 +27,20 @@ export class EstadoService {
     if (!estadoToBeDeleted) {
       throw new NotFoundError("Estado no encontrado",`Estado con id ${id} no encontrado`);
     }
+    if(estadoToBeDeleted.esEstadoInicial) 
+      throw new Error("No se puede eliminar el estado inicial");
+    
+    if(estadoToBeDeleted.esEstadoFinal)
+      throw new Error("No se puede eliminar el estado final");
+
     return await EstadoDAO.delete(estadoToBeDeleted);
+  }
+
+  static async updateEstado(id: Number, estadoInput: any) {
+    const estadoToBeUpdated = await EstadoDAO.findOne({ id: id });
+    if (!estadoToBeUpdated) {
+      throw new NotFoundError("Estado no encontrado",`Estado con id ${id} no encontrado`);
+    }
+    return await EstadoDAO.updateState(estadoInput, estadoToBeUpdated);
   }
 }

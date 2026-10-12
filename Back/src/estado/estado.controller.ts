@@ -7,6 +7,7 @@ import type { CreateEstadoInDto } from "./DTO/CreateEstado.dto.js";
 import { EstadoOutSchema, type EstadoDto } from "./DTO/EstadoOut.dto.js";
 import { wrap } from "@mikro-orm/core";
 import type { FindOneEstadoInDto } from "./DTO/FindOneEstado.dto.js";
+import type { UpdateEstadoDTOType } from "./DTO/UpdateEstado.dto.js";
 class EstadoController {
   async createNew(req: Request<any,any,CreateEstadoInDto>, res: Response) {
       const estadoInput = {...req.body,empresa:req.user.empresa}
@@ -39,6 +40,13 @@ class EstadoController {
       const id = Number(req.params.id);
       await EstadoService.deleteEstado(id);
       res.status(200).json(new ApiSuccessResponse<null>(null, "Estado eliminado correctamente"));
+  }
+
+  async update(req: Request<FindOneEstadoInDto,any,UpdateEstadoDTOType>, res: Response) {
+      const id = Number(req.params.id);
+      const estadoInput = req.body;
+      await EstadoService.updateEstado(id, estadoInput);
+      res.status(200).json(new ApiSuccessResponse<null>(null, "Estado actualizado correctamente"));
   }
 }
 
