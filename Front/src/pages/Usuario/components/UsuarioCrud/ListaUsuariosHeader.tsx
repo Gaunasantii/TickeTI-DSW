@@ -2,12 +2,14 @@ import React from "react";
 interface ListaUsuariosHeaderProps {
   esAdmin: boolean;
   onNuevoUsuario: () => void;
+  onNuevoTecnico: () => void;
   onRefresh: () => void;
 }
 
 export const ListaUsuariosHeader: React.FC<ListaUsuariosHeaderProps> = ({
   esAdmin,
   onNuevoUsuario,
+  onNuevoTecnico,
   onRefresh,
 }) => (
   <div className="flex justify-between items-center">
@@ -17,12 +19,20 @@ export const ListaUsuariosHeader: React.FC<ListaUsuariosHeaderProps> = ({
     </div>
     <div>
     {esAdmin && (
+      <>
       <button
         onClick={onNuevoUsuario}
         className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold shadow-sm transition"
       >
         + Nuevo Usuario
       </button>
+      <button
+            onClick={onNuevoTecnico}
+            className="px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl text-sm font-semibold shadow-sm transition"
+          >
+            + Nuevo Técnico
+          </button>
+      </>
     )}
     <button
         onClick={() => onRefresh()}

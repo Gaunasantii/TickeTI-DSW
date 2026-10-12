@@ -1,4 +1,4 @@
 export interface IOficina{
     id:number,
-    name:string,
+    nombre:string,
 }

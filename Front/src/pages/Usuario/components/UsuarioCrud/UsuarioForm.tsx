@@ -2,11 +2,12 @@ import React from "react";
 import type { OficinaItem } from "../../../../types/usuarios";
 import { ICreatePersonRequest } from "../../../../requests/ICreatePersonRequest";
 import type { IModifyPersonRequest } from "../../../../requests/IModifyPersonRequest";
+import { IOficina } from "../../../../models/oficina.model";
 
 interface UsuarioFormProps {
   editandoDni: string | null;
   formData: ICreatePersonRequest|IModifyPersonRequest;
-  oficinas: OficinaItem[];
+  oficinas: IOficina[];
   guardando: boolean;
   onSubmit: (e: React.FormEvent) => void;
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
@@ -66,7 +67,6 @@ export const UsuarioForm: React.FC<UsuarioFormProps> = ({
         className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl"
       />
 
-      {!editandoDni && (
       <select
         value={(formData as ICreatePersonRequest).oficina}
         onChange={onChange}
@@ -81,7 +81,7 @@ export const UsuarioForm: React.FC<UsuarioFormProps> = ({
         ))}
       </select>
 
-      )}
+      
       {!editandoDni ? (
         <input
           type="password"

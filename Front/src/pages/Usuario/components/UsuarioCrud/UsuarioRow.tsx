@@ -10,7 +10,7 @@ interface UsuarioRowProps {
   esAdmin: boolean;
   onToggle: (dni: string, abierta: boolean) => void;
   onEditar: (usuario: personaPaginatedModel) => void;
-  onEliminar: (dni: string) => void;
+  onEliminar: (usuario: personaPaginatedModel) => void;
 }
 
 export const UsuarioRow: React.FC<UsuarioRowProps> = ({
@@ -72,7 +72,7 @@ export const UsuarioRow: React.FC<UsuarioRowProps> = ({
                 Editar
               </button>
               <button
-                onClick={() => onEliminar(u.dni)}
+                onClick={() => onEliminar(u)}
                 className="px-2.5 py-1 font-semibold bg-rose-50 text-rose-700 border border-rose-200 rounded-lg hover:bg-rose-100 transition"
               >
                 Eliminar

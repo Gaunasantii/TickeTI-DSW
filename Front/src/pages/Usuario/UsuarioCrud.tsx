@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { DashboardLayout } from "../../components/Layout/DashboardLayout";
 import { ListarOficinas } from "../../services/OficinaService/ListarOficina";
-import type { OficinaItem, UsuarioItem } from "../../types/usuarios";
 import { ListaUsuariosHeader } from "./components/UsuarioCrud/ListaUsuariosHeader";
 import { UsuarioForm } from "./components/UsuarioCrud/UsuarioForm";
 import { UsuariosTable } from "./components/UsuarioCrud/UsuariosTable";
@@ -14,10 +13,16 @@ import { Pagination } from "../../components/Pagination";
 import type {IMeta} from "../../responses/IPaginatedApiResponse"
 import { modificarUsuario } from "../../services/UsuarioServices/ModificarUsuario";
 import { crearUsuario } from "../../services/UsuarioServices/CrearUsuario";
+import { TecnicoForm } from "./components/UsuarioCrud/TecnicoForm";
+import { IModifyUserRequest } from "../../requests/IModifyUserRequest";
+import { IOficina } from "../../models/oficina.model";
+import { CreateTecnico } from "../../services/TecnicoServices/CreateTecnico";
+import { eliminarTecnico } from "../../services/TecnicoServices/DeleteTecnico";
+import { modificarTecnico } from "../../services/TecnicoServices/UpdateTecnico";
 
 export const UsuarioCrudPage: React.FC = () => {
   const [usuarios, setUsuarios] = useState<personaPaginatedModel[]>([]);
-  const [oficinas, setOficinas] = useState<OficinaItem[]>([]);
+  const [oficinas, setOficinas] = useState<IOficina[]>([]);
   const [cargando, setCargando] = useState(true);
   const [filaExpandida, setFilaExpandida] = useState<string | null>(null);
   const [paramsPaginado, setParamsPaginado] = useState({
@@ -26,11 +31,11 @@ export const UsuarioCrudPage: React.FC = () => {
   });
   const [meta, setMeta] = useState<IMeta>({} as IMeta);
 
-  // Formulario rápido para Admin
   const [mostrarModal, setMostrarModal] = useState(false);
+  const [tipoFormulario, setTipoFormulario] = useState<'usuario' | 'tecnico' | null>(null);
   const [editandoDni, setEditandoDni] = useState<string | null>(null);
   const [newUserData, setNewUserData] = useState<ICreatePersonRequest>({} as ICreatePersonRequest);
-  const [updatedUserData, setUpdatedUserData] = useState<IModifyPersonRequest>({} as IModifyPersonRequest);
+  const [updatedUserData, setUpdatedUserData] = useState<IModifyPersonRequest | IModifyUserRequest>({} as IModifyPersonRequest);
   const [guardando, setGuardando] = useState(false);
 
   const usuarioRaw = sessionStorage.getItem("user") || sessionStorage.getItem("usuario");
@@ -88,10 +93,15 @@ export const UsuarioCrudPage: React.FC = () => {
     if(!esAdmin) return;
     try {
       setGuardando(true);
-      await modificarUsuario(editandoDni!, updatedUserData);
+      if (tipoFormulario === 'tecnico') {
+        await modificarTecnico(editandoDni!, updatedUserData);
+      } else {
+        await modificarUsuario(editandoDni!, updatedUserData as IModifyUserRequest);
+      };
       setMostrarModal(false);
       setEditandoDni(null);
     } catch (err: any) {
+      console.error("Error al actualizar el usuario:", err);
       alert(err.message || "Error al actualizar el usuario");
     } finally {
       setGuardando(false);
@@ -102,8 +112,11 @@ export const UsuarioCrudPage: React.FC = () => {
     e.preventDefault();
     try{
       setGuardando(true);
-      console.log(newUserData);
-      await crearUsuario(newUserData);
+      if (tipoFormulario === 'tecnico') {
+        await CreateTecnico(newUserData);
+      } else {
+        await crearUsuario(newUserData);
+      }
       setMostrarModal(false);
       setNewUserData({} as ICreatePersonRequest);
     }catch(err: any){
@@ -116,14 +129,27 @@ export const UsuarioCrudPage: React.FC = () => {
   const handleNuevoUsuario = () => {
     setEditandoDni(null);
     setNewUserData({} as ICreatePersonRequest);
+    setTipoFormulario('usuario');
     setMostrarModal(true);
   };
 
-  const deleteUsuario = async (dni: string) => {
+  const handleNuevoTecnico = () => {
+    setEditandoDni(null);
+    setNewUserData({} as ICreatePersonRequest);
+    setTipoFormulario('tecnico')
+    setMostrarModal(true);
+  };
+
+  const deleteUsuario = async (usuario:personaPaginatedModel) => {
     if(!esAdmin) return;
+    const esTecnico=usuario.type.toLowerCase() === 'tecnico';
     try {
       setGuardando(true);
-      await eliminarUsuario(dni);
+      if (esTecnico) {
+        await eliminarTecnico(usuario.dni);
+      } else {
+        await eliminarUsuario(usuario.dni);
+      }
       cargarUsuarios();
     } catch (err: any) {
       alert(err.message || "Error al eliminar el usuario");
@@ -136,6 +162,7 @@ export const UsuarioCrudPage: React.FC = () => {
     if (usuario) {
       setEditandoDni(usuario.dni);
       setUpdatedUserData(usuario);
+      setTipoFormulario(usuario.type === 'tecnico' ? 'tecnico' : 'usuario'); 
       setMostrarModal(true);
     }
   };
@@ -143,15 +170,25 @@ export const UsuarioCrudPage: React.FC = () => {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <ListaUsuariosHeader esAdmin={esAdmin} onNuevoUsuario={handleNuevoUsuario} onRefresh={cargarUsuarios} />
+        <ListaUsuariosHeader esAdmin={esAdmin} onNuevoUsuario={handleNuevoUsuario} onNuevoTecnico={handleNuevoTecnico} onRefresh={cargarUsuarios} />
         {console.log(usuarios)}
-        {esAdmin && mostrarModal && (
+        {esAdmin && mostrarModal && tipoFormulario === 'usuario' && (
           <UsuarioForm
             editandoDni={editandoDni}
             formData={editandoDni ? updatedUserData : newUserData}
             oficinas={oficinas}
             guardando={guardando}
             onSubmit={editandoDni ? HandleUpdateSubmit : handleCreateSubmit}
+            onChange={handleChange}
+            onCancel={() => setMostrarModal(false)}
+          />
+        )}
+        {esAdmin && mostrarModal && tipoFormulario === 'tecnico' && (
+          <TecnicoForm
+            editandoDni={editandoDni}
+            formData={editandoDni ? updatedUserData : newUserData}
+            guardando={guardando}
+            onSubmit={editandoDni ? HandleUpdateSubmit : handleCreateSubmit} // Depende de si manejas endpoints diferentes
             onChange={handleChange}
             onCancel={() => setMostrarModal(false)}
           />

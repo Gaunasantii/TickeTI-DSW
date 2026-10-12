@@ -1,18 +1,19 @@
 import { api } from "../api";
-import type { IModifyPersonRequest } from "../../requests/IModifyPersonRequest";
+import { IModifyUserRequest } from "../../requests/IModifyUserRequest";
 
 
-export const modificarUsuario = async (dni: string | number, data: IModifyPersonRequest) => {
+export const modificarUsuario = async (dni: string | number, data: IModifyUserRequest) => {
+
+  const payload = {...data,oficina:Number(data.oficina)}
 
   const res = await api(`/usuarios/${dni}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+    body: JSON.stringify(payload),
   });
 
   if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.message || "Error al actualizar el usuario");
+    throw new Error("Error al actualizar el usuario:"+ (await res.json()).errors);
   }
 
   return await res.json();

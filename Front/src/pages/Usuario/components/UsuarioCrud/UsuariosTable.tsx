@@ -11,7 +11,7 @@ interface UsuariosTableProps {
   esAdmin: boolean;
   onToggle: (dni: string, abierta: boolean) => void;
   onEditar: (usuario: personaPaginatedModel) => void;
-  onEliminar: (dni: string) => void;
+  onEliminar: (usuario: personaPaginatedModel) => void;
 }
 
 export const UsuariosTable: React.FC<UsuariosTableProps> = ({
