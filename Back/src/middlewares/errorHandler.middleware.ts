@@ -26,7 +26,7 @@ export const ErrorHander=(err:Error,req:Request,res:Response,next:NextFunction)=
                 break;
         }
 
-        return res.status(statusCode).json(new ApiErrorResponse(err.message,(err as any).details))
+        return res.status(statusCode).json(new ApiErrorResponse((err as any).details, err.message))
     }
 
     console.log("Error no controlado:",err);
