@@ -10,9 +10,7 @@ export const ObtenerEmpresasPaginated = async (params: IPaginadoParams): Promise
             cantPerPage: params.cantidad.toString()
         });
         const response = await api(`/empresas?${urlParams.toString()}`, { method: "GET" });
-
         
-
         return await response.json();
     } catch (error) {
         console.error(error);
