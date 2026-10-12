@@ -132,10 +132,10 @@ export const ListaEmpresas: React.FC = () => {
         {/* Modal de Alta Empresa + Admin */}
         {mostrarModal && (
           <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-            <h2 className="text-base font-bold text-slate-800">Dar de Alta Empresa y Administrador Principal</h2>
+            <h2 className="text-base font-bold text-slate-800">Alta Empresa y Administrador (Opcional)</h2>
             <form onSubmit={handleCrearEmpresaYAdmin} className="space-y-4">
               <div className="p-4 bg-slate-50 rounded-xl border border-slate-200/60 space-y-2">
-                <span className="block text-xs font-bold text-slate-500 uppercase">Datos de la Empresa</span>
+                <span className="block text-xs font-bold text-slate-500 uppercase">Empresa</span>
                 <input
                   type="text"
                   required
@@ -147,7 +147,7 @@ export const ListaEmpresas: React.FC = () => {
               </div>
 
               <div className="p-4 bg-slate-50 rounded-xl border border-slate-200/60 space-y-3">
-                <span className="block text-xs font-bold text-slate-500 uppercase">Administrador Asignado</span>
+                <span className="block text-xs font-bold text-slate-500 uppercase">Administrador</span>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                   <input
                     type="text"
