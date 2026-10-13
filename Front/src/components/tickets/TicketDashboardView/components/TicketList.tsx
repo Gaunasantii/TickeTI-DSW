@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import type { EstadoItem, TicketItem } from "../../../../types/tickets";
 import { TicketCard } from "./TicketCard";
 import { ticketPaginatedModel } from "../../../../models/ticket.model";
@@ -6,6 +6,7 @@ import { estadoModel } from "../../../../models/estado.model";
 import { CategoriaModel } from "../../../../models/categoria.model";
 import { prioridadModel } from "../../../../models/prioridad.model";
 import { MyTicketCard } from "./MyTicketsCard";
+import { filterIntermediateStates } from "../../../../helpers/FilterEstadosIntermedios";
 
 interface TicketListProps {
   tickets: ticketPaginatedModel[];
@@ -31,7 +32,13 @@ export const TicketList: React.FC<TicketListProps> = ({
   onCambiarCategoria,
   onCambiarPrioridad,
   onEliminar
-}) => (
+}) => {
+
+  const filteredIntermediateStates = useMemo(() => {
+    return filterIntermediateStates(estadosEmpresa);
+  }, [estadosEmpresa]);
+
+  return (
   <div className="space-y-3">
     {cargando ? (
       <div className="p-10 text-center bg-white rounded-2xl border border-slate-200">
@@ -47,7 +54,7 @@ export const TicketList: React.FC<TicketListProps> = ({
           <TicketCard
             key={ticket.id}
             ticket={ticket}
-            estadosEmpresa={estadosEmpresa}
+            estadosEmpresa={filteredIntermediateStates}
             categoriasEmpresa={categoriasEmpresa}
             prioridadesEmpresa={prioridadesEmpresa}
             onCambiarEstado={onCambiarEstado}
@@ -61,5 +68,6 @@ export const TicketList: React.FC<TicketListProps> = ({
           />
       ))
     )}
-  </div>
-);
+    </div>
+  );
+};
