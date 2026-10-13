@@ -1,6 +1,8 @@
 import { asignacionDAO } from "./asignacion.DAO.js";
 import { NotFoundError } from "../utils/base.error.js";
+
 export class AsignacionService {
+  
   static async createAsignacion(asignacionInput: any) {
     await asignacionDAO.createAsignacion(asignacionInput);
   }

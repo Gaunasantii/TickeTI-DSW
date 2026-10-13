@@ -81,9 +81,7 @@ export const TicketDashboardView: React.FC<TicketDashboardViewProps> = ({
 
       <TicketList
         tickets={tickets}
-        cargando={cargando}
-        estadosEmpresa={estados}
-        mostrarAccionesEstado={mostrarAccionesEstado}
+        onTicketUpdated={() => onRefresh(filtro)}
       />
 
       {totalItems > itemsPorPagina && (
