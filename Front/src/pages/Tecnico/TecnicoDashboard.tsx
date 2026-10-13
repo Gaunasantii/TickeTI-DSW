@@ -25,7 +25,6 @@ export const TecnicoPage: React.FC = () => {
 
   const cargarTickets = async (filters: IObtenerTicketsParams) => {
     try {
-      console.log("Cargando tickets con filtros:", filters);
       const lista = await obtenerTicketsPaginado(filters);
       setTickets(lista.data || []);
       setMeta(lista.meta || {
