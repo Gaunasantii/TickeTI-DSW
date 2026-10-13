@@ -72,6 +72,7 @@ export const Sidebar: React.FC = () => {
     if (rol === "tecnico") {
       return [
         commonDashboard,
+        { label: "Mis tickets" , path: "/usuario"},
         { label: "Usuarios", path: "/usuarios" },
         ajustesItem,
       ];
