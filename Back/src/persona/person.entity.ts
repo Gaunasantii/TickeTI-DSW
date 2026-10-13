@@ -37,5 +37,5 @@ PersonSchema.addHook('beforeCreate',async(args:EventArgs<PersonType> )=>{
 
     const count=await args.em.count(PersonSchema,{mail:{$like:`${baseMail}%`}});
 
-    person.mail=baseMail+String(count)+"@ticketi.com";
+    person.mail=baseMail+String(count)+String(person.empresa?.id)+"@ticketi.com";
 })
