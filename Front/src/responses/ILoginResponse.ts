@@ -1,5 +1,5 @@
 export interface ILoginResponse{
-    idUser:number,
+    dni:string,
     name:string,
-    email:string,
+    type:string
 }

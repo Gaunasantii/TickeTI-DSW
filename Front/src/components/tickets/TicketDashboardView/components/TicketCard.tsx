@@ -1,23 +1,64 @@
-import React from "react";
+import React, { useState } from "react";
 import type { EstadoItem, TicketItem } from "../../../../types/tickets";
 import type { ticketPaginatedModel } from "../../../../models/ticket.model";
+import {useAuth} from "../../../../context/AuthContext";
 
 interface TicketCardProps {
   ticket: ticketPaginatedModel;
   estadosEmpresa: EstadoItem[];
+  categoriasEmpresa: { id: string | number; nombre: string }[];
+  prioridadesEmpresa: { id: string | number; nombre: string }[];
+  onCambiarCategoria?: (ticketId: string | number, nuevaCategoriaId: number | string) => Promise<void>;
+  onCambiarPrioridad?: (ticketId: string | number, nuevaPrioridadId: number | string) => Promise<void>;
   onCambiarEstado?: (ticketId: string | number, nuevoEstadoId: number | string) => Promise<void>;
 }
 
 export const TicketCard: React.FC<TicketCardProps> = ({
   ticket: t,
+  onCambiarCategoria,
+  onCambiarPrioridad,
+  onCambiarEstado,
+  categoriasEmpresa,
+  prioridadesEmpresa,
+  estadosEmpresa,
 }) => {
-  const eId = t.estado;
+  const [desplegableActivo, setDesplegableActivo] = useState<'categoria' | 'prioridad' | 'estado' | null>(null);
+  const [cargando, setCargando] = useState(false);
+  const { isAdmin, isTecnico } = useAuth();
   const pId = t.prioridad;
   const badgeEstado = t.estado;
 
   const catNombre=t.categoria;
   //const catNombre =t.categoria.nombre;;
 
+  const handleSeleccionar = (e: React.ChangeEvent<HTMLSelectElement>, tipo: 'categoria' | 'prioridad' | 'estado') => {
+    const valor = e.target.value;
+    switch (tipo) {
+      case 'categoria':
+        onCambiarCategoria?.(t.id, valor);
+        break;
+      case 'prioridad':
+        onCambiarPrioridad?.(t.id, valor);
+        break;
+      case 'estado':
+        onCambiarEstado?.(t.id, valor);
+        break;
+    }
+    setDesplegableActivo(null);
+  };
+
+  const obtenerOpciones = () => {
+    switch (desplegableActivo) {
+      case 'categoria':
+        return categoriasEmpresa;
+      case 'prioridad':
+        return prioridadesEmpresa;
+      case 'estado':
+        return estadosEmpresa;
+      default:
+        return [];
+    }
+  };
   const fechaAlta = t.fechaCreacion;
   const fechaFin = t.fechaCierre;
 
@@ -64,6 +105,75 @@ export const TicketCard: React.FC<TicketCardProps> = ({
             </>
           )}
         </div>
+        <div className="flex gap-2 mt-2">
+          {(isAdmin || isTecnico) && (
+            <button 
+              type="button"
+              onClick={() => setDesplegableActivo("categoria")}
+              className="px-3 py-1.5 text-xs font-semibold text-teal-700 bg-teal-50 hover:bg-teal-100 border border-teal-200/80 rounded-xl transition shadow-xs"
+            >
+              Cambiar categoría
+            </button>
+          )}
+
+          {isAdmin && (
+            <button 
+              type="button"
+              onClick={() => setDesplegableActivo("prioridad")}
+              className="px-3 py-1.5 text-xs font-semibold text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200/80 rounded-xl transition shadow-xs"
+            >
+              Cambiar prioridad
+            </button>
+          )}
+
+          {isAdmin && (
+            <button 
+              type="button"
+              onClick={() => setDesplegableActivo("estado")}
+              className="px-3 py-1.5 text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200/80 rounded-xl transition shadow-xs"
+            >
+              Cambiar estado
+            </button>
+          )}
+        </div>
+        {desplegableActivo && (
+          <div className="mt-2 p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-3 animate-in fade-in slide-in-from-top-1 duration-150">
+            <span className="text-xs font-semibold text-slate-600 capitalize">
+              Seleccionar nueva {desplegableActivo}:
+            </span>
+
+            <select
+              disabled={cargando}
+              defaultValue=""
+              onChange={(e) => handleSeleccionar(e, desplegableActivo)}
+              className="text-xs px-3 py-1.5 bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-700 disabled:opacity-50 cursor-pointer"
+            >
+              <option value="" disabled>
+                -- Seleccionar opción --
+              </option>
+              {obtenerOpciones().map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.nombre}
+                </option>
+              ))}
+            </select>
+
+            {cargando && (
+              <span className="text-xs text-blue-600 font-medium animate-pulse">
+                Guardando cambios...
+              </span>
+            )}
+
+            <button
+              type="button"
+              onClick={() => setDesplegableActivo(null)}
+              className="ml-auto text-xs text-slate-400 hover:text-slate-600 font-bold px-2 py-0.5 rounded hover:bg-slate-200 transition"
+              title="Cerrar"
+            >
+              ✕
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

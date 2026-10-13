@@ -4,20 +4,23 @@ import type { IObtenerTicketsParams } from "../../interfaces/IObtenerTickets.par
 import type { CategoriaModel } from "../../models/categoria.model";
 import { TicketFilters } from "./TicketDashboardView/components/TicketFilters";
 import { TicketList } from "./TicketDashboardView/components/TicketList";
-import { TicketMetrics } from "./TicketDashboardView/components/TicketMetrics";
 import { Pagination } from "../Pagination";
 import type { ticketPaginatedModel } from "../../models/ticket.model";
 import { estadoModel } from "../../models/estado.model";
+import { prioridadModel } from "../../models/prioridad.model";
 
 interface TicketDashboardViewProps {
   tickets: ticketPaginatedModel[];
   estados: estadoModel[];
   categorias: CategoriaModel[];
+  prioridades: prioridadModel[];
   cargando: boolean;
   onRefresh: (params: IObtenerTicketsParams) => void;
-  onCambiarEstado?: (ticketId: number, nuevoEstadoId: number) => Promise<void>;
-  mostrarAccionesEstado?: boolean;
-  mostrarMetricas?: boolean;
+  onCambiarEstado?: (ticketId: number | string, nuevoEstadoId: number | string) => Promise<void>;
+  onCambiarCategoria?: (ticketId: number|string, nuevaCategoriaId: number | string) => Promise<void>;
+  onCambiarPrioridad?: (ticketId: number | string, nuevaPrioridadId: number | string) => Promise<void>;
+  onEliminar?: (ticketId: number | string) => Promise<void>;
+  mostrarAcciones: boolean;
   meta: IMeta;
 }
 
@@ -25,6 +28,7 @@ export const TicketDashboardView: React.FC<TicketDashboardViewProps> = ({
   tickets,
   estados,
   categorias,
+  prioridades,
   cargando,
   meta: {
         currentPage,
@@ -34,8 +38,10 @@ export const TicketDashboardView: React.FC<TicketDashboardViewProps> = ({
   },
   onRefresh,
   onCambiarEstado,
-  mostrarAccionesEstado = false,
-  mostrarMetricas = true,
+  onCambiarCategoria,
+  onCambiarPrioridad,
+  mostrarAcciones,
+  onEliminar,
 }) => {
   const [filtro,setFiltro]=useState<IObtenerTicketsParams>({
     estado: undefined,
@@ -47,14 +53,6 @@ export const TicketDashboardView: React.FC<TicketDashboardViewProps> = ({
 
   return (
     <div className="space-y-6">
-      {/*
-      {mostrarMetricas  && (
-        <TicketMetrics
-          estados={estadosEmpresa.slice(0, 4)}
-          metricasPorEstado={metricasPorEstado}
-        />
-      )}
-      */}
 
       <TicketFilters
         filtros={{ estado: filtro.estado, categoria: filtro.categoria }}
@@ -83,7 +81,13 @@ export const TicketDashboardView: React.FC<TicketDashboardViewProps> = ({
         tickets={tickets}
         cargando={cargando}
         estadosEmpresa={estados}
-        mostrarAccionesEstado={mostrarAccionesEstado}
+        prioridadesEmpresa={prioridades}
+        categoriasEmpresa={categorias}
+        mostrarAcciones={mostrarAcciones}
+        onCambiarEstado={onCambiarEstado}
+        onCambiarCategoria={onCambiarCategoria}
+        onCambiarPrioridad={onCambiarPrioridad}
+        onEliminar={onEliminar}
       />
 
       {totalItems > itemsPorPagina && (

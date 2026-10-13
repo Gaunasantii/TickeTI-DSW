@@ -2,18 +2,35 @@ import React from "react";
 import type { EstadoItem, TicketItem } from "../../../../types/tickets";
 import { TicketCard } from "./TicketCard";
 import { ticketPaginatedModel } from "../../../../models/ticket.model";
+import { estadoModel } from "../../../../models/estado.model";
+import { CategoriaModel } from "../../../../models/categoria.model";
+import { prioridadModel } from "../../../../models/prioridad.model";
+import { MyTicketCard } from "./MyTicketsCard";
 
 interface TicketListProps {
   tickets: ticketPaginatedModel[];
   cargando: boolean;
-  estadosEmpresa: EstadoItem[];
-  mostrarAccionesEstado: boolean;
+  estadosEmpresa: estadoModel[];
+  categoriasEmpresa:CategoriaModel[];
+  prioridadesEmpresa:prioridadModel[];
+  mostrarAcciones: boolean;
+  onCambiarEstado?: (ticketId: string | number, nuevoEstadoId: number | string) => Promise<void>;
+  onCambiarCategoria?: (ticketId: string | number, nuevaCategoriaId: number | string) => Promise<void>;
+  onCambiarPrioridad?: (ticketId: string | number, nuevaPrioridadId: number | string) => Promise<void>;
+  onEliminar?: (ticketId: string | number) => Promise<void>;
 }
 
 export const TicketList: React.FC<TicketListProps> = ({
   tickets,
   cargando,
-  estadosEmpresa
+  estadosEmpresa,
+  mostrarAcciones,
+  onCambiarEstado,
+  categoriasEmpresa,
+  prioridadesEmpresa,
+  onCambiarCategoria,
+  onCambiarPrioridad,
+  onEliminar
 }) => (
   <div className="space-y-3">
     {cargando ? (
@@ -26,11 +43,22 @@ export const TicketList: React.FC<TicketListProps> = ({
       </div>
     ) : (
       tickets.map((ticket) => (
-        <TicketCard
-          key={ticket.id}
-          ticket={ticket}
-          estadosEmpresa={estadosEmpresa}
-        />
+        mostrarAcciones ? (
+          <TicketCard
+            key={ticket.id}
+            ticket={ticket}
+            estadosEmpresa={estadosEmpresa}
+            categoriasEmpresa={categoriasEmpresa}
+            prioridadesEmpresa={prioridadesEmpresa}
+            onCambiarEstado={onCambiarEstado}
+            onCambiarCategoria={onCambiarCategoria}
+            onCambiarPrioridad={onCambiarPrioridad}
+          />
+        ) : <MyTicketCard
+            key={ticket.id}
+            ticket={ticket}
+            onEliminar={onEliminar}
+          />
       ))
     )}
   </div>

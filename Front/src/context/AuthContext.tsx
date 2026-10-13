@@ -1,22 +1,19 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
-
-type Usuario = {
-    dni: string;
-    type: string; //rol
-    name: string;
-};
+import { ILoginResponse } from "../responses/ILoginResponse";
 
 type AuthContextType = {
-    usuario: Usuario | null;
-    login: (usuario: Usuario) => void;
+    usuario: ILoginResponse | null;
+    login: (usuario: ILoginResponse) => void;
     logout: () => void;
     isAuthenticated: boolean;
+    isAdmin: boolean;
+    isTecnico: boolean;
 };
 
 const authContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-    const [usuario, setUsuario] = useState<Usuario | null>(() => {
+    const [usuario, setUsuario] = useState<ILoginResponse | null>(() => {
     const usuarioGuardado = sessionStorage.getItem("usuario");
     if (usuarioGuardado) {
       try {
@@ -28,7 +25,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return null;
     });
 
-    const login = (nuevoUsuario: Usuario) => {
+    const login = (nuevoUsuario: ILoginResponse) => {
         setUsuario(nuevoUsuario);
         sessionStorage.setItem("usuario", JSON.stringify(nuevoUsuario));
     };
@@ -38,8 +35,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         sessionStorage.removeItem("usuario");
     };
 
+    const isAdmin = usuario?.type === "admin";
+    const isTecnico = usuario?.type === "tecnico";
+
     return (
-        <authContext.Provider value={{ usuario, login, logout, isAuthenticated: !!usuario }}>
+        <authContext.Provider value={{ usuario, login, logout, isAuthenticated: !!usuario, isAdmin, isTecnico }}>
             {children}
         </authContext.Provider>
     );

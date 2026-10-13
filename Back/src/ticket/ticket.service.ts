@@ -2,7 +2,7 @@ import { asignacionDAO } from "../asignacion/asignacion.DAO.js";
 import { categoriaDAO } from "../categoria/categoria.DAO.js";
 import { EstadoDAO } from "../estado/estado.DAO.js";
 import { prioridadDAO } from "../prioridad/prioridad.DAO.js";
-import { NotFoundError, ConflictError } from "../utils/base.error.js";
+import { NotFoundError, ConflictError} from "../utils/base.error.js";
 import type { ModifyTicketInBodyDto } from "./DTO/ModifyTicket.dto.js";
 import { ticketDAO } from "./ticket.DAO.js";
 import { wrap } from "@mikro-orm/core";
@@ -86,5 +86,12 @@ export class TicketService {
     const newEstado = await EstadoDAO.findOne({ id: newEstadoId });
     if(!newEstado)throw new NotFoundError("Estado no encontrado");
     return await ticketDAO.updateTicket({estado:newEstadoId}, ticketToUpdate);
+  }
+
+  static async DeleteMyTicket(Dni:string,ticketId: number) {
+    const ticketToDelete = await ticketDAO.findOne({ id: ticketId });
+    if(!ticketToDelete)throw new NotFoundError("Ticket no encontrado");
+    if(ticketToDelete.usuario.dni!=Dni)throw new ConflictError("El ticket no te pertenece");
+    return await ticketDAO.deleteTicket(ticketToDelete);
   }
 }

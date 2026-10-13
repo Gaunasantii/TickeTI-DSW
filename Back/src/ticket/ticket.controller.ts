@@ -93,6 +93,12 @@ class ticketController {
 
     res.status(200).json(new ApiPaginationResponse<TicketDto>(ticketsDto,{currentPage:pageNum,itemsPerPage:limit,totalItems:count,totalPages:Math.ceil(count/limit)},"Mis tickets recuperados"))
   }
+
+  async deleteMyTicket(req: Request<ModifyTicketInParamsDto,any,any>, res: Response) {
+    const id = Number(req.params.id);
+    await TicketService.DeleteMyTicket(req.user.dni, id);
+    res.status(200).json(new ApiSuccessResponse<null>(null,"Ticket eliminado con exito"));
+  }
 }
 
 export const ticketcontroller = new ticketController();

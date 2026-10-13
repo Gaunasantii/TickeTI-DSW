@@ -13,6 +13,7 @@ import { getAllEstados } from "../../services/EstadoServices/GetAllEstados";
 import { type IMeta } from "../../responses/IPaginatedApiResponse";
 import { getAllPrioridades } from "../../services/PrioridadServices/getAllPrioridades";
 import type { prioridadModel } from "../../models/prioridad.model";
+import { eliminarMiTicket } from "../../services/TicketServices/EliminarMiTicket";
 
 export const UserDashboardPage: React.FC = () => {
   const [tickets, setTickets] = useState<ticketPaginatedModel[]>([]);
@@ -77,6 +78,16 @@ export const UserDashboardPage: React.FC = () => {
       setPrioridades(lista.data || []);
     } catch (err) {
       console.error("Error al cargar prioridades:", err);
+    }
+  };
+
+  const handleEliminarMiTicket = async (ticketId: number|string) => {
+    try {
+      await eliminarMiTicket(ticketId);
+      await cargarTickets({ pagina: 1, cantidad: 10 });
+      alert("Ticket eliminado con éxito.");
+    } catch (err: any) {
+      alert(err.message || "Error al eliminar el ticket");
     }
   };
 
@@ -226,14 +237,15 @@ export const UserDashboardPage: React.FC = () => {
         )}
 
         <TicketDashboardView
+          prioridades={prioridades}
           meta={meta}
           categorias={categorias}
           estados={estados}
           tickets={tickets}
           cargando={cargando}
           onRefresh={cargarTickets}
-          mostrarAccionesEstado={false}
-          mostrarMetricas={false}
+          mostrarAcciones={false}
+          onEliminar={handleEliminarMiTicket}
         />
       </div>
     </DashboardLayout>
