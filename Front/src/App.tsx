@@ -1,6 +1,4 @@
 import { Routes, Route } from "react-router";
-import { ListaEmpresas } from "./components/ListaEmpresas";
-import { OficinasDeEmpresa } from "./components/OficinasDeEmpresa";
 import { CategoriasCrudPage } from "./pages/Categorias/CategoriasCrudPage";
 import {UsuarioCrudPage} from "./pages/Usuario/UsuarioCrud.js";
 import { HomePage } from "./pages/Home/Home.js";
@@ -10,7 +8,7 @@ import { OficinaPage } from "./pages/Oficina/Oficina.js";
 import { UserDashboardPage } from "./pages/Usuario/UsuarioDashboard.js";
 import { AdminPage } from "./pages/Admin/AdminDashboard.js";
 import { TecnicoPage } from "./pages/Tecnico/TecnicoDashboard.js";
-import { SuperAdminPage } from "./pages/SuperAdmin/SuperAdmin";
+import { SuperAdminPage } from "./pages/SuperAdmin/SuperAdminPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { PrioridadCrudPage } from "./pages/Prioridad/PrioridadCrudPage.js";
 import { EstadoCrudPage } from "./pages/Estado/EstadoCrudPage.js";
@@ -26,12 +24,6 @@ export const App = () => {
       {/* Rutas Super Admin */}
       <Route element={<ProtectedRoute rolesPermitidos={["s_admin", "superadmin"]} />}>
         <Route path="/superadmin" element={<SuperAdminPage />} />
-      </Route>
-
-      {/* Rutas compartidas Super Admin y Admin (Empresas) */}
-      <Route element={<ProtectedRoute rolesPermitidos={["s_admin", "superadmin", "admin", "administrador"]} />}>
-        <Route path="/empresas" element={<ListaEmpresas />} />
-        <Route path="/empresas/:empresaId/oficinas" element={<OficinasDeEmpresa />} />
       </Route>
 
       {/* Rutas compartidas Admin y Técnico */}

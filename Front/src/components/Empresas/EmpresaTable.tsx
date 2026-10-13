@@ -1,5 +1,5 @@
 import React from "react";
-import { EmpresaPaginatedModel } from "../../../models/empresaPaginated.model";
+import { EmpresaPaginatedModel } from "../../models/empresaPaginated.model";
 
 interface EmpresasTableProps {
   empresas: EmpresaPaginatedModel[];
