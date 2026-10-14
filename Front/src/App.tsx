@@ -23,17 +23,17 @@ export const App = () => {
       <Route path="/contact" element={<ContactPage />} />
 
       {/* Rutas Super Admin */}
-      <Route element={<ProtectedRoute rolesPermitidos={["s_admin", "superadmin"]} />}>
+      <Route element={<ProtectedRoute rolesPermitidos={["S_ADMIN"]} />}>
         <Route path="/superadmin" element={<SuperAdminPage />} />
       </Route>
 
       {/* Rutas compartidas Admin y Técnico */}
-      <Route element={<ProtectedRoute rolesPermitidos={["admin", "administrador", "tecnico"]} />}>
+      <Route element={<ProtectedRoute rolesPermitidos={["admin", "tecnico"]} />}>
         <Route path="/usuarios" element={<UsuarioCrudPage />} />
       </Route>
 
       {/* Rutas exclusivas Administrador */}
-      <Route element={<ProtectedRoute rolesPermitidos={["admin", "administrador"]} />}>
+      <Route element={<ProtectedRoute rolesPermitidos={["admin"]} />}>
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/Oficina" element={<OficinaPage />} />
         <Route path="/categorias/crud" element={<CategoriasCrudPage />} />
@@ -48,8 +48,8 @@ export const App = () => {
       </Route>
 
       {/* Rutas Solicitante / Usuario */}
-      <Route element={<ProtectedRoute rolesPermitidos={["user", "usuario", "solicitante", "cliente", "admin", "administrador", "tecnico"]} />}>
-        <Route path="/usuario" element={<UserDashboardPage />} />
+      <Route element={<ProtectedRoute rolesPermitidos={["user", "tecnico"]} />}>
+        <Route path="/Mis-tickets" element={<UserDashboardPage />} />
       </Route>
     </Routes>
   );

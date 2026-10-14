@@ -28,7 +28,7 @@ export const Sidebar: React.FC = () => {
         ? "/admin"
         : isTecnico
         ? "/tecnico"
-        : "/usuario";
+        : "/Mis-tickets";
 
     const commonDashboard = { label: "Dashboard", path: dashboardPath };  
 
@@ -52,7 +52,7 @@ export const Sidebar: React.FC = () => {
     if (isTecnico) {
       return [
         commonDashboard,
-        { label: "Mis tickets" , path: "/usuario"},
+        { label: "Mis tickets" , path: "/Mis-tickets"},
         { label: "Usuarios", path: "/usuarios" },
         { label: "Mis asignaciones", path: "/mis-asignaciones" },
       ];
