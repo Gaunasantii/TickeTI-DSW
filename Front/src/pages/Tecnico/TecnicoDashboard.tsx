@@ -10,11 +10,15 @@ import { IObtenerTicketsParams } from "../../interfaces/IObtenerTickets.params";
 import { ticketPaginatedModel } from "../../models/ticket.model";
 import { getAllEstados } from "../../services/EstadoServices/GetAllEstados";
 import { type IMeta } from "../../responses/IPaginatedApiResponse";
+import { crearAsignacion } from "../../services/AsignacionServices/CrearAsignacion";
+import { prioridadModel } from "../../models/prioridad.model";
+import { getAllPrioridades } from "../../services/PrioridadServices/GetAllPrioridades";
 
 export const TecnicoPage: React.FC = () => {
   const [tickets, setTickets] = useState<ticketPaginatedModel[]>([]);
   const [cargando, setCargando] = useState(true);
   const [categorias, setCategorias] = useState<CategoriaModel[]>([]);
+  const [prioridades, setPrioridades] = useState<prioridadModel[]>([]);
   const [estados, setEstados] = useState<estadoModel[]>([]);
   const [meta, setMeta] = useState<IMeta>({
     currentPage: 1,
@@ -57,18 +61,40 @@ export const TecnicoPage: React.FC = () => {
     }
   };
 
+  const cargarPrioridades = async () => {
+    try {
+      const lista = await getAllPrioridades();
+      setPrioridades(lista.data || []);
+    } catch (err) {
+      console.error("Error al cargar prioridades:", err);
+    }
+  };
+
   useEffect(() => {
     cargarEstados();
     cargarCategorias();
+    cargarPrioridades();
     cargarTickets({ pagina: 1, cantidad: 10 });
   }, []);
 
-  const handleCambiarEstado = async (ticketId: number, nuevoEstadoId: number) => {
+  const handleCambiarEstado = async (
+    ticketId: number | string,
+    nuevoEstadoId: number | string
+  ) => {
     try {
-      await cambiarEstadoTicket(ticketId, nuevoEstadoId);
+      await cambiarEstadoTicket(Number(ticketId), Number(nuevoEstadoId));
     } catch (err: any) {
       console.error("Error al cambiar estado:", err);
       alert(err.message || "Error al cambiar el estado del ticket");
+    }
+  };
+
+  const handleTomarTicket = async (ticketId: number | string) => {
+    try {
+      await crearAsignacion({ticket:ticketId});
+    } catch (err: any) {
+      console.error("Error al tomar ticket:", err);
+      alert(err.message || "Error al tomar el ticket");
     }
   };
 
@@ -90,8 +116,9 @@ export const TecnicoPage: React.FC = () => {
           cargando={cargando}
           onRefresh={cargarTickets}
           onCambiarEstado={handleCambiarEstado}
-          mostrarAccionesEstado={true}
-          mostrarMetricas={true}
+          prioridades={prioridades}
+          onTomarTicket={handleTomarTicket}
+          mostrarAcciones={true}
         />
       </div>
     </DashboardLayout>

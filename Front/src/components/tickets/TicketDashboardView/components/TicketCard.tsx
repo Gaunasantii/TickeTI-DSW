@@ -4,65 +4,78 @@ import type { ticketPaginatedModel } from "../../../../models/ticket.model";
 import { useAuth } from "../../../../context/AuthContext";
 import { crearAsignacion } from "../../../../services/AsignacionServices/CrearAsignacion";
 
+
 interface TicketCardProps {
   ticket: ticketPaginatedModel;
-  estadosEmpresa?: EstadoItem[];
+  estadosEmpresa: EstadoItem[];
+  categoriasEmpresa: { id: string | number; nombre: string }[];
+  prioridadesEmpresa: { id: string | number; nombre: string }[];
+  onCambiarCategoria?: (ticketId: string | number, nuevaCategoriaId: number | string) => Promise<void>;
+  onCambiarPrioridad?: (ticketId: string | number, nuevaPrioridadId: number | string) => Promise<void>;
   onCambiarEstado?: (ticketId: string | number, nuevoEstadoId: number | string) => Promise<void>;
-  onTicketUpdated?: () => void;
-  esMisTickets?: boolean;
+  onTomarTicket?: (id: string | number) => Promise<void>;
 }
 
 export const TicketCard: React.FC<TicketCardProps> = ({
   ticket: t,
-  onTicketUpdated,
-  esMisTickets = false,
+  onCambiarCategoria,
+  onCambiarPrioridad,
+  onCambiarEstado,
+  categoriasEmpresa,
+  prioridadesEmpresa,
+  estadosEmpresa,
 }) => {
-  const auth = useAuth() as any;
-  const user = auth?.user || auth?.usuario;
-  const [loading, setLoading] = useState(false);
+  const [desplegableActivo, setDesplegableActivo] = useState<'categoria' | 'prioridad' | 'estado' | null>(null);
+  const [cargando, setCargando] = useState(false);
+  const { isAdmin, isTecnico,usuario } = useAuth();
+  const pId = t.prioridad;
+  const badgeEstado = t.estado;
 
-  const catNombre = t.categoria;
-  const fechaAlta = t.fechaCreacion;
-  const fechaFin = t.fechaCierre;
-  const dni = t.usuario;
+  const catNombre=t.categoria;
+  //const catNombre =t.categoria.nombre;;
 
-  const rolUsuario = user?.type || user?.rol || user?.role;
-  const esTecnico = String(rolUsuario || "").toLowerCase().includes("tecnico");
-
-  const estadoRaw = typeof t.estado === "object" ? (t.estado as any)?.nombre : String(t.estado || "");
-  const esEstadoAbierto = estadoRaw.toLowerCase().includes("abierto") || estadoRaw === "1";
-
-  const tecnicoAsignado = (t as any).tecnico || (t as any).idTecnico || (t as any).asignacion;
-
-  const esPropio = t.usuario === user?.dni || t.usuario === user?.name;
-
-  const sinAsignar = !tecnicoAsignado && esEstadoAbierto && !esPropio && !esMisTickets;
-
-  const handleTomarTicket = async () => {
-
-    const userId = user?.id || user?.idUsuario || user?.idTecnico || user?.dni;
-
-    if (!userId) {
-      alert("Error: No se pudo identificar al usuario actual.");
-      return;
+  const handleSeleccionar = (e: React.ChangeEvent<HTMLSelectElement>, tipo: 'categoria' | 'prioridad' | 'estado') => {
+    const valor = e.target.value;
+    switch (tipo) {
+      case 'categoria':
+        onCambiarCategoria?.(t.id, valor);
+        break;
+      case 'prioridad':
+        onCambiarPrioridad?.(t.id, valor);
+        break;
+      case 'estado':
+        onCambiarEstado?.(t.id, valor);
+        break;
     }
+    setDesplegableActivo(null);
+  };
 
-    setLoading(true);
+  const obtenerOpciones = () => {
+    switch (desplegableActivo) {
+      case 'categoria':
+        return categoriasEmpresa;
+      case 'prioridad':
+        return prioridadesEmpresa;
+      case 'estado':
+        return estadosEmpresa;
+      default:
+        return [];
+    }
+  };
+
+  const handleTomarTicket = async (id: string | number) => {
+
+    setCargando(true);
 
     try {
     await crearAsignacion({
-      ticket: Number(t.id),
-      tecnico: String(userId),
+      ticket: Number(id),
     });
-
-      if (onTicketUpdated) {
-        onTicketUpdated();
-      }
     } catch (error: any) {
       console.error("Error al tomar el ticket:", error);
       alert(error?.message || "Ocurrió un error al intentar tomar el ticket.");
     } finally {
-      setLoading(false);
+      setCargando(false);
     }
   };
 
@@ -86,39 +99,108 @@ export const TicketCard: React.FC<TicketCardProps> = ({
 
         <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
           <span className="px-2 py-0.5 rounded-full font-medium border bg-slate-50 text-slate-700">
-            {estadoRaw}
+            {t.estado}
           </span>
           <span className="px-2 py-0.5 rounded-full font-medium border bg-slate-50 text-slate-700">
             {t.prioridad}
           </span>
           <span className="text-slate-400">|</span>
           <span className="text-slate-600">
-            Solicitante: <strong className="font-mono text-slate-800">{dni}</strong>
+            Solicitante: <strong className="font-mono text-slate-800">{t.usuario}</strong>
           </span>
           <span className="text-slate-400">|</span>
           <span className="text-slate-500">
-            Creado: <strong className="font-normal text-slate-700">{fechaAlta}</strong>
+            Creado: <strong className="font-normal text-slate-700">{t.fechaCreacion}</strong>
           </span>
-          {fechaFin && (
+          {t.fechaCierre && (
             <>
               <span className="text-slate-400">|</span>
               <span className="text-emerald-600">
-                Cerrado: <strong className="font-medium text-emerald-700">{fechaFin}</strong>
+                Cerrado: <strong className="font-medium text-emerald-700">{t.fechaCierre}</strong>
               </span>
             </>
           )}
         </div>
+        <div className="flex gap-2 mt-2">
+          {(isAdmin || isTecnico) && (
+            <button 
+              type="button"
+              onClick={() => setDesplegableActivo("categoria")}
+              className="px-3 py-1.5 text-xs font-semibold text-teal-700 bg-teal-50 hover:bg-teal-100 border border-teal-200/80 rounded-xl transition shadow-xs"
+            >
+              Cambiar categoría
+            </button>
+          )}
+
+          {isAdmin && (
+            <button 
+              type="button"
+              onClick={() => setDesplegableActivo("prioridad")}
+              className="px-3 py-1.5 text-xs font-semibold text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200/80 rounded-xl transition shadow-xs"
+            >
+              Cambiar prioridad
+            </button>
+          )}
+
+          {isAdmin && (
+            <button 
+              type="button"
+              onClick={() => setDesplegableActivo("estado")}
+              className="px-3 py-1.5 text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200/80 rounded-xl transition shadow-xs"
+            >
+              Cambiar estado
+            </button>
+          )}
+        </div>
+        {desplegableActivo && (
+          <div className="mt-2 p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center gap-3 animate-in fade-in slide-in-from-top-1 duration-150">
+            <span className="text-xs font-semibold text-slate-600 capitalize">
+              Seleccionar nueva {desplegableActivo}:
+            </span>
+
+            <select
+              disabled={cargando}
+              defaultValue=""
+              onChange={(e) => handleSeleccionar(e, desplegableActivo)}
+              className="text-xs px-3 py-1.5 bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-700 disabled:opacity-50 cursor-pointer"
+            >
+              <option value="" disabled>
+                -- Seleccionar opción --
+              </option>
+              {obtenerOpciones().map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.nombre}
+                </option>
+              ))}
+            </select>
+
+            {cargando && (
+              <span className="text-xs text-blue-600 font-medium animate-pulse">
+                Guardando cambios...
+              </span>
+            )}
+
+            <button
+              type="button"
+              onClick={() => setDesplegableActivo(null)}
+              className="ml-auto text-xs text-slate-400 hover:text-slate-600 font-bold px-2 py-0.5 rounded hover:bg-slate-200 transition"
+              title="Cerrar"
+            >
+              ✕
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Botón de Acción para Tomar Ticket */}
-      {esTecnico && sinAsignar && (
+      {isTecnico && (
         <div className="flex items-center justify-end">
           <button
-            onClick={handleTomarTicket}
-            disabled={loading}
+            onClick={() => handleTomarTicket(t.id)}
+            disabled={cargando}
             className="px-4 py-2 text-xs font-semibold rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition shadow-sm disabled:opacity-50 cursor-pointer"
           >
-            {loading ? "Tomando..." : "Tomar Ticket"}
+            {cargando ? "Tomando..." : "Tomar Ticket"}
           </button>
         </div>
       )}
