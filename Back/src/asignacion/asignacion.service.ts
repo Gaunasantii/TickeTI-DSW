@@ -1,5 +1,5 @@
 import { asignacionDAO } from "./asignacion.DAO.js";
-import { NotFoundError } from "../utils/base.error.js";
+import { ConflictError, NotFoundError } from "../utils/base.error.js";
 
 export class AsignacionService {
   
@@ -26,5 +26,12 @@ export class AsignacionService {
   static async getAsignacionesPendientesPaginated(page: number, pageSize: number,dni:string) {
     const filters = { estado:true, tecnico:dni, fechaCierre:null };
     return await asignacionDAO.getPaginated(filters, page, pageSize, {populate: ["ticket.estado","ticket.categoria","ticket.prioridad"]});
+  }
+
+  static async abandonarMiAsignacion(id: number, dni: string) {
+    const asignacionFound = await asignacionDAO.findOne({ id: id });
+    if(!asignacionFound) throw new NotFoundError("Asignacion no encontrada", `La asignacion con el id ${id} no fue encontrada`);
+    if(asignacionFound.tecnico.dni !== dni) throw new ConflictError("La asignacion no te pertenece", `La asignacion con el id ${id} no te pertenece`); 
+    await asignacionDAO.updateAsignacion({ estado: false, fechaCierre: new Date() }, asignacionFound);
   }
 }

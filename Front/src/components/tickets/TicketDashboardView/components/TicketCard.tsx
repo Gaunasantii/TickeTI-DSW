@@ -119,9 +119,17 @@ export const TicketCard: React.FC<TicketCardProps> = ({
               </span>
             </>
           )}
+          {t.solucion && (
+            <>
+              <span className="text-slate-400">|</span>
+              <span className="text-slate-600">
+                Solución: <strong className="font-normal text-slate-700">{t.solucion}</strong>
+              </span>
+            </>
+          )}
         </div>
         <div className="flex gap-2 mt-2">
-          {(isAdmin || isTecnico) && (
+          {onCambiarCategoria && (isAdmin) && (
             <button 
               type="button"
               onClick={() => setDesplegableActivo("categoria")}
@@ -131,7 +139,7 @@ export const TicketCard: React.FC<TicketCardProps> = ({
             </button>
           )}
 
-          {isAdmin && (
+          {onCambiarPrioridad && isAdmin && (
             <button 
               type="button"
               onClick={() => setDesplegableActivo("prioridad")}
@@ -141,7 +149,7 @@ export const TicketCard: React.FC<TicketCardProps> = ({
             </button>
           )}
 
-          {isAdmin && (
+          {onCambiarEstado && isAdmin && (
             <button 
               type="button"
               onClick={() => setDesplegableActivo("estado")}
@@ -191,7 +199,7 @@ export const TicketCard: React.FC<TicketCardProps> = ({
         )}
       </div>
 
-      {/* Botón de Acción para Tomar Ticket */}
+      
       {isTecnico && !t.estaTomado&& (
         <div className="flex items-center justify-end">
           <button

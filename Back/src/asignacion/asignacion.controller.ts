@@ -49,6 +49,13 @@ class AsignacionController {
     const asignacionesDto = asignaciones.map(a => AsignacionOutSchema.parse(wrap(a).toJSON()));
     res.status(200).json(new ApiPaginationResponse<AsignacionDto>(asignacionesDto,{totalPages: Math.ceil(total / Number(cantPerPage)),totalItems: total,currentPage: Number(page),itemsPerPage: Number(cantPerPage)}, "Asignaciones pendientes recuperadas correctamente"));
   }
+
+  async abandonarAsignacion(req: Request<ChangeStateAsignacionParamsDTO,any,any>, res: Response) {
+    const id = Number(req.params.id);
+    const dni = req.user.dni;
+    await AsignacionService.abandonarMiAsignacion(id,dni)
+    res.status(200).json(new ApiSuccessResponse<null>(null, "Asignacion abandonada correctamente"));
+  }
 }
 
 export const asignacioncontroller = new AsignacionController();

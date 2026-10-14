@@ -74,6 +74,7 @@ export const Sidebar: React.FC = () => {
         commonDashboard,
         { label: "Mis tickets" , path: "/usuario"},
         { label: "Usuarios", path: "/usuarios" },
+        { label: "Mis asignaciones", path: "/mis-asignaciones" },
         ajustesItem,
       ];
     }

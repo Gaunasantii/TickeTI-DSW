@@ -78,18 +78,10 @@ export const TecnicoPage: React.FC = () => {
     cargarTickets({ pagina: 1, cantidad: 10 });
   }, []);
 
-  const handleCambiarCategoria = async (ticketId: string | number, nuevaCategoriaId: number | string) => {
-      try {
-        await CambiarCategoria(ticketId, nuevaCategoriaId);
-      } catch (err: any) {
-        console.error("Error al cambiar categoría:", err);
-        alert(err.message || "Error al cambiar la categoría del ticket");
-      }
-    };
-
   const handleTomarTicket = async (ticketId: number | string) => {
     try {
       await crearAsignacion({ticket:ticketId});
+      await cargarTickets({pagina:meta.currentPage, cantidad:meta.itemsPerPage});
     } catch (err: any) {
       console.error("Error al tomar ticket:", err);
       alert(err.message || "Error al tomar el ticket");
@@ -113,7 +105,6 @@ export const TecnicoPage: React.FC = () => {
           tickets={tickets}
           cargando={cargando}
           onRefresh={cargarTickets}
-          onCambiarCategoria={handleCambiarCategoria}
           prioridades={prioridades}
           onTomarTicket={handleTomarTicket}
           mostrarAcciones={true}

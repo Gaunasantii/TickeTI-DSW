@@ -12,6 +12,7 @@ import { SuperAdminPage } from "./pages/SuperAdmin/SuperAdminPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { PrioridadCrudPage } from "./pages/Prioridad/PrioridadCrudPage.js";
 import { EstadoCrudPage } from "./pages/Estado/EstadoCrudPage.js";
+import MisAsignacionesPage from "./pages/Asignaciones/MisAsignacionesPage.js";
 
 export const App = () => {
   return (
@@ -43,6 +44,7 @@ export const App = () => {
       {/* Rutas exclusivas Técnico */}
       <Route element={<ProtectedRoute rolesPermitidos={["tecnico"]} />}>
         <Route path="/tecnico" element={<TecnicoPage />} />
+        <Route path="/mis-asignaciones" element={<MisAsignacionesPage />} />
       </Route>
 
       {/* Rutas Solicitante / Usuario */}

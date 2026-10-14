@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import type { EstadoItem, TicketItem } from "../../../../types/tickets";
 import type { ticketPaginatedModel } from "../../../../models/ticket.model";
 import {useAuth} from "../../../../context/AuthContext";
+import { estadoModel } from "../../../../models/estado.model";
 
 interface TicketCardProps {
   ticket: ticketPaginatedModel;
@@ -62,15 +63,26 @@ export const MyTicketCard: React.FC<TicketCardProps> = ({
               </span>
             </>
           )}
+
+          {t.solucion && (
+            <>
+              <span className="text-slate-400">|</span>
+              <span className="text-slate-600">
+                Solución: <strong className="font-normal text-slate-700">{t.solucion}</strong>
+              </span>
+            </>
+          )}
         </div>
-        <div className="flex gap-2 mt-2">
-          <button type="button" 
-            onClick={() => onEliminar?.(t.id)}
-            className="px-3 py-1.5 text-xs font-semibold text-red-700 bg-red-50 hover:bg-red-100 border border-red-200/80 rounded-xl transition shadow-xs"
-          >
-            Eliminar
-          </button>
-        </div>
+        {(!t.solucion && !(t.estado as estadoModel).esEstadoInicial) && (
+          <div className="flex gap-2 mt-2">
+            <button type="button" 
+              onClick={() => onEliminar?.(t.id)}
+              className="px-3 py-1.5 text-xs font-semibold text-red-700 bg-red-50 hover:bg-red-100 border border-red-200/80 rounded-xl transition shadow-xs"
+            >
+              Eliminar
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
