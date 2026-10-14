@@ -7,11 +7,9 @@ import { TrustedBySection } from "./Components/TrustedBySection/TrustedBySection
 export const HomePage=()=>{
   return(
     <>
-    <NavBar></NavBar>
     <HeroSection></HeroSection>
     <TrustedBySection></TrustedBySection>
     <FeatureSection></FeatureSection>
-    <Footer></Footer>
     </>
   );
 }

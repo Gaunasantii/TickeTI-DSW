@@ -91,7 +91,7 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement|HTMLSelectElement>) 
   };
 
   return (
-    <DashboardLayout>
+    <>
       <div className="space-y-6">
         <div className="flex items-center justify-between gap-4">
           <div>
@@ -180,7 +180,7 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement|HTMLSelectElement>) 
           />
         )}
       </div>
-    </DashboardLayout>
+    </>
   );
 };
 

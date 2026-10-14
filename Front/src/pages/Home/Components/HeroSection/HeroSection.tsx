@@ -15,9 +15,11 @@ export const HeroSection=()=>{
         <span className="text-slate-600">
           Gestione tickets, coordine tecnicos y analice rendimiento desde una unica plataforma. Diseñado para equipos de soporte que buscan eficiencia y claridad.
         </span>
+        {/*
         <button onClick={()=>navigate("/contact")} className=" self-start px-4 py-2 rounded-lg bg-slate-200 text-slate-800 hover:bg-slate-300 transition-colors block fit-content md:hidden">
           Contactanos
         </button>
+        */}
       </div>
       <div className="flex flex-grow:1 items-center">
         <DashboardExample></DashboardExample>

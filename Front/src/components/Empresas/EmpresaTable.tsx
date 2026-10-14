@@ -16,7 +16,7 @@ export const EmpresasTable: React.FC<EmpresasTableProps> = ({
 }) => {
   if (cargando) {
     return (
-      <div className="bg-white rounded-2xl border border-slate-200 p-8 text-center text-slate-500 text-sm">
+      <div className="rounded-2xl border border-slate-200 bg-white p-4 text-center text-sm text-slate-500 sm:p-6 lg:p-8">
         Cargando nómina de empresas...
       </div>
     );
@@ -24,63 +24,64 @@ export const EmpresasTable: React.FC<EmpresasTableProps> = ({
 
   if (empresas.length === 0) {
     return (
-      <div className="bg-white rounded-2xl border border-slate-200 p-8 text-center text-slate-500 text-sm">
+      <div className="rounded-2xl border border-slate-200 bg-white p-4 text-center text-sm text-slate-500 sm:p-6 lg:p-8">
         No se encontraron empresas registradas.
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-      <div className="divide-y divide-slate-100">
-        <div className="grid grid-cols-12 px-6 py-3.5 text-xs font-bold text-slate-500 uppercase bg-slate-50">
-          <div className="col-span-4">Empresa</div>
-          <div className="col-span-3">Administrador</div>
-          <div className="col-span-2">Contacto Admin</div>
-          <div className="col-span-1 text-center">Empleados</div>
-          <div className="col-span-2 text-right">Acciones</div>
-        </div>
-
+    <div className="space-y-3">
         {empresas.map((emp) => (
-          <div
+          <article
             key={emp.id ?? emp.nombre}
-            className="grid grid-cols-12 px-6 py-4 items-center text-sm hover:bg-slate-50/70 transition"
+            className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5"
           >
-            <div className="col-span-4 font-semibold text-slate-800">
-              {emp.nombre}
-            </div>
-            <div className="col-span-3 text-slate-700 text-xs">
-              {emp.nombreAdmin || (
-                <span className="text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
-                  Sin admin asignado
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+              <h2 className="break-words text-base font-semibold text-slate-800 sm:text-lg">
+                {emp.nombre}
+              </h2>
+              <div className="flex items-center gap-2 text-xs text-slate-500 sm:shrink-0">
+                <span>Empleados</span>
+                <span className="inline-block rounded-full border border-slate-200 bg-slate-100 px-2 py-1 font-semibold text-slate-700">
+                  {emp.cantidadEmpleados ?? 0}
                 </span>
-              )}
+              </div>
             </div>
-            <div className="col-span-2 text-xs font-mono text-slate-500">
-              {emp.telAdmin || "N/A"}
+            <div className="grid grid-cols-1 gap-3 border-t border-slate-100 pt-3 text-sm sm:grid-cols-2">
+              <div className="min-w-0">
+                <p className="text-xs font-medium text-slate-500">Administrador</p>
+                <p className="mt-1 break-words text-slate-700">
+                  {emp.nombreAdmin || (
+                    <span className="inline-block rounded-md border border-amber-200 bg-amber-50 px-2 py-1 text-xs text-amber-700">
+                      Sin admin asignado
+                    </span>
+                  )}
+                </p>
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs font-medium text-slate-500">Contacto Admin</p>
+                <p className="mt-1 break-all font-mono text-xs text-slate-600">
+                  {emp.telAdmin || "N/A"}
+                </p>
+              </div>
             </div>
-            <div className="col-span-1 text-center">
-              <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-slate-100 text-slate-700 border border-slate-200">
-                {emp.cantidadEmpleados ?? 0}
-              </span>
-            </div>
-            <div className="col-span-2 text-right flex justify-end gap-1.5">
+            <div className="flex flex-col gap-2 border-t border-slate-100 pt-3 sm:flex-row">
               <button
                 onClick={() => onModificar(emp)}
-                className="px-2.5 py-1 text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200 rounded-lg hover:bg-blue-100 transition"
+                className="w-full rounded-xl border border-blue-200 bg-blue-50 px-3 py-2.5 text-sm font-semibold text-blue-700 transition sm:w-auto lg:hover:bg-blue-100"
               >
                 Modificar
               </button>
               <button
                 onClick={() => onEliminar(emp)}
-                className="px-2.5 py-1 text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200 rounded-lg hover:bg-rose-100 transition"
+                className="w-full rounded-xl border border-rose-200 bg-rose-50 px-3 py-2.5 text-sm font-semibold text-rose-700 transition sm:w-auto lg:hover:bg-rose-100"
               >
                 Eliminar
               </button>
             </div>
-          </div>
+          </article>
         ))}
-      </div>
     </div>
   );
 };

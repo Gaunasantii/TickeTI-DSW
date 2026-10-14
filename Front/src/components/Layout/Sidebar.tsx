@@ -7,12 +7,6 @@ export const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const {isAuthenticated,isAdmin,isTecnico,isSuperAdmin,usuario,logout}=useAuth()
-  console.log("isAuthenticated:", isAuthenticated);
-  console.log("isAdmin:", isAdmin);
-  console.log("isTecnico:", isTecnico);
-  console.log("isSuperAdmin:", isSuperAdmin);
-  console.log("usuario:", usuario);
-  console.log("logout function:", logout);
 
   const handleLogout = () => {
     setIsMenuOpen(false);

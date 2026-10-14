@@ -38,10 +38,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const isAdmin = usuario?.type === "admin";
     const isTecnico = usuario?.type === "tecnico";
-    const isSuperAdmin = usuario?.dni === "0000000000";
+    const isSuperAdmin = usuario?.dni === "00000000";
 
     return (
-        <authContext.Provider value={{ usuario, login, logout, isAuthenticated: !!usuario, isAdmin, isTecnico, isSuperAdmin }}>
+        <authContext.Provider value={{ usuario, login, logout, isAuthenticated: usuario?.dni ? true : false, isAdmin, isTecnico, isSuperAdmin }}>
             {children}
         </authContext.Provider>
     );

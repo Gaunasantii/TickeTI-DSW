@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { DashboardLayout } from "../../components/Layout/DashboardLayout";
 import { Pagination } from "../../components/Pagination";
 import { ObtenerEmpresasPaginated } from "../../services/EmpresaServices/GetEmpresasPaginado";
 import { EmpresaPaginatedModel } from "../../models/empresaPaginated.model";
@@ -122,12 +121,12 @@ export const SuperAdminPage: React.FC = () => {
   };
 
   return (
-    <DashboardLayout>
-      <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-slate-800">Gestión de Empresas</h1>
-            <p className="text-sm text-slate-500">
+    <>
+      <div className="space-y-4 sm:space-y-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="min-w-0">
+            <h1 className="text-xl font-bold text-slate-800 sm:text-2xl">Gestión de Empresas</h1>
+            <p className="text-xs text-slate-500 sm:text-sm">
               Empresas registradas y administradores asignados en el sistema
             </p>
           </div>
@@ -136,7 +135,7 @@ export const SuperAdminPage: React.FC = () => {
               setEmpresaAEditar({ id: "", nombre: "", admin: { dni: "", name: "", surName: "", tele: "", pass: "" } });
               setMostrarModal(!mostrarModal);
             }}
-            className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold shadow-sm transition self-start sm:self-auto"
+            className="w-full rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition sm:w-auto sm:self-auto lg:hover:bg-blue-700"
           >
             {mostrarModal ? "Cerrar formulario" : "+ Nueva Empresa"}
           </button>
@@ -174,7 +173,7 @@ export const SuperAdminPage: React.FC = () => {
           />
         )}
       </div>
-    </DashboardLayout>
+    </>
   );
 };
 

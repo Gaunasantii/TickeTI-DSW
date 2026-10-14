@@ -89,7 +89,6 @@ export const TecnicoPage: React.FC = () => {
   };
 
   return (
-    <DashboardLayout>
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-800">Panel Técnico</h1>
@@ -110,7 +109,6 @@ export const TecnicoPage: React.FC = () => {
           mostrarAcciones={true}
         />
       </div>
-    </DashboardLayout>
   );
 };
 

@@ -11,7 +11,7 @@ import { IObtenerTicketsParams } from "../../interfaces/IObtenerTickets.params";
 import { ticketPaginatedModel } from "../../models/ticket.model";
 import { getAllEstados } from "../../services/EstadoServices/GetAllEstados";
 import { type IMeta } from "../../responses/IPaginatedApiResponse";
-import { getAllPrioridades } from "../../services/PrioridadServices/getAllPrioridades";
+import { getAllPrioridades } from "../../services/PrioridadServices/GetAllPrioridades";
 import type { prioridadModel } from "../../models/prioridad.model";
 import { eliminarMiTicket } from "../../services/TicketServices/EliminarMiTicket";
 
@@ -131,7 +131,7 @@ export const UserDashboardPage: React.FC = () => {
   };
 
   return (
-    <DashboardLayout>
+    
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
@@ -248,7 +248,6 @@ export const UserDashboardPage: React.FC = () => {
           onEliminar={handleEliminarMiTicket}
         />
       </div>
-    </DashboardLayout>
   );
 };
 

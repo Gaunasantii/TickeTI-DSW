@@ -160,7 +160,7 @@ export const UsuarioCrudPage: React.FC = () => {
   };
 
   return (
-    <DashboardLayout>
+    <>
       <div className="space-y-6">
         <ListaUsuariosHeader esAdmin={isAdmin} onNuevoUsuario={handleNuevoUsuario} onNuevoTecnico={handleNuevoTecnico} onRefresh={cargarUsuarios} />
         {isAdmin && mostrarModal && tipoFormulario === 'usuario' && (
@@ -209,9 +209,8 @@ export const UsuarioCrudPage: React.FC = () => {
                   setParamsPaginado({ ...paramsPaginado, pagina: Math.min(meta.currentPage + 1, meta.totalPages) });
                 }}
               />
-            )}
-      
-    </DashboardLayout>//Reemplazar y usar reactLayout
+                )}
+              </>
   );
 };
 

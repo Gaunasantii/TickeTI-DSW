@@ -98,7 +98,6 @@ const MisAsignacionesPage:React.FC=()=>{
 
     return (
         <>
-        <DashboardLayout>
         <div className="space-y-6">
             <div>
                 <h1 className="text-2xl font-bold text-slate-800">Mis asignaciones pendientes</h1>
@@ -134,7 +133,6 @@ const MisAsignacionesPage:React.FC=()=>{
                       )}
             </div>
         </div>
-        </DashboardLayout>
         </>
     );
 }

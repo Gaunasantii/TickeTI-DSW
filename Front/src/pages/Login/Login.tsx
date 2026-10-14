@@ -8,15 +8,13 @@ import { useAuth } from "../../context/AuthContext.tsx";
 
 export const LoginPage = () => {
   const navigate = useNavigate();
-  const { login,isAdmin,isSuperAdmin,isTecnico } = useAuth();
+  const { login,isAdmin,isSuperAdmin,isTecnico,usuario } = useAuth();
 
   const onSubmit = async (formData: LoginValues) => {
     try {
       const resultado = await loginService(formData);
 
-      if (login) {
-        await login(resultado.data);
-      }
+      login(resultado.data);
 
       // Redirección condicional según el rol
       if (isSuperAdmin) {
@@ -26,7 +24,7 @@ export const LoginPage = () => {
       } else if (isTecnico) {
         navigate("/tecnico");
       } else {
-        navigate("/usuario");
+        navigate("/Mis-tickets");
       }
     } catch (error: any) {
       console.error("Error en login:", error);
@@ -36,9 +34,7 @@ export const LoginPage = () => {
 
   return (
     <>
-      <NavBar />
       <LoginForm onSubmit={onSubmit} />
-      <Footer />
     </>
   );
 };

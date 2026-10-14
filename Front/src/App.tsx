@@ -13,15 +13,20 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import { PrioridadCrudPage } from "./pages/Prioridad/PrioridadCrudPage.js";
 import { EstadoCrudPage } from "./pages/Estado/EstadoCrudPage.js";
 import MisAsignacionesPage from "./pages/Asignaciones/MisAsignacionesPage.js";
+import DashboardLayout from "./components/Layout/DashboardLayout.js";
+import { GuestLayout } from "./components/Layout/GuestLayout.js";
 
 export const App = () => {
   return (
     <Routes>
       {/* Públicas */}
-      <Route path="/" element={<HomePage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/contact" element={<ContactPage />} />
+      <Route element={<GuestLayout></GuestLayout>}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        {/* <Route path="/contact" element={<ContactPage />} /> */}
+      </Route>
 
+      <Route element={<DashboardLayout></DashboardLayout>}>
       {/* Rutas Super Admin */}
       <Route element={<ProtectedRoute rolesPermitidos={["S_ADMIN"]} />}>
         <Route path="/superadmin" element={<SuperAdminPage />} />
@@ -50,6 +55,7 @@ export const App = () => {
       {/* Rutas Solicitante / Usuario */}
       <Route element={<ProtectedRoute rolesPermitidos={["user", "tecnico"]} />}>
         <Route path="/Mis-tickets" element={<UserDashboardPage />} />
+      </Route>
       </Route>
     </Routes>
   );

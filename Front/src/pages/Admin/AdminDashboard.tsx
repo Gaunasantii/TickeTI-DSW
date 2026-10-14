@@ -111,7 +111,7 @@ export const AdminPage: React.FC = () => {
 
 
   return (
-    <DashboardLayout>
+    <>
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-800">Panel de Administrador</h1>
@@ -134,7 +134,7 @@ export const AdminPage: React.FC = () => {
                   mostrarAcciones={true}
                 />
       </div>
-    </DashboardLayout>
+    </>
   );
 };
 

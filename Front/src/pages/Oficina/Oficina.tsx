@@ -78,7 +78,7 @@ export const OficinaPage: React.FC = () => {
   };
 
   return (
-    <DashboardLayout>
+    
       <div className="space-y-6">
         <div className="flex items-center justify-between gap-4">
           <div>
@@ -154,7 +154,6 @@ export const OficinaPage: React.FC = () => {
           />
         )}
       </div>
-    </DashboardLayout>
   );
 };
 

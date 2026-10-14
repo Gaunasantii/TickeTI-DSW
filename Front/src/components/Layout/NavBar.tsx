@@ -12,13 +12,14 @@ export const NavBar = () => {
       </div>
 
       <div className="flex flex-row justify-end items-center gap-6">
+        {/* 
         <button
           onClick={() => navigate("/contact")}
           className="btn btn-secondary transition-all duration-300 hover:shadow-md active:scale-95 hidden md:block"
         >
           Contactanos
         </button>
-
+        */}
         <button
           onClick={() => navigate("/login")}
           className="btn btn-primary transition-all duration-300 hover:shadow-md active:scale-95"
