@@ -22,7 +22,7 @@ export const NavBar = () => {
         */}
         <button
           onClick={() => navigate("/login")}
-          className="btn btn-primary transition-all duration-300 hover:shadow-md active:scale-95"
+          className="px-6 py-3 bg-gray-950 text-white text-sm font-medium rounded-lg transition-all duration-300 hover:bg-gray-800 hover:shadow-md active:scale-95"
         >
           Ingresar
         </button>
