@@ -22,4 +22,9 @@ export class AsignacionService {
     if(!asignacionFound) throw new NotFoundError("Asignacion no encontrada", `La asignacion con el id ${id} no fue encontrada`);
     await asignacionDAO.deleteAsignacion(asignacionFound);
   }
+
+  static async getAsignacionesPendientesPaginated(page: number, pageSize: number,dni:string) {
+    const filters = { estado:true, tecnico:dni, fechaCierre:null };
+    return await asignacionDAO.getPaginated(filters, page, pageSize, {populate: ["ticket.estado","ticket.categoria","ticket.prioridad"]});
+  }
 }

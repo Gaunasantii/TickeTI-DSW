@@ -37,4 +37,14 @@ export class asignacionDAO {
       const asignacionFound = await em.findOne(asignacionSchema, filters);
       return asignacionFound;
   }
+
+  static async getPaginated(filters: any, page: number, pageSize: number,options:any) {
+      const em = orm.em ;
+      const [asignaciones, total] = await em.findAndCount(asignacionSchema, filters, {
+          limit: pageSize,
+          offset: (page - 1) * pageSize,
+          ...options
+      });
+      return {asignaciones,total};
+  }
 }

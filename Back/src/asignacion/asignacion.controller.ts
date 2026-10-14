@@ -1,12 +1,13 @@
 import { type Request, type Response } from "express";
 import { asignacionDAO } from "./asignacion.DAO.js";
 import { AsignacionService } from "./asignacion.service.js";
-import { ApiSuccessResponse } from "../utils/api.response.js";
+import { ApiPaginationResponse, ApiSuccessResponse } from "../utils/api.response.js";
 import { AsignacionOutSchema, type AsignacionDto } from "./DTO/AsignacionOut.dto.js";
 import type { CreateAsignacionInDto } from "./DTO/CreateAsignacion.dto.js";
 import { date } from "zod";
 import { wrap } from '@mikro-orm/core';
 import { ChangeStateAsignacionSchema, type ChangeStateAsignacionBodyDTO, type ChangeStateAsignacionParamsDTO } from "./DTO/ChangeStateAsignacion.dto.js";
+import type { PaginateAsignacionQueryDto } from "./DTO/PaginateAsignacionQuery.dto.js";
 
 class AsignacionController {
   async findAll(req: Request, res: Response) {
@@ -39,6 +40,14 @@ class AsignacionController {
       const id = Number(req.params.id);
       await AsignacionService.deleteAsignacion(id)
       res.status(200).json(new ApiSuccessResponse<null>(null, "Asignacion eliminada correctamente"));
+  }
+
+  async getMisAsignacionesPendientesPaginated(req: Request<any,any,any,PaginateAsignacionQueryDto>, res: Response) {
+    const { page, cantPerPage } = req.query;
+    const dni = req.user.dni;
+    const {asignaciones, total }= await AsignacionService.getAsignacionesPendientesPaginated(Number(page), Number(cantPerPage), dni);
+    const asignacionesDto = asignaciones.map(a => AsignacionOutSchema.parse(wrap(a).toJSON()));
+    res.status(200).json(new ApiPaginationResponse<AsignacionDto>(asignacionesDto,{totalPages: Math.ceil(total / Number(cantPerPage)),totalItems: total,currentPage: Number(page),itemsPerPage: Number(cantPerPage)}, "Asignaciones pendientes recuperadas correctamente"));
   }
 }
 
