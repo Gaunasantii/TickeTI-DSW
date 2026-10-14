@@ -53,6 +53,7 @@ export const SuperAdminPage: React.FC = () => {
     try {
       let idAEliminar = empresa.id;
       await eliminarEmpresa(idAEliminar);
+      setPaginadoParams({ ...paginadoParams, pagina: 1 });
       await cargarEmpresas();
       alert("Empresa eliminada correctamente.");
     } catch (err: any) {
@@ -73,6 +74,7 @@ export const SuperAdminPage: React.FC = () => {
     try {
       console.log("entro en creacion")
       await AgregarEmpresa(data);
+      await cargarEmpresas();
       alert("Empresa creada correctamente.");
       setNewEmpresa({ nombre: "", admin: { dni: "", name: "", surName: "", tele: "", pass: "" } });
     } catch (err: any) {
