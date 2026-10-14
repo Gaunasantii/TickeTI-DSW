@@ -13,6 +13,7 @@ import { type IMeta } from "../../responses/IPaginatedApiResponse";
 import { crearAsignacion } from "../../services/AsignacionServices/CrearAsignacion";
 import { prioridadModel } from "../../models/prioridad.model";
 import { getAllPrioridades } from "../../services/PrioridadServices/GetAllPrioridades";
+import { CambiarCategoria } from "../../services/TicketServices/CambiarCategoria";
 
 export const TecnicoPage: React.FC = () => {
   const [tickets, setTickets] = useState<ticketPaginatedModel[]>([]);
@@ -77,17 +78,14 @@ export const TecnicoPage: React.FC = () => {
     cargarTickets({ pagina: 1, cantidad: 10 });
   }, []);
 
-  const handleCambiarEstado = async (
-    ticketId: number | string,
-    nuevoEstadoId: number | string
-  ) => {
-    try {
-      await cambiarEstadoTicket(Number(ticketId), Number(nuevoEstadoId));
-    } catch (err: any) {
-      console.error("Error al cambiar estado:", err);
-      alert(err.message || "Error al cambiar el estado del ticket");
-    }
-  };
+  const handleCambiarCategoria = async (ticketId: string | number, nuevaCategoriaId: number | string) => {
+      try {
+        await CambiarCategoria(ticketId, nuevaCategoriaId);
+      } catch (err: any) {
+        console.error("Error al cambiar categoría:", err);
+        alert(err.message || "Error al cambiar la categoría del ticket");
+      }
+    };
 
   const handleTomarTicket = async (ticketId: number | string) => {
     try {
@@ -115,7 +113,7 @@ export const TecnicoPage: React.FC = () => {
           tickets={tickets}
           cargando={cargando}
           onRefresh={cargarTickets}
-          onCambiarEstado={handleCambiarEstado}
+          onCambiarCategoria={handleCambiarCategoria}
           prioridades={prioridades}
           onTomarTicket={handleTomarTicket}
           mostrarAcciones={true}

@@ -35,9 +35,8 @@ class ticketController {
   async resolveTicket(req: Request<ModifyTicketInParamsDto,any,ResolveTicketInBodyDto>, res: Response) {
     const id = Number(req.params.id);
     const solucion = req.body.solucion;
-    const ticketResolved = await TicketService.resolveTicket(solucion, id);
-    const ticketDto=TicketOutSchema.parse(wrap(ticketResolved).toJSON())
-    res.status(200).json(new ApiSuccessResponse<TicketDto>(ticketDto,"Ticket Resuelto con exito"));
+    await TicketService.resolveTicket(solucion, id);
+    res.status(200).json(new ApiSuccessResponse<null>(null,"Ticket Resuelto con exito"));
   }
 
   async GetAllPaginated(req:Request<any, any,any,ticketQueryParamsDto>,res:Response){
@@ -59,25 +58,22 @@ class ticketController {
   async ChangePriority(req: Request<ModifyTicketInParamsDto,any,ChangePriorityInBodyDto>, res: Response) {
     const id = Number(req.params.id);
     const newPriorityId = req.body.prioridad;
-    const ticketUpdated = await TicketService.ChangePriority(id, newPriorityId);
-    const ticketDto=TicketOutSchema.parse(wrap(ticketUpdated).toJSON())
-    res.status(200).json(new ApiSuccessResponse<TicketDto>(ticketDto,"Prioridad del ticket actualizada con exito"));
+    await TicketService.ChangePriority(id, newPriorityId);
+    res.status(200).json(new ApiSuccessResponse<null>(null,"Prioridad del ticket actualizada con exito"));
   }
   
   async ChangeCategoria(req: Request<ModifyTicketInParamsDto,any,ChangeCategoriaInBodyDto>, res: Response) {
     const id = Number(req.params.id);
     const newCategoriaId = req.body.categoria;
-    const ticketUpdated = await TicketService.ChangeCategoria(id, newCategoriaId);
-    const ticketDto=TicketOutSchema.parse(wrap(ticketUpdated).toJSON())
-    res.status(200).json(new ApiSuccessResponse<TicketDto>(ticketDto,"Categoría del ticket actualizada con exito"));
+    await TicketService.ChangeCategoria(id, newCategoriaId);
+    res.status(200).json(new ApiSuccessResponse<null>(null,"Categoría del ticket actualizada con exito"));
   }
 
   async ChangeState(req: Request<ModifyTicketInParamsDto,any,ChangeStateInBodyDto>, res: Response) {
     const id = Number(req.params.id);
     const newEstadoId = req.body.estado;
-    const ticketUpdated = await TicketService.ChangeState(id, newEstadoId);
-    const ticketDto=TicketOutSchema.parse(wrap(ticketUpdated).toJSON())
-    res.status(200).json(new ApiSuccessResponse<TicketDto>(ticketDto,"Estado del ticket actualizado con exito"));
+    await TicketService.ChangeState(id, newEstadoId);
+    res.status(200).json(new ApiSuccessResponse<null>(null,"Estado del ticket actualizado con exito"));
   }
 
   async getMyTickets(req:Request<any, any,any,ticketQueryParamsDto>,res:Response){
