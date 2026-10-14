@@ -15,7 +15,7 @@ export const LoginPage = () => {
       const resultado = await loginService(formData);
 
       if (login) {
-        login(resultado.data);
+        await login(resultado.data);
       }
 
       // Redirección condicional según el rol

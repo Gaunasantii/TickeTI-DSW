@@ -1,5 +1,5 @@
 export interface oficinaPaginated {
   id: number;
   nombre: string;
-  usuarios: number; // Ajusta el tipo según corresponda
+  cantidadUsuarios: number; // Ajusta el tipo según corresponda
 }

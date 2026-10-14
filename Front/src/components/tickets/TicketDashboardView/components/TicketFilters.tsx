@@ -21,13 +21,13 @@ export const TicketFilters: React.FC<TicketFiltersProps> = ({
   onFiltroChange,
   onRefresh,
 }) => (
-  <div className="bg-white p-3 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col md:flex-row gap-3">
+  <div className="flex flex-col gap-3 rounded-2xl border border-slate-200/80 bg-white p-3 shadow-sm sm:p-4 lg:p-5">
 
-    <div className="flex gap-2">
+    <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center md:flex-nowrap">
       <select
         value={filtros.estado}
         onChange={(e) => onFiltroChange({ ...filtros, estado: e.target.value ? Number(e.target.value) : undefined })}
-        className="px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl text-slate-700"
+        className="w-full min-w-0 rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm text-slate-700 sm:min-w-[12rem] sm:flex-1 sm:py-2"
       >
         <option value={undefined}>Todos los estados</option>
         {estadosEmpresa.map((est) => (
@@ -40,7 +40,7 @@ export const TicketFilters: React.FC<TicketFiltersProps> = ({
       <select
         value={filtros.categoria}
         onChange={(e) => onFiltroChange({ ...filtros, categoria: e.target.value ? Number(e.target.value) : undefined  } )}
-        className="px-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl text-slate-700"
+        className="w-full min-w-0 rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm text-slate-700 sm:min-w-[12rem] sm:flex-1 sm:py-2"
       >
         <option value={undefined}>Todas las categorías</option>
         {categorias.map((cat) => (
@@ -52,7 +52,7 @@ export const TicketFilters: React.FC<TicketFiltersProps> = ({
 
       <button
         onClick={() => onRefresh(filtros)}
-        className="px-3 py-2 text-xs font-semibold bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200"
+        className="w-full rounded-xl bg-slate-100 px-3 py-3 text-sm font-semibold text-slate-700 transition sm:w-auto sm:py-2 lg:hover:bg-slate-200"
       >
         Refrescar
       </button>
