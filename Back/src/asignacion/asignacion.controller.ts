@@ -17,6 +17,10 @@ class AsignacionController {
 
   async createAsignacion(req: Request<any,any,CreateAsignacionInDto>, res: Response) {
       const asignacionInput = {...req.body,empresa:req.user.empresa};
+      //si llega asi, es pq lo creo un tecnico
+      if(!asignacionInput.tecnico){
+        asignacionInput.tecnico = req.user.dni;
+      }
       await AsignacionService.createAsignacion(asignacionInput)
       res.status(201).json(new ApiSuccessResponse<null>(null, "Asignacion creada correctamente"));
   }
