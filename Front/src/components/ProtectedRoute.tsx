@@ -11,27 +11,32 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ rolesPermitidos 
 
   if(!isAuthenticated)  return <Navigate to="/login" replace />;
 
-  if (rolesPermitidos && rolesPermitidos.length > 0) {
-    const permitidosNormalizados = rolesPermitidos.map((r) => r.toLowerCase());
-
-    const tienePermiso = permitidosNormalizados.some((p) => {
-      if (p === "s_admin" && isSuperAdmin) return true;
-      if (p === "admin" && isAdmin) return true;
-      if (p === "tecnico" && isTecnico) return true;
-      if (p === "user" && !isSuperAdmin && !isAdmin && !isTecnico) return true;
-      return false;
-    });
-
-    if (!tienePermiso) {
-      if (isSuperAdmin) return <Navigate to="/superadmin" replace />;
-      if (isAdmin) return <Navigate to="/admin" replace />;
-      if (isTecnico) return <Navigate to="/tecnico" replace />;
-      if(!isSuperAdmin && !isAdmin && !isTecnico) return <Navigate to="/usuario" replace />;
-      return <Navigate to="/usuario" replace />;
-    }
+  if (!rolesPermitidos || rolesPermitidos.length === 0) {
+    return <Outlet />;
   }
 
-  return <Outlet />;
+  const isUser = !isSuperAdmin && !isAdmin && !isTecnico;
+
+  const permitidosNormalizados = rolesPermitidos.map((r) => r.toLowerCase());
+
+  const tienePermiso = permitidosNormalizados.some((rol) => {
+    switch (rol) {
+      case "s_admin": return isSuperAdmin;
+      case "admin":   return isAdmin;
+      case "tecnico": return isTecnico;
+      case "user":    return isUser;
+      default:        return false;
+    }
+  });
+
+  if (tienePermiso) return <Outlet />;
+
+  if (isSuperAdmin) return <Navigate to="/superadmin" replace />;
+  if (isAdmin)      return <Navigate to="/admin" replace />;
+  if (isTecnico)    return <Navigate to="/tecnico" replace />;
+  if (isUser)       return <Navigate to="/Mis-tickets" replace />;
+
+  return <Navigate to="/login" replace />;
 };
 
 export default ProtectedRoute;

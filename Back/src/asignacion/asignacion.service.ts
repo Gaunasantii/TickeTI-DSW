@@ -1,9 +1,16 @@
 import { asignacionDAO } from "./asignacion.DAO.js";
 import { ConflictError, NotFoundError } from "../utils/base.error.js";
+import { EstadoDAO } from "../estado/estado.DAO.js";
+import { ticketDAO } from "../ticket/ticket.DAO.js";
+import type { CreateAsignacionInDto } from './DTO/CreateAsignacion.dto.js'
 
 export class AsignacionService {
   
-  static async createAsignacion(asignacionInput: any) {
+  static async createAsignacion(asignacionInput: CreateAsignacionInDto) {
+    const estadoIntermedio=await EstadoDAO.findOne({esEstadoInicial: false,esEstadoFinal: false,esEstadoBase:true})
+    const ticket= await ticketDAO.findOne({ id: asignacionInput.ticket });
+    if(!ticket) throw new NotFoundError("Ticket no encontrado", `El ticket con el id ${asignacionInput.ticket} no fue encontrado`);
+    await ticketDAO.updateTicket({ estado: estadoIntermedio!.id }, ticket);
     await asignacionDAO.createAsignacion(asignacionInput);
   }
 
