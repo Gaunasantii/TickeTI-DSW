@@ -12,31 +12,31 @@ export const ListaUsuariosHeader: React.FC<ListaUsuariosHeaderProps> = ({
   onNuevoTecnico,
   onRefresh,
 }) => (
-  <div className="flex justify-between items-center">
-    <div>
-      <h1 className="text-2xl font-bold text-slate-800">Nómina de Personal</h1>
-      <p className="text-sm text-slate-500">Usuarios, técnicos y administradores</p>
+  <div className="flex flex-col gap-4 sm:gap-5 md:flex-row md:items-center md:justify-between">
+    <div className="min-w-0">
+      <h1 className="text-xl font-bold text-slate-800 sm:text-2xl">Nómina de Personal</h1>
+      <p className="text-xs text-slate-500 sm:text-sm">Usuarios, técnicos y administradores</p>
     </div>
-    <div>
-    {esAdmin && (
-      <>
-      <button
-        onClick={onNuevoUsuario}
-        className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold shadow-sm transition"
-      >
-        + Nuevo Usuario
-      </button>
-      <button
+    <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap md:justify-end">
+      {esAdmin && (
+        <>
+          <button
+            onClick={onNuevoUsuario}
+            className="w-full rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition sm:flex-1 md:w-auto md:flex-initial lg:hover:bg-blue-700"
+          >
+            + Nuevo Usuario
+          </button>
+          <button
             onClick={onNuevoTecnico}
-            className="px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white rounded-xl text-sm font-semibold shadow-sm transition"
+            className="w-full rounded-xl bg-green-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition sm:flex-1 md:w-auto md:flex-initial lg:hover:bg-green-700"
           >
             + Nuevo Técnico
           </button>
-      </>
-    )}
-    <button
+        </>
+      )}
+      <button
         onClick={() => onRefresh()}
-        className="px-3 py-2 text-xs font-semibold bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200"
+        className="w-full rounded-xl bg-slate-100 px-3 py-3 text-sm font-semibold text-slate-700 transition sm:flex-1 md:w-auto md:flex-initial lg:hover:bg-slate-200"
       >
         Refrescar
       </button>

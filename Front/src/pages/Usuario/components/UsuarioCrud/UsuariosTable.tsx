@@ -23,14 +23,14 @@ export const UsuariosTable: React.FC<UsuariosTableProps> = ({
   onEditar,
   onEliminar,
 }) => (
-  <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+  <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
     {cargando ? (
-      <p className="p-8 text-center text-slate-500 text-sm">Cargando...</p>
+      <p className="p-4 text-center text-sm text-slate-500 sm:p-6 lg:p-8">Cargando...</p>
     ) : usuarios.length === 0 ? (
-      <p className="p-8 text-center text-slate-500 text-sm">No se encontraron usuarios.</p>
+      <p className="p-4 text-center text-sm text-slate-500 sm:p-6 lg:p-8">No se encontraron usuarios.</p>
     ) : (
-      <div className="divide-y divide-slate-100">
-        <div className="grid grid-cols-12 px-5 py-3 text-xs font-bold text-slate-500 uppercase bg-slate-50">
+      <div>
+        <div className="hidden grid-cols-12 border-b border-slate-100 bg-slate-50 px-4 py-3 text-xs font-bold uppercase text-slate-500 md:grid lg:px-5">
           <div className="col-span-3">DNI</div>
           <div className="col-span-4">Nombre y Apellido</div>
           <div className="col-span-3">Oficina</div>
