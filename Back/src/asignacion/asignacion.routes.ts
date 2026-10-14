@@ -10,7 +10,7 @@ import { authorizeRoles } from "../middlewares/role.middleware.js";
 
 export const asignacionrouter:Router = Router();
 
-asignacionrouter.get('/asignaciones/pendientes',authenticateToken,authorizeRoles('tecnico'),ValidationMiddleware(PaginateAsignacionQuerySchema),asignacioncontroller.getMisAsignacionesPendientesPaginated);
+asignacionrouter.get('/Mis-asignaciones/pendientes',authenticateToken,authorizeRoles('tecnico'),ValidationMiddleware(PaginateAsignacionQuerySchema),asignacioncontroller.getMisAsignacionesPendientesPaginated);
 asignacionrouter.get('/asignaciones',authenticateToken,asignacioncontroller.findAll);
 asignacionrouter.post('/asignaciones',authenticateToken,authorizeRoles('admin','tecnico'),ValidationMiddleware(CreateAsignacionSchema),asignacioncontroller.createAsignacion);
 asignacionrouter.put('/asignaciones/:id',authenticateToken,ValidationMiddleware(ChangeStateAsignacionSchema),asignacioncontroller.ChangeStateAsignacion);
