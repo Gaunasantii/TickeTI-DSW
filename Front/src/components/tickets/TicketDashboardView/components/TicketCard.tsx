@@ -21,6 +21,7 @@ export const TicketCard: React.FC<TicketCardProps> = ({
   onCambiarCategoria,
   onCambiarPrioridad,
   onCambiarEstado,
+  onTomarTicket,
   categoriasEmpresa,
   prioridadesEmpresa,
   estadosEmpresa,
@@ -43,7 +44,7 @@ export const TicketCard: React.FC<TicketCardProps> = ({
         onCambiarPrioridad?.(t.id, valor);
         break;
       case 'estado':
-        onCambiarEstado?.(t.id, valor);
+        onCambiarEstado?.(t.id, valor); 
         break;
     }
     setDesplegableActivo(null);
@@ -59,22 +60,6 @@ export const TicketCard: React.FC<TicketCardProps> = ({
         return estadosEmpresa;
       default:
         return [];
-    }
-  };
-
-  const handleTomarTicket = async (id: string | number) => {
-
-    setCargando(true);
-
-    try {
-    await crearAsignacion({
-      ticket: Number(id),
-    });
-    } catch (error: any) {
-      console.error("Error al tomar el ticket:", error);
-      alert(error?.message || "Ocurrió un error al intentar tomar el ticket.");
-    } finally {
-      setCargando(false);
     }
   };
 
@@ -200,10 +185,10 @@ export const TicketCard: React.FC<TicketCardProps> = ({
       </div>
 
       
-      {isTecnico && !t.estaTomado&& (
+      {isTecnico && !t.estaTomado && !(t.solucion!="Sin solucion") && (
         <div className="flex items-center justify-end">
           <button
-            onClick={() => handleTomarTicket(t.id)}
+            onClick={() => onTomarTicket?.(t.id)}
             disabled={cargando}
             className="px-4 py-2 text-xs font-semibold rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition shadow-sm disabled:opacity-50 cursor-pointer"
           >

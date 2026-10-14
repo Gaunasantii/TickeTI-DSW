@@ -34,16 +34,10 @@ export class TicketService {
     if(ticketToResolve.fechaCierre)throw new ConflictError("Ticket ya cerrado","El ticket ya fue cerrado previamente")
     const lastAsignacion= await asignacionDAO.findOne({ticket:ticketToResolve.id,estado:true})
     if(!lastAsignacion)throw new ConflictError("No hay asignaciones activas para este ticket","El ticket debe ser asignado previo a ser resuelto")
-    var newInputTicket= wrap(ticketToResolve).toJSON();
-    newInputTicket.solucion=solucion;
-    newInputTicket.fechaCierre=new Date();
-    var newInputAsignacion= wrap(lastAsignacion).toObject();;
-    newInputAsignacion.fechaCierre=new Date();
+    const estado = await EstadoDAO.findOne({esEstadoFinal:true});
 
-    await ticketDAO.updateTicket(newInputTicket,ticketToResolve);
-    await asignacionDAO.updateAsignacion(newInputAsignacion,lastAsignacion);
-
-    return newInputTicket;
+    await ticketDAO.updateTicket({solucion:solucion,fechaCierre:new Date(),estado:estado!.id},ticketToResolve);
+    await asignacionDAO.updateAsignacion({fechaCierre:new Date()},lastAsignacion);
   }
 
   static async getPaginatedByStateAndCategory(user:any,page:number,limit:number,estadoId:number|undefined,categoriaId:number|undefined){

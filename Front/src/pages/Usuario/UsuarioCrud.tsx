@@ -19,6 +19,7 @@ import { IOficina } from "../../models/oficina.model";
 import { CreateTecnico } from "../../services/TecnicoServices/CreateTecnico";
 import { eliminarTecnico } from "../../services/TecnicoServices/DeleteTecnico";
 import { modificarTecnico } from "../../services/TecnicoServices/UpdateTecnico";
+import { useAuth } from "../../context/AuthContext";
 
 export const UsuarioCrudPage: React.FC = () => {
   const [usuarios, setUsuarios] = useState<personaPaginatedModel[]>([]);
@@ -37,16 +38,7 @@ export const UsuarioCrudPage: React.FC = () => {
   const [newUserData, setNewUserData] = useState<ICreatePersonRequest>({} as ICreatePersonRequest);
   const [updatedUserData, setUpdatedUserData] = useState<IModifyPersonRequest | IModifyUserRequest>({} as IModifyPersonRequest);
   const [guardando, setGuardando] = useState(false);
-
-  const usuarioRaw = sessionStorage.getItem("user") || sessionStorage.getItem("usuario");
-  let usuarioSesion: any = null;
-  try {
-    usuarioSesion = usuarioRaw ? JSON.parse(usuarioRaw) : null;
-  } catch {
-    usuarioSesion = null;
-  }
-  const rolSesion = (usuarioSesion?.type || usuarioSesion?.rol || "").toLowerCase();
-  const esAdmin = rolSesion.includes("admin");
+  const {isAdmin} = useAuth();
 
   const cargarUsuarios=async ()=>{
     try {
@@ -90,7 +82,7 @@ export const UsuarioCrudPage: React.FC = () => {
 
   const HandleUpdateSubmit=async(e:React.FormEvent) => {
     e.preventDefault();
-    if(!esAdmin) return;
+    if(!isAdmin) return;
     try {
       setGuardando(true);
       if (tipoFormulario === 'tecnico') {
@@ -141,7 +133,7 @@ export const UsuarioCrudPage: React.FC = () => {
   };
 
   const deleteUsuario = async (usuario:personaPaginatedModel) => {
-    if(!esAdmin) return;
+    if(!isAdmin) return;
     const esTecnico=usuario.type.toLowerCase() === 'tecnico';
     try {
       setGuardando(true);
@@ -170,9 +162,8 @@ export const UsuarioCrudPage: React.FC = () => {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <ListaUsuariosHeader esAdmin={esAdmin} onNuevoUsuario={handleNuevoUsuario} onNuevoTecnico={handleNuevoTecnico} onRefresh={cargarUsuarios} />
-        {console.log(usuarios)}
-        {esAdmin && mostrarModal && tipoFormulario === 'usuario' && (
+        <ListaUsuariosHeader esAdmin={isAdmin} onNuevoUsuario={handleNuevoUsuario} onNuevoTecnico={handleNuevoTecnico} onRefresh={cargarUsuarios} />
+        {isAdmin && mostrarModal && tipoFormulario === 'usuario' && (
           <UsuarioForm
             editandoDni={editandoDni}
             formData={editandoDni ? updatedUserData : newUserData}
@@ -183,7 +174,7 @@ export const UsuarioCrudPage: React.FC = () => {
             onCancel={() => setMostrarModal(false)}
           />
         )}
-        {esAdmin && mostrarModal && tipoFormulario === 'tecnico' && (
+        {isAdmin && mostrarModal && tipoFormulario === 'tecnico' && (
           <TecnicoForm
             editandoDni={editandoDni}
             formData={editandoDni ? updatedUserData : newUserData}
@@ -198,7 +189,7 @@ export const UsuarioCrudPage: React.FC = () => {
           usuarios={usuarios}
           cargando={cargando}
           filaExpandida={filaExpandida}
-          esAdmin={esAdmin}
+          esAdmin={isAdmin}
           onToggle={(dniUsuario, abierta) => setFilaExpandida(abierta ? null : dniUsuario)}
           onEditar={handleEditar}
           onEliminar={deleteUsuario}

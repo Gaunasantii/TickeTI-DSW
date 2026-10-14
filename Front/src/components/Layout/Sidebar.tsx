@@ -1,63 +1,36 @@
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router";
+import { useAuth } from "../../context/AuthContext";
 
 export const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
-  const usuarioRaw = sessionStorage.getItem("user") || sessionStorage.getItem("usuario");
-  let usuario: any = null;
-  try {
-    usuario = usuarioRaw ? JSON.parse(usuarioRaw) : null;
-  } catch {
-    usuario = null;
-  }
-
-  const rolRaw = (
-    usuario?.type ||
-    usuario?.rol ||
-    usuario?.role ||
-    usuario?.tipo ||
-    ""
-  ).toLowerCase();
-
-  // Mapeo seguro de roles
-  let rol = "user";
-  if (rolRaw.includes("s_admin") || rolRaw.includes("super")) {
-    rol = "superadmin";
-  } else if (rolRaw.includes("admin")) {
-    rol = "admin";
-  } else if (rolRaw.includes("tec")) {
-    rol = "tecnico";
-  }
+  const {isAuthenticated,isAdmin,isTecnico,isSuperAdmin,usuario,logout}=useAuth()
 
   const handleLogout = () => {
-    sessionStorage.removeItem("user");
-    sessionStorage.removeItem("usuario");
+    logout();
     navigate("/login");
   };
 
   const getMenuItems = () => {
     const dashboardPath =
-      rol === "superadmin"
+      isSuperAdmin
         ? "/superadmin"
-        : rol === "admin"
+        : isAdmin
         ? "/admin"
-        : rol === "tecnico"
+        : isTecnico
         ? "/tecnico"
         : "/usuario";
 
-    const commonDashboard = { label: "Dashboard", path: dashboardPath };
-    const ajustesItem = { label: "Ajustes", path: "/ajustes" };
+    const commonDashboard = { label: "Dashboard", path: dashboardPath };  
 
-    if (rol === "superadmin") {
+    if (isSuperAdmin) {
       return [
         commonDashboard,
-        ajustesItem,
       ];
     }
 
-    if (rol === "admin") {
+    if (isAdmin) {
       return [
         commonDashboard,
         { label: "Usuarios", path: "/usuarios" },
@@ -65,21 +38,19 @@ export const Sidebar: React.FC = () => {
         { label: "Prioridades", path: "/prioridades/crud" },
         { label: "Categorías", path: "/categorias/crud" },
         { label: "Estados", path: "/estados/crud" },
-        ajustesItem,
       ];
     }
 
-    if (rol === "tecnico") {
+    if (isTecnico) {
       return [
         commonDashboard,
         { label: "Mis tickets" , path: "/usuario"},
         { label: "Usuarios", path: "/usuarios" },
         { label: "Mis asignaciones", path: "/mis-asignaciones" },
-        ajustesItem,
       ];
     }
 
-    return [commonDashboard, ajustesItem];
+    return [commonDashboard];
   };
 
   const menuItems = getMenuItems();
@@ -94,7 +65,7 @@ export const Sidebar: React.FC = () => {
           <div>
             <span className="font-bold text-slate-800 text-base tracking-tight block">TickeTI</span>
             <span className="text-[11px] font-semibold text-blue-600 uppercase tracking-wider">
-              Panel {rol === "superadmin" ? "Super Admin" : rol}
+              Panel {isSuperAdmin ? "Super Admin" : isAdmin ? "Admin" : isTecnico ? "Tecnico" : "Usuario"}
             </span>
           </div>
         </div>
@@ -122,10 +93,10 @@ export const Sidebar: React.FC = () => {
       <div className="p-4 border-t border-slate-100">
         <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/60 mb-2">
           <p className="text-xs font-semibold text-slate-800 truncate capitalize">
-            {usuario?.name || usuario?.nombre || "Super Administrador"}
+            {usuario?.name}
           </p>
           <p className="text-[11px] text-slate-500 font-mono">
-            {usuario?.dni ? `DNI: ${usuario.dni}` : "Sesión activa"}
+            {usuario?.dni}
           </p>
         </div>
 

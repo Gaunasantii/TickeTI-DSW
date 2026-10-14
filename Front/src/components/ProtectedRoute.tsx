@@ -1,52 +1,32 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router";
+import { useAuth } from "../context/AuthContext";
 
 interface ProtectedRouteProps {
   rolesPermitidos?: string[];
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ rolesPermitidos }) => {
-  const usuarioRaw = sessionStorage.getItem("usuario") || sessionStorage.getItem("user");
+  const {isAdmin,isSuperAdmin,isTecnico,isAuthenticated}=useAuth();
 
-  if (!usuarioRaw) {
-    return <Navigate to="/login" replace />;
-  }
-
-  let usuario: any = null;
-  try {
-    usuario = JSON.parse(usuarioRaw);
-  } catch {
-    sessionStorage.removeItem("usuario");
-    sessionStorage.removeItem("user");
-    return <Navigate to="/login" replace />;
-  }
-
-  const rolBruto = (usuario?.type || usuario?.rol || usuario?.role || usuario?.tipo || "").toLowerCase();
-
-  let userRol = "user";
-  if (rolBruto.includes("s_admin") || rolBruto.includes("super")) {
-    userRol = "S_ADMIN";
-  } else if (rolBruto.includes("admin")) {
-    userRol = "admin";
-  } else if (rolBruto.includes("tec")) {
-    userRol = "tecnico";
-  }
+  if(!isAuthenticated)  return <Navigate to="/login" replace />;
 
   if (rolesPermitidos && rolesPermitidos.length > 0) {
     const permitidosNormalizados = rolesPermitidos.map((r) => r.toLowerCase());
 
     const tienePermiso = permitidosNormalizados.some((p) => {
-      if ((p.includes("S_ADMIN") || p.includes("super")) && userRol === "S_ADMIN") return true;
-      if (p.includes("admin") && !p.includes("super") && !p.includes("s_") && userRol === "admin") return true;
-      if (p.includes("tec") && userRol === "tecnico") return true;
-      if ((p === "user" || p === "usuario" || p === "solicitante" || p === "cliente") && userRol === "user") return true;
-      return p === userRol;
+      if (p === "s_admin" && isSuperAdmin) return true;
+      if (p === "admin" && isAdmin) return true;
+      if (p === "tecnico" && isTecnico) return true;
+      if (p === "user" && !isSuperAdmin && !isAdmin && !isTecnico) return true;
+      return false;
     });
 
     if (!tienePermiso) {
-      if (userRol === "S_ADMIN") return <Navigate to="/superadmin" replace />;
-      if (userRol === "admin") return <Navigate to="/admin" replace />;
-      if (userRol === "tecnico") return <Navigate to="/tecnico" replace />;
+      if (isSuperAdmin) return <Navigate to="/superadmin" replace />;
+      if (isAdmin) return <Navigate to="/admin" replace />;
+      if (isTecnico) return <Navigate to="/tecnico" replace />;
+      if(!isSuperAdmin && !isAdmin && !isTecnico) return <Navigate to="/usuario" replace />;
       return <Navigate to="/usuario" replace />;
     }
   }
