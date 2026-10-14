@@ -12,10 +12,11 @@ export const MyTicketCard: React.FC<TicketCardProps> = ({
   ticket: t,
   onEliminar,
 }) => {
-  const pId = t.prioridad;
+  const prioridadNombre=t.prioridad instanceof Object ? t.prioridad.nombre : t.prioridad;
   const badgeEstado = t.estado;
 
-  const catNombre=t.categoria;
+  const catNombre=t.categoria instanceof Object ? t.categoria.nombre : t.categoria;
+  const estadoNombre=t.estado instanceof Object ? t.estado.nombre : t.estado;
   const fechaAlta = t.fechaCreacion;
   const fechaFin = t.fechaCierre;
 
@@ -40,10 +41,10 @@ export const MyTicketCard: React.FC<TicketCardProps> = ({
 
         <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
           <span className={`px-2 py-0.5 rounded-full font-medium border ${badgeEstado}`}>
-            {t.estado}
+            {estadoNombre}
           </span>
-          <span className={`px-2 py-0.5 rounded-full font-medium border ${pId}`}>
-            {t.prioridad}
+          <span className={`px-2 py-0.5 rounded-full font-medium border ${prioridadNombre}`}>
+            {prioridadNombre}
           </span>
           <span className="text-slate-400">|</span>
           <span className="text-slate-600">

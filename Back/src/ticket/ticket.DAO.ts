@@ -40,7 +40,7 @@ export class ticketDAO {
 
   static async GetAllPaginated(filters:any,page:number,limit:number){
     const em = orm.em;
-    const [tickets,count]=await em.findAndCount(TicketSchema,filters,{limit:limit,offset:(page-1)*limit,populate:['asignaciones']})
+    const [tickets,count]=await em.findAndCount(TicketSchema,filters,{limit:limit,offset:(page-1)*limit,populate:['asignaciones','estado','categoria','prioridad']})
     return {tickets,count};
   }
 }
