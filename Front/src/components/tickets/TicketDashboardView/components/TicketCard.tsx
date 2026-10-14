@@ -193,7 +193,7 @@ export const TicketCard: React.FC<TicketCardProps> = ({
       </div>
 
       {/* Botón de Acción para Tomar Ticket */}
-      {isTecnico && (
+      {isTecnico && !t.estaTomado&& (
         <div className="flex items-center justify-end">
           <button
             onClick={() => handleTomarTicket(t.id)}

@@ -9,4 +9,5 @@ export interface ticketPaginatedModel{
     fechaCreacion:string;
     fechaCierre?:string;
     solucion?:string;
+    estaTomado:boolean;
 }
