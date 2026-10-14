@@ -11,17 +11,20 @@ export class EstadoSeeder extends Seeder{
                 nombre: "Abierto",
                 descripcion: "Ticket recién creado, pendiente de revisión",
                 esEstadoInicial: true,
+                esEstadoBase: true,
                 empresa:e.id
             })
             em.create(EstadoSchema,{
                 nombre: "En Proceso",
                 descripcion: "Ticket asignado a un técnico y en resolución",
+                esEstadoBase: true,
                 empresa:e.id
             })
             em.create(EstadoSchema,{
                 nombre: "Cerrado",
                 descripcion: "Ticket resuelto y cerrado",
                 esEstadoFinal:true,
+                esEstadoBase: true,
                 empresa:e.id
             })
 

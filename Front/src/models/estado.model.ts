@@ -4,4 +4,5 @@ export interface estadoModel{
     descripcion:string;
     esEstadoInicial:boolean;
     esEstadoFinal:boolean;
+    esEstadoBase:boolean;
 }

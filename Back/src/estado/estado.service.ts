@@ -27,11 +27,9 @@ export class EstadoService {
     if (!estadoToBeDeleted) {
       throw new NotFoundError("Estado no encontrado",`Estado con id ${id} no encontrado`);
     }
-    if(estadoToBeDeleted.esEstadoInicial) 
-      throw new Error("No se puede eliminar el estado inicial");
-    
-    if(estadoToBeDeleted.esEstadoFinal)
-      throw new Error("No se puede eliminar el estado final");
+    if(estadoToBeDeleted.esEstadoBase){
+      throw new Error("No se puede eliminar un estado base");
+    } 
 
     return await EstadoDAO.delete(estadoToBeDeleted);
   }

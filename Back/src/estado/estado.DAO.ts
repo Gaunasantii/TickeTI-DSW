@@ -36,6 +36,7 @@ export class EstadoDAO {
                 nombre: "Abierto",
                 descripcion: "Ticket recién creado, pendiente de revisión",
                 esEstadoInicial: true,
+                esEstadoBase:true,
                 empresa:idEmpresa
       });
 
@@ -43,6 +44,14 @@ export class EstadoDAO {
                 nombre: "Cerrado",
                 descripcion: "Ticket cerrado",
                 esEstadoFinal:true,
+                esEstadoBase:true,
+                empresa:idEmpresa
+      });
+
+      await em.create(EstadoSchema,{
+                nombre: "En proceso",
+                descripcion: "El ticket se encuentra en proceso de ser resuelto",
+                esEstadoBase:true,
                 empresa:idEmpresa
       });
 

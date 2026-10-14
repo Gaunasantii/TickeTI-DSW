@@ -35,7 +35,7 @@ export const EstadoSection: React.FC<IEstadoSectionProps> = ({ estados, cargando
                 >
                   Editar
                 </button>
-                {!estado.esEstadoInicial && !estado.esEstadoFinal && (
+                {!estado.esEstadoBase && (
                 <button
                   onClick={() => onEliminar(estado.id)}
                   className="px-2.5 py-1 text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200 rounded-lg hover:bg-rose-100"

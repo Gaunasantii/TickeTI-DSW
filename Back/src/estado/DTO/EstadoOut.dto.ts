@@ -5,7 +5,8 @@ export const EstadoOutSchema=zod.object({
   nombre:zod.string(),
   descripcion:zod.string(),
   esEstadoInicial:zod.boolean(),
-  esEstadoFinal:zod.boolean()
+  esEstadoFinal:zod.boolean(),
+  esEstadoBase:zod.boolean()
 })
 
 export type EstadoDto=zod.infer<typeof EstadoOutSchema>
