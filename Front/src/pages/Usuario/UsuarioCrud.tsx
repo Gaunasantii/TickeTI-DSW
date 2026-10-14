@@ -111,6 +111,7 @@ export const UsuarioCrudPage: React.FC = () => {
       }
       setMostrarModal(false);
       setNewUserData({} as ICreatePersonRequest);
+      cargarUsuarios();
     }catch(err: any){
       alert(err.message || "Error al crear el usuario");
     }finally{

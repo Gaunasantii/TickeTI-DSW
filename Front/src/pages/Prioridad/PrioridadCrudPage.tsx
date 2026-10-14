@@ -19,8 +19,8 @@ import { PrioridadSection } from "./components/PrioridadSection";
 export const PrioridadCrudPage: React.FC = () => {
   const [prioridades, setPrioridades] = useState<prioridadModel[]>([]);
   const [cargando, setCargando] = useState(true);
-  const [prioridadNew,setPrioridadNew] = useState<ICreatePrioridadRequest|null>(null);
-  const [updatedPrioridad, setUpdatedPrioridad] = useState<IModifyPrioridadRequest|null>(null);
+  const [prioridadNew,setPrioridadNew] = useState<ICreatePrioridadRequest|null>();
+  const [updatedPrioridad, setUpdatedPrioridad] = useState<IModifyPrioridadRequest|null>();
   const [editandoId, setEditandoId] = useState<number | string | null>(null);
   const [guardando, setGuardando] = useState(false);
   const [paginadoParams, setPaginadoParams] = useState<IPaginadoParams>({
@@ -62,6 +62,8 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement|HTMLSelectElement>) 
           cargarPrioridades();
         } catch (err) {
           console.error("Error al manejar la nueva prioridad:", err);
+        }finally {
+          setPrioridadNew(null);
         }
   }
 
@@ -79,6 +81,7 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement|HTMLSelectElement>) 
     e.preventDefault();
     try{
       await modificarPrioridad(updatedPrioridad!);
+      cargarPrioridades();
     }catch(err){
       console.error("Error al actualizar la prioridad:", err);
     }
@@ -118,7 +121,7 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement|HTMLSelectElement>) 
             type="text"
             required
             name="nombre"
-            value={updatedPrioridad? updatedPrioridad.nombre : prioridadNew?.nombre}
+            value={updatedPrioridad? updatedPrioridad.nombre : (prioridadNew?.nombre||"")}
             onChange={handleChange}
             placeholder={
               updatedPrioridad
@@ -131,7 +134,7 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement|HTMLSelectElement>) 
             type="number"
             required
             name="tiempoLimiteResolucion"
-            value={updatedPrioridad? updatedPrioridad.tiempoLimiteResolucion : prioridadNew?.tiempoLimiteResolucion}
+            value={updatedPrioridad? updatedPrioridad.tiempoLimiteResolucion : (prioridadNew?.tiempoLimiteResolucion||0)}
             onChange={handleChange}
             placeholder={
               updatedPrioridad
