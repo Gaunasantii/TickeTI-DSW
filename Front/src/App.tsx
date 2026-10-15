@@ -61,7 +61,7 @@ export const App = () => {
       </Route>
 
       {/* Ruta ajustes para todos los usuarios */}
-      <Route element={<ProtectedRoute rolesPermitidos={["user", "usuario", "solicitante", "cliente", "admin", "administrador"]} />}>
+      <Route element={<ProtectedRoute rolesPermitidos={["user", "usuario", "solicitante", "cliente", "s_admin", "superadmin", "admin", "administrador", "tecnico"]} />}>
         <Route path="/ajustes" element={<AjustesPage />} />
       </Route>
     </Routes>

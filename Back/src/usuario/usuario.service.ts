@@ -2,6 +2,7 @@ import { NotFoundError } from "../utils/base.error.js";
 import { userDAO } from "./user.DAO.js";
 import { UnauthorizedError } from "../utils/base.error.js";
 import { orm } from "../config/DataBase/db.js";
+import { PersonSchema } from "../persona/person.entity.js";
 
 export class UsuarioService {
   static async createUsuario(usuarioInput: any) {
@@ -18,16 +19,29 @@ export class UsuarioService {
     return await userDAO.updateUser(usuarioInput, userFound);
   }
 
-  static async changePassword(dni: string, passwordActual: string, passwordNueva: string) {
-    const user = await userDAO.findOne({dni:dni})
-    if (!user) throw new NotFoundError("Usuario no encontrado");
+
+  static async changePassword(
+    dni: string,
+    passwordActual: string,
+    passwordNueva: string
+  ) {
+    const user = await orm.em.findOne(PersonSchema, { dni });
+
+    if (!user) {
+      throw new NotFoundError("Usuario no encontrado");
+    }
 
     const coincide = passwordActual === user.pass;
+
     if (!coincide) {
-      throw new UnauthorizedError("Contraseña actual incorrecta", "La contraseña ingresada no coincide con la actual");
+      throw new UnauthorizedError(
+        "Contraseña actual incorrecta",
+        "La contraseña ingresada no coincide con la actual"
+      );
     }
 
     user.pass = passwordNueva;
+
     await orm.em.flush();
   }
 
