@@ -19,32 +19,6 @@ export class UsuarioService {
     return await userDAO.updateUser(usuarioInput, userFound);
   }
 
-
-  static async changePassword(
-    dni: string,
-    passwordActual: string,
-    passwordNueva: string
-  ) {
-    const user = await orm.em.findOne(PersonSchema, { dni });
-
-    if (!user) {
-      throw new NotFoundError("Usuario no encontrado");
-    }
-
-    const coincide = passwordActual === user.pass;
-
-    if (!coincide) {
-      throw new UnauthorizedError(
-        "Contraseña actual incorrecta",
-        "La contraseña ingresada no coincide con la actual"
-      );
-    }
-
-    user.pass = passwordNueva;
-
-    await orm.em.flush();
-  }
-
   static async deleteUsuario(dni: string) {
     const userFound= await userDAO.findOne({dni:dni})
     if(!userFound)throw new NotFoundError("Usuario no encontrado")

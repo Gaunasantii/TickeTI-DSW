@@ -15,6 +15,7 @@ import { tecnicorouter } from './tecnico/tecnico.routes.js';
 import { ticketrouter } from './ticket/ticket.routes.js';
 import { asignacionrouter } from './asignacion/asignacion.routes.js';
 import { authRouter } from './auth/auth.routes.js';
+import { personarouter } from './persona/persona.routes.js';
 import { ErrorHander } from './middlewares/errorHandler.middleware.js';
 import { RequestContext } from '@mikro-orm/core';
 
@@ -52,7 +53,8 @@ app.use('/api', oficinarouter);
 app.use('/api', prioridadrouter);
 app.use('/api', tecnicorouter);
 app.use('/api', ticketrouter);
-app.use('/api', asignacionrouter)
+app.use('/api', asignacionrouter);
+app.use('/api', personarouter);
 app.use('/api/auth', authRouter);
 
 app.use(ErrorHander);

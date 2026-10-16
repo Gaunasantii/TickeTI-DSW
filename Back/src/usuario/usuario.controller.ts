@@ -5,7 +5,6 @@ import { UsuarioOutSchema, type UsuarioOutDto } from "./DTO/UsuarioOut.dto.js";
 import {wrap} from '@mikro-orm/core'
 import type { CreateUsuarioInDto } from "./DTO/CreateUsuario.dto.js";
 import type { ModifyUsuarioBodyDTO, ModifyUsuarioParamsDTO } from "./DTO/ModifyUsuario.dto.js";
-import type { ChangePasswordBodyDTO } from "./DTO/ChangePassword.dto.js";
 
 class userController {
 
@@ -28,29 +27,6 @@ class userController {
 
       return res.status(200).json(new ApiSuccessResponse<null>(null,"Usuario Actualizado con exito"));
   }
-
-
-    async changePassword(
-        req: Request<any, any, ChangePasswordBodyDTO>,
-        res: Response
-    ) {
-        try {
-            const dni = req.user?.dni;
-            const { passwordActual, passwordNueva } = req.body;
-
-            if (!dni) {
-                return res.status(401).json({errors: "El token no contiene el DNI del usuario", success: false, data: null,});
-            }
-
-            await UsuarioService.changePassword(dni,passwordActual,passwordNueva);
-
-            return res.status(200).json(new ApiSuccessResponse<null>(null,"Contraseña actualizada con éxito"));
-        
-        } catch (error: any) {
-            console.error("Error al cambiar la contraseña:", error.message);
-            throw error;
-        }
-    }
 
   async deleteUser(req: Request<ModifyUsuarioParamsDTO,any,any>, res: Response) {
       const dni = req.params.dni;
