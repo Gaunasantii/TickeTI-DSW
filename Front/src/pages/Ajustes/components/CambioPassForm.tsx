@@ -1,7 +1,17 @@
 import { useState } from "react";
 import { cambiarPass } from "../../../services/UsuarioServices/CambiarPassword";
+import { CheckCircle2 } from "lucide-react";
 
 export const CambiarPassForm = () => {
+    const reglas = [
+        { id: "long", texto: "Al menos debe contener al menos 8 caraacteres", cumple: (p: string) => p.length >= 8 },
+        { id: "mayus", texto: "Al menos debe contener una mayúscula", cumple: (p: string) => /[A-Z]/.test(p) },
+        { id: "minus", texto: "Una letra minúscula", cumple: (p: string) => /[a-z]/.test(p) },
+        { id: "numero", texto: "Un número", cumple: (p: string) => /\d/.test(p) },
+        { id: "simbolo", texto: "Un símbolo (ej: ! @ # $ %)", cumple: (p: string) => /[^A-Za-z0-9]/.test(p) }
+    ];
+    
+
     const [actual , setActual] = useState("");
     const [nueva , setNueva] = useState("");
     const [confirmar , setConfirmar] = useState("");
@@ -10,6 +20,8 @@ export const CambiarPassForm = () => {
     const [cargando , setCargando] = useState(false);
     const [mostrarNueva , setMostrarNueva] = useState(false);
     const [mostrarConfirmar , setMostrarConfirmar] = useState(false);
+    const reglasEstado = reglas.map((r) => ({ ...r, ok: r.cumple(nueva) }));
+    const passValida = reglasEstado.every((r) => r.ok);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -103,11 +115,22 @@ export const CambiarPassForm = () => {
                 </div>
             </div>
 
-
             {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
             {exito && <p className="text-sm text-green-600 dark:text-green-400">Contraseña actualizada correctamente</p>}
 
-            <button type="submit" disabled={cargando} className="px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition disabled:opacity-50">
+
+            <div>
+                <ul className="mt-2 space-y-1">
+                    {reglasEstado.map((r) => (
+                        <li key={r.id} className={`flex items-center gap-2 text-xs transition-colors duration-200 ${ r.ok ? "text-green-600 dark:text-green-400" : "text-slate-400 dark:text-slate-500"}`}>
+                            <CheckCircle2 className="w-4 h-4 shrink-0" />
+                            {r.texto}
+                        </li>
+                    ))}
+                </ul>
+            </div>
+
+            <button type="submit" disabled={cargando || !passValida} className="px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition disabled:opacity-50">
                 {cargando ? "Guardando..." : "Cambiar contraseña"}
             </button>
         </form>
