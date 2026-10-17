@@ -36,9 +36,14 @@ export class AsignacionService {
   }
 
   static async abandonarMiAsignacion(id: number, dni: string) {
-    const asignacionFound = await asignacionDAO.findOne({ id: id });
+    const asignacionFound = await asignacionDAO.findOne({ id: id, estado:true,fechaCierre:null });
     if(!asignacionFound) throw new NotFoundError("Asignacion no encontrada", `La asignacion con el id ${id} no fue encontrada`);
     if(asignacionFound.tecnico.dni !== dni) throw new ConflictError("La asignacion no te pertenece", `La asignacion con el id ${id} no te pertenece`); 
+
+    const estadoInicial= await EstadoDAO.findOne({esEstadoInicial: true});
+    const ticket= await ticketDAO.findOne({ id: asignacionFound.ticket.id });
+    
+    await ticketDAO.updateTicket({ estado: estadoInicial!.id }, ticket);
     await asignacionDAO.updateAsignacion({ estado: false, fechaCierre: new Date() }, asignacionFound);
   }
 }
