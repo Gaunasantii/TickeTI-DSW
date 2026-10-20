@@ -1,4 +1,5 @@
 import Express from 'express';
+import task from './jobs/task.js';
 import { personrouter } from './persona/persona.route.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -68,4 +69,5 @@ app.get('/api/status', (req, res) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor en http://localhost:${PORT}`);
+    task.start();
 });
