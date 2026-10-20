@@ -9,17 +9,17 @@ export class PrioridadSeeder extends Seeder{
         for(const empresa of empresas) {
             em.create(PrioridadSchema,{
                 nombre:"Baja",
-                tiempoLimiteResolucion: 432000,
+                tiempoLimiteResolucion: 3, //Tener en cuenta q este valor esta en dias
                 empresa:empresa.id
             })
             em.create(PrioridadSchema,{
                 nombre: "Media",
-                tiempoLimiteResolucion: 259200,
+                tiempoLimiteResolucion: 2, //Tener en cuenta q este valor esta en dias
                 empresa:empresa.id
             })
             em.create(PrioridadSchema,{
                 nombre: "Alta",
-                tiempoLimiteResolucion: 86400,
+                tiempoLimiteResolucion: 1, //Tener en cuenta q este valor esta en dias
                 empresa:empresa.id
             })   
 
