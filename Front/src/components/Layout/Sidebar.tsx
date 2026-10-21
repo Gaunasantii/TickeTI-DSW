@@ -26,9 +26,15 @@ export const Sidebar: React.FC = () => {
 
     const commonDashboard = { label: "Dashboard", path: dashboardPath };  
 
+    const ajustesItem = {
+      label: "Ajustes",
+      path: "/ajustes",
+    };
+
     if (isSuperAdmin) {
       return [
         commonDashboard,
+        ajustesItem,
       ];
     }
 
@@ -40,6 +46,7 @@ export const Sidebar: React.FC = () => {
         { label: "Prioridades", path: "/prioridades/crud" },
         { label: "Categorías", path: "/categorias/crud" },
         { label: "Estados", path: "/estados/crud" },
+        ajustesItem,
       ];
     }
 
@@ -49,10 +56,14 @@ export const Sidebar: React.FC = () => {
         { label: "Mis tickets" , path: "/Mis-tickets"},
         { label: "Usuarios", path: "/usuarios" },
         { label: "Mis asignaciones", path: "/mis-asignaciones" },
+        ajustesItem,
       ];
     }
 
-    return [commonDashboard];
+    return [
+      commonDashboard,
+      ajustesItem,
+    ];
   };
 
   const menuItems = getMenuItems();
