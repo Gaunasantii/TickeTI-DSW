@@ -6,23 +6,22 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const task = cron.schedule(process.env.CRON_SCHEDULE || '* * * * *', async ()=>{
-    RequestContext.create(orm.em, async ()=>{
+const task = cron.schedule(process.env.CRON_SCHEDULE || '* * * * * *', async ()=>{
+    await RequestContext.create(orm.em, async ()=>{
 
     const asignaciones = await asignacionDAO.findAll({fechaCierre:null,estado:true},{populate:['ticket.prioridad'],filters: { empresa: false }})
     const asignacionesVencidas = asignaciones.filter(asignacion => {
         
         if(!asignacion.ticket.prioridad) return false;
 
-        const fechaApertura= asignacion.fechaCreacion;
-        const fechaEstimadaCierre = fechaApertura.setDate(new Date(fechaApertura).getDate() + asignacion.ticket.prioridad!.tiempoLimiteResolucion);
-
-        return fechaEstimadaCierre < new Date().getTime();
+        const fechaEstimadaCierre = new Date(asignacion.fechaCreacion);
+        fechaEstimadaCierre.setDate(fechaEstimadaCierre.getDate() + asignacion.ticket.prioridad.tiempoLimiteResolucion);
+        return fechaEstimadaCierre < new Date();
     });
 
-    asignacionesVencidas.forEach(async asignacion => {
+    for (const asignacion of asignacionesVencidas) {
         await asignacionDAO.updateAsignacion({estado:false},asignacion)
-    });
+    }
     });
 })
 
