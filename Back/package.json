@@ -5,7 +5,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest",
     "dev": "cross-env NODE_ENV=development tsx --env-file=.env.development --watch src/app.ts",
     "build": "tsc",
     "start:dev": "cross-env NODE_ENV=development node --env-file .env.development dist/app.js",
