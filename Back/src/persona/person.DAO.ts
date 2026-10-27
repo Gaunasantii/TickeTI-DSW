@@ -12,4 +12,16 @@ export class PersonDAO{
         })
         return { persons, total };
     }
+
+    static async findOne(filters: any) {
+        const em = orm.em.fork();
+        return await em.findOne(PersonSchema, filters);
+    }
+
+    static async updatePassword(dni: string, nuevaPass: string) {
+        const em = orm.em.fork();
+        const persona = await em.findOneOrFail(PersonSchema, { dni });
+        persona.pass = nuevaPass;
+        await em.flush();
+    }
 }

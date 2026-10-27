@@ -10,6 +10,7 @@ import { AdminPage } from "./pages/Admin/AdminDashboard.js";
 import { TecnicoPage } from "./pages/Tecnico/TecnicoDashboard.js";
 import { SuperAdminPage } from "./pages/SuperAdmin/SuperAdminPage";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import { AjustesPage } from "./pages/Ajustes/Ajustes.js";
 import { PrioridadCrudPage } from "./pages/Prioridad/PrioridadCrudPage.js";
 import { EstadoCrudPage } from "./pages/Estado/EstadoCrudPage.js";
 import MisAsignacionesPage from "./pages/Asignaciones/MisAsignacionesPage.js";
@@ -56,6 +57,11 @@ export const App = () => {
       <Route element={<ProtectedRoute rolesPermitidos={["user", "tecnico"]} />}>
         <Route path="/Mis-tickets" element={<UserDashboardPage />} />
       </Route>
+      </Route>
+      
+      {/* Ruta ajustes para todos los usuarios */}
+      <Route element={<ProtectedRoute rolesPermitidos={["user", "usuario", "solicitante", "cliente", "s_admin", "superadmin", "admin", "administrador", "tecnico"]} />}>
+        <Route path="/ajustes" element={<AjustesPage />} />
       </Route>
     </Routes>
   );
