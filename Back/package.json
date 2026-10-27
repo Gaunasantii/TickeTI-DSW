@@ -6,9 +6,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npx tsx src/app.ts",
+    "dev": "cross-env NODE_ENV=development tsx --env-file=.env.development --watch src/app.ts",
     "build": "tsc",
-    "start": "node dist/app.js",
+    "start:dev": "cross-env NODE_ENV=development node --env-file .env.development dist/app.js",
+    "start:prod": "cross-env NODE_ENV=production node --env-file .env.production dist/app.js",
     "poblar": "mikro-orm seeder:run --config ./src/config/DataBase/db.config.ts"
   },
   "keywords": [],
@@ -39,6 +40,7 @@
     "@types/node": "^25.6.0",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
+    "cross-env": "^10.1.0",
     "nodemon": "^3.1.14",
     "tsx": "^4.21.0",
     "typescript": "^6.0.3",
