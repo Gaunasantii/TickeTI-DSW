@@ -1,3 +1,50 @@
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     FieldError:
+ *       type: object
+ *       properties:
+ *         field:
+ *           type: string
+ *           example: email
+ *         error:
+ *           type: string
+ *           example: El campo email es obligatorio
+ *     PaginationMeta:
+ *       type: object
+ *       properties:
+ *         currentPage:
+ *           type: number
+ *         itemsPerPage:
+ *           type: number
+ *         totalItems:
+ *           type: number
+ *         totalPages:
+ *           type: number
+ * 
+ *     
+ *     ApiResponseSucces:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *           example: true
+ *         message:
+ *           type: string
+ *           example: Operacion exitosa
+ * 
+ *     ApiResponseError:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *           example: false
+ *         message:
+ *           type: string
+ *           example: Error en la operacion
+ */
+
 interface IApiResponse<T> {
     data: T|T[];
     message?:string;
