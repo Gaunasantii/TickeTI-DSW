@@ -1,4 +1,6 @@
 import Express from 'express';
+import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
 import task from './jobs/task.js';
 import { personrouter } from './persona/persona.route.js';
 import cookieParser from 'cookie-parser';
@@ -19,9 +21,9 @@ import { asignacionrouter } from './asignacion/asignacion.routes.js';
 import { authRouter } from './auth/auth.routes.js';
 import { ErrorHander } from './middlewares/errorHandler.middleware.js';
 import { RequestContext } from '@mikro-orm/core';
+import { swaggerOptions } from './Docs/swager.options.js';
 
-// Importar Rutas
-
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
 const app = Express();
 
@@ -36,6 +38,7 @@ app.use(cors({
     origin: ["http://localhost:4173", "http://localhost:5173"],
     credentials: true
 }));
+
 
 app.use(Express.json());
 app.use(cookieParser())
@@ -57,7 +60,8 @@ app.use('/api', tecnicorouter);
 app.use('/api', ticketrouter);
 app.use('/api', asignacionrouter)
 app.use('/api/auth', authRouter);
-app.use('/api',personrouter)
+app.use('/api',personrouter);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 
 app.use(ErrorHander);
