@@ -1,5 +1,20 @@
 import zod from "zod";
 
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     UpdateEstadoDto:
+ *       type: object
+ *       properties:
+ *         nombre:
+ *           type: string
+ *         descripcion:
+ *           type: string
+ *       required:
+ *         - nombre
+ *         - descripcion
+ */
 export const UpdateEstadoSchema = zod.object({
     body: zod.object({
       nombre: zod.string().optional(),

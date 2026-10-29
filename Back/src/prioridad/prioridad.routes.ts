@@ -15,6 +15,8 @@ import { authorizeRoles } from "../middlewares/role.middleware.js";
  * /prioridad:
  *   post:
  *     summary: Crear una nueva prioridad
+ *     security:
+ *       - cookieAuth: []
  *     tags:
  *       - Prioridad
  *     requestBody:
@@ -51,6 +53,8 @@ prioridadrouter.post("/prioridad",authenticateToken,authorizeRoles('admin'),Vali
  * /prioridad:
  *   get:
  *     summary: Obtener todas las prioridades
+ *     security:
+ *       - cookieAuth: []
  *     tags:
  *       - Prioridad
  *     responses:
@@ -79,6 +83,8 @@ prioridadrouter.get("/prioridad",authenticateToken, prioridadcontroller.findAll)
  * /prioridad/{id}:
  *   put:
  *     summary: Modificar una prioridad existente
+ *     security:
+ *       - cookieAuth: []
  *     tags:
  *       - Prioridad
  *     parameters:
@@ -115,6 +121,8 @@ prioridadrouter.put("/prioridad/:id",authenticateToken,authorizeRoles('admin'),V
  * /prioridad/{id}:
  *   delete:
  *     summary: Eliminar una prioridad existente
+ *     security:
+ *       - cookieAuth: []
  *     tags:
  *       - Prioridad
  *     parameters:
@@ -151,6 +159,8 @@ prioridadrouter.delete("/prioridad/:id",authenticateToken,authorizeRoles('admin'
  * /prioridad/paginated:
  *   get:
  *     summary: Obtener prioridades paginadas
+ *     security:
+ *       - cookieAuth: []
  *     tags:
  *       - Prioridad
  *     parameters:
