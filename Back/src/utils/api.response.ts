@@ -16,13 +16,16 @@
  *       properties:
  *         currentPage:
  *           type: number
+ *           example: 1
  *         itemsPerPage:
  *           type: number
+ *           example: 10
  *         totalItems:
  *           type: number
+ *           example: 100
  *         totalPages:
  *           type: number
- * 
+ *           example: 10
  *     
  *     ApiResponseSucces:
  *       type: object
@@ -43,6 +46,17 @@
  *         message:
  *           type: string
  *           example: Error en la operacion
+ *     ApiResponsePagination:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *           example: true
+ *         message:
+ *           type: string
+ *           example: Operacion exitosa
+ *         meta:
+ *           $ref: '#/components/schemas/PaginationMeta'
  */
 
 interface IApiResponse<T> {

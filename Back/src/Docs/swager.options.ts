@@ -27,12 +27,18 @@ export const swaggerOptions: swaggerJsdoc.Options = {
   apis: [
   './src/*/*.controller.ts',
   
-  // Busca archivos de rutas (usamos *route*.ts para atrapar tanto admin.routes.ts como persona.route.ts)
+  
   './src/*/*route*.ts',
   
-  // Busca todos los archivos dentro de la subcarpeta DTO de cada módulo
+  
   './src/*/DTO/*.ts',
   
-  // Opcional: si creás un archivo global para el ApiResponseBase, agregalo acá
-   './src/utils/api.response.ts'], 
+  
+   './src/utils/api.response.ts',
+   './src/Docs/swagger.unauthorized.ts',
+   './src/Docs/swagger.forbidden.ts',
+   './src/Docs/swagger.notFound.ts',
+   './src/Docs/swagger.InvalidData.ts'
+ ], 
+   
 };
