@@ -20,7 +20,7 @@ TickeTI conecta a usuarios solicitantes, técnicos de soporte, administradores d
 - [Mapa de rutas y Endpoints](#-mapa-de-rutas-y-endpoints)
 - [Estructura del proyecto](#-estructura-del-proyecto)
 - [Manejo de errores](#-manejo-de-errores)
-- [Diagrama / DER](#-diagrama-/-der)
+- [Diagrama](#-diagrama)
 
 ---
 ## 🛠 Tecnologías
@@ -315,5 +315,5 @@ El servidor implementa un manejador global de errores (`errorHandler.middleware.
 - **500 Internal Server Error**: Errores no controlados del servidor.
 
 ---
-## 📑 Diagrama / DER
+## 📑 Diagrama
 https://drive.google.com/file/d/1TTASr6qYMNAaap6kCXzykvyuBbd7hI4a/view?usp=sharing
