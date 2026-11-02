@@ -1,16 +1,15 @@
 import {api} from '../api';
+import type { IApiResponse } from '../../responses/IApiResponse';
+import {Notify} from '../MessageService/ToastService';
 
-export const CambiarCategoria = async (ticketId: string | number, nuevaCategoriaId: number | string) => {
-    const response = await api(`/tickets/${ticketId}/categoria`, {
+export const CambiarCategoria = async (ticketId: string | number, nuevaCategoriaId: number | string): Promise<IApiResponse<null>> => {
+    const response = await api<IApiResponse<null>>(`/tickets/${ticketId}/categoria`, {
         method: "PATCH",
         body: JSON.stringify({
             categoria: Number(nuevaCategoriaId)
         })
     });
 
-    if (!response.ok) {
-        throw new Error("Error al cambiar la categoría del ticket:"+(JSON.stringify((await response.json()).errors)));
-    }
-
-    return await response.json();
+    Notify.success(response.message!);
+    return response;
 }

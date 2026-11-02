@@ -1,20 +1,15 @@
 import { api } from "../api";
+import type { IApiResponse } from '../../responses/IApiResponse';
+import { Notify } from '../MessageService/ToastService';
 
-export const cambiarEstadoTicket = async (ticketId: string | number, nuevoEstadoId: number | string) => {
-  const res = await api(`/tickets/${ticketId}/state`, {
+export const cambiarEstadoTicket = async (ticketId: string | number, nuevoEstadoId: number | string): Promise<IApiResponse<null>> => {
+  const res = await api<IApiResponse<null>>(`/tickets/${ticketId}/state`, {
     method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify({
       estado: Number(nuevoEstadoId),
     }),
   });
 
-  if (!res.ok) {
-    const errorJson = await res.json().catch(() => ({}));
-    throw new Error(errorJson.message || "Error al actualizar el estado del ticket");
-  }
-
-  return await res.json();
+  Notify.success(res.message!);
+  return res;
 };

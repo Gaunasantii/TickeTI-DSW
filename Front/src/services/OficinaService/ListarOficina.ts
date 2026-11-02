@@ -1,17 +1,9 @@
 import { api } from "../api.ts"
+import { IApiResponse } from "../../responses/IApiResponse.ts";
+import { IOficina } from "../../models/oficina.model.ts";
 
-export const ListarOficinas = async () => {
-  try {
-    const response = await api("oficinas", { method: "GET" });
-    const data = await response.json();
+export const ListarOficinas = async ():Promise<IApiResponse<IOficina[]>> => {
+    const response = await api<IApiResponse<IOficina[]>>("oficinas", { method: "GET" });
 
-    if (!response.ok) {
-      throw new Error(data.message || "Error al mostrar oficina");
-    }
-
-    return data;
-  } catch (error) {
-    console.error('Error mostrar oficina:', error);
-    throw error;
-  }
+    return response;
 }

@@ -10,9 +10,9 @@ export class ticketDAO {
       return ticketRecovered;
   }
 
-  static async findOne(filters: any) {
+  static async findOne(filters: any,options?:any) {
       const em = orm.em ;
-      const ticketFound = await em.findOne(TicketSchema, filters);
+      const ticketFound = await em.findOne(TicketSchema, filters, options);
       return ticketFound;
   }
 

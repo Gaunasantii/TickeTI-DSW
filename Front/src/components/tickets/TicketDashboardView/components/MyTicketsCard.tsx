@@ -73,7 +73,7 @@ export const MyTicketCard: React.FC<TicketCardProps> = ({
             </>
           )}
         </div>
-        {(!t.solucion && !(t.estado as estadoModel).esEstadoInicial) && (
+        {((t.solucion==="Sin solucion") && (t.estado as estadoModel).esEstadoInicial) && (
           <div className="flex gap-2 mt-2">
             <button type="button" 
               onClick={() => onEliminar?.(t.id)}

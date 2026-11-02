@@ -1,11 +1,9 @@
+import { IApiResponse } from "../../responses/IApiResponse";
 import { api } from "../api";
+import { Notify } from "../MessageService/ToastService";
 
-export const cambiarPass = async (datos: {passwordActual: string ; passwordNueva: string}) => {
-    const response = await api("/persona/cambiar-password" , {method: "PUT", body: JSON.stringify(datos),});
-    const resJson = await response.json();
-
-    if (!response.ok) {
-        throw new Error(resJson.message || "Error al cambiar la contraseña");
-    }
-    return resJson;
+export const cambiarPass = async (datos: {passwordActual: string ; passwordNueva: string}): Promise<IApiResponse<null>> => {
+    const response = await api<IApiResponse<null>>("/persona/cambiar-password" , {method: "PUT", body: JSON.stringify(datos),});
+    Notify.success(response.message!);
+    return response;
 }

@@ -8,10 +8,6 @@ export const listarOficinasPaginado = async (paginadoParams: IPaginadoParams): P
       page: paginadoParams.pagina.toString(),
       cantPerPage: paginadoParams.cantidad.toString(),
     }).toString();
-  const res = await api(`/oficinas/paginated?${query}`);
-  if (!res.ok) {
-    const err = new Error("Error al listar las oficinas paginadas");
-    throw err;
-  }
-  return await res.json();
+  const res = await api<IPaginatedApiResponse<oficinaPaginated>>(`/oficinas/paginated?${query}`);
+  return res;
 };

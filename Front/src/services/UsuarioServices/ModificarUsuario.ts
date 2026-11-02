@@ -1,20 +1,18 @@
 import { api } from "../api";
 import { IModifyUserRequest } from "../../requests/IModifyUserRequest";
+import { IApiResponse } from "../../responses/IApiResponse";
+import { Notify } from "../MessageService/ToastService";
 
 
-export const modificarUsuario = async (dni: string | number, data: IModifyUserRequest) => {
+export const modificarUsuario = async (dni: string | number, data: IModifyUserRequest): Promise<IApiResponse<null>> => {
 
   const payload = {...data,oficina:Number(data.oficina)}
 
-  const res = await api(`/usuarios/${dni}`, {
+  const res = await api<IApiResponse<null>>(`/usuarios/${dni}`, {
     method: "PUT",
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
+  Notify.success(res.message!);
 
-  if (!res.ok) {
-    throw new Error("Error al actualizar el usuario:"+ (await res.json()).errors);
-  }
-
-  return await res.json();
+  return res;
 };

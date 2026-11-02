@@ -83,9 +83,10 @@ export class TicketService {
   }
 
   static async DeleteMyTicket(Dni:string,ticketId: number) {
-    const ticketToDelete = await ticketDAO.findOne({ id: ticketId });
+    const ticketToDelete = await ticketDAO.findOne({ id: ticketId }, { populate: ['estado', 'usuario'] });
     if(!ticketToDelete)throw new NotFoundError("Ticket no encontrado");
-    if(!ticketToDelete.estado?.esEstadoInicial)throw new ConflictError("No puedes cancelar un ticket ya asignado");
+    console.log(ticketToDelete.estado);
+    if(!(ticketToDelete.estado?.esEstadoInicial))throw new ConflictError("No puedes cancelar un ticket ya asignado");
     if(ticketToDelete.usuario.dni!=Dni)throw new ConflictError("El ticket no te pertenece");
     return await ticketDAO.deleteTicket(ticketToDelete);
   }

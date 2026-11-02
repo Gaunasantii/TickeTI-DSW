@@ -1,7 +1,9 @@
 import { api } from "../api";
 import type { ICreateTicketRequest } from "../../requests/ICreateTicketRequest";
+import {Notify} from "../MessageService/ToastService";
+import type { IApiResponse } from "../../responses/IApiResponse";
 
-export const crearTicket = async (data: ICreateTicketRequest) => {
+export const crearTicket = async (data: ICreateTicketRequest): Promise<IApiResponse<null>> => {
   const payload = {
     title: data.title.trim(),
     description: data.description.trim(),
@@ -9,16 +11,12 @@ export const crearTicket = async (data: ICreateTicketRequest) => {
     categoria: Number(data.categoria),
   };
 
-  const res = await api("/tickets", {
+  const res = await api<IApiResponse<null>>("/tickets", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
 
-  if (!res.ok) {
-    const errorData = await res.json().catch(() => ({}));
-    throw new Error(errorData.message || "Error al crear el ticket");
-  }
-
-  return await res.json();
+  Notify.success(res.message!);
+  
+  return res;
 };

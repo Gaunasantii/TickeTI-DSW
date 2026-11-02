@@ -1,20 +1,11 @@
 import { ICreateOficinaRequest } from "../../requests/ICreateOficinaRequest.ts";
 import { api } from "../api.ts"
+import { IApiResponse } from "../../responses/IApiResponse.ts";
+import { Notify } from "../MessageService/ToastService.ts";
 
-export const crearOficina = async (oficinaData: ICreateOficinaRequest) => {
-  try {
-    const response = await api("oficinas", { method: "POST", body: JSON.stringify(oficinaData) });
-    const data = await response.json();
+export const crearOficina = async (oficinaData: ICreateOficinaRequest): Promise<IApiResponse<null>> => {
+    const response = await api<IApiResponse<null>>("oficinas", { method: "POST", body: JSON.stringify(oficinaData) });
+    Notify.success(response.message!);
 
-    console.log(data)
-
-    if (!response.ok) {
-      throw new Error(data.message || "Error al Crear oficina");
-    }
-
-    return data;
-  } catch (error) {
-    console.error('Error creando oficina:', error);
-    throw error;
-  }
+    return response;
 }

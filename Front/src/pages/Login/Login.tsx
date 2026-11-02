@@ -26,13 +26,8 @@ export const LoginPage = () => {
   }, [isAuthenticated, isSuperAdmin, isAdmin, isTecnico, navigate]);
 
   const onSubmit = async (formData: LoginValues) => {
-    try {
       const resultado = await loginService(formData);
       login(resultado.data);
-    } catch (error: any) {
-      console.error("Error en login:", error);
-      alert(error.message || "Error al iniciar sesión");
-    }
   };
 
   return (

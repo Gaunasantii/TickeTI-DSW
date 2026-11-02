@@ -1,14 +1,12 @@
+import { IApiResponse } from '../../responses/IApiResponse';
 import {api} from '../api';
+import {Notify} from '../MessageService/ToastService';
 
-export const eliminarMiTicket = async (ticketId: number|string) => {
-  const response= await api(`/My-tickets/${ticketId}`,{
+export const eliminarMiTicket = async (ticketId: number|string):Promise<IApiResponse<null>> => {
+  const response= await api<IApiResponse<null>>(`/My-tickets/${ticketId}`,{
     method: 'DELETE'
   });
-
-  if(!response.ok) {
-    throw new Error("Error al eliminar el ticket:"+JSON.stringify((await response.json()).errors));
-  }
-
-  return await response.json();
+  Notify.success(response.message!);
+  return response;
   
 };

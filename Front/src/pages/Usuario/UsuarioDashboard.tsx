@@ -39,7 +39,6 @@ export const UserDashboardPage: React.FC = () => {
   });
 
   const cargarTickets = async (filters: IObtenerTicketsParams) => {
-    try {
       const lista = await obtenerMisTickets(filters);
       setTickets(lista.data || []);
       setMeta(lista.meta || {
@@ -49,46 +48,26 @@ export const UserDashboardPage: React.FC = () => {
         totalPages: 1,
       });
       setCargando(false);
-    } catch (err) {
-      console.error("Error al cargar tickets:", err);
-    }
   };
 
   const cargarEstados = async () => {
-    try {
       const lista = await getAllEstados();
       setEstados(lista.data || []);
-    } catch (err) {
-      console.error("Error al cargar estados de la empresa:", err);
-    }
   };
 
   const cargarCategorias = async () => {
-    try {
       const lista = await getAllCategorias();
       setCategorias(lista.data || []);
-    } catch (err) {
-      console.error("Error al cargar categorías:", err);
-    }
   };
 
   const cargarPrioridades = async () => {
-    try {
       const lista = await getAllPrioridades();
       setPrioridades(lista.data || []);
-    } catch (err) {
-      console.error("Error al cargar prioridades:", err);
-    }
   };
 
   const handleEliminarMiTicket = async (ticketId: number|string) => {
-    try {
       await eliminarMiTicket(ticketId);
       await cargarTickets({ pagina: 1, cantidad: 10 });
-      alert("Ticket eliminado con éxito.");
-    } catch (err: any) {
-      alert(err.message || "Error al eliminar el ticket");
-    }
   };
 
   useEffect(() => {
@@ -100,17 +79,6 @@ export const UserDashboardPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!ticketValues.categoria) {
-      alert("Por favor seleccioná una categoría para el ticket.");
-      return;
-    }
-    if (!ticketValues.prioridad) {
-      alert("Por favor seleccioná una prioridad para el ticket.");
-      return;
-    }
-
-    try {
       setCreando(true);
       await crearTicket(ticketValues);
 
@@ -122,12 +90,8 @@ export const UserDashboardPage: React.FC = () => {
       });
       setMostrarForm(false);
       await cargarTickets({ pagina: 1, cantidad: 10 });
-      alert("Ticket reportado exitosamente.");
-    } catch (err: any) {
-      alert(err.message || "Error al crear el ticket");
-    } finally {
       setCreando(false);
-    }
+    
   };
 
   return (

@@ -8,10 +8,6 @@ export const getPrioridadesPaginated = async (params: IPaginadoParams):Promise<I
         page: params.pagina.toString(),
         cantPerPage: params.cantidad.toString()
     });
-    const response = await api(`/prioridad/paginated?${urlParams.toString()}`,{method: 'GET'});
-    
-    if(!response.ok){
-        throw new Error(`Error fetching paginated prioridades: ${(await response.json()).errors}`);
-    }
-    return await response.json();
+    const response = await api<IPaginatedApiResponse<prioridadModel>>(`/prioridad/paginated?${urlParams.toString()}`,{method: 'GET'});
+    return await response
 }

@@ -1,16 +1,12 @@
+import type { IApiResponse } from "../../responses/IApiResponse";
 import { api } from "../api";
+import { Notify } from "../MessageService/ToastService";
 
-export const eliminarEmpresa = async (idOrNombre: string | number): Promise<void> => {
-  const res = await api(`/empresas/${idOrNombre}`, {
+export const eliminarEmpresa = async (id: string | number): Promise<IApiResponse<null>> => {
+  const res = await api<IApiResponse<null>>(`/empresas/${id}`, {
     method: "DELETE",
-  }).catch(() =>
-    api(`/empresa/${idOrNombre}`, {
-      method: "DELETE",
-    })
-  );
+  });
 
-  if (!res.ok) {
-    const errorData = await res.json().catch(() => ({}));
-    throw new Error(errorData.message || "Error al eliminar la empresa");
-  }
+  Notify.success(res.message!);
+  return res;
 };

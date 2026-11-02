@@ -1,14 +1,9 @@
+import { IApiResponse } from "../../responses/IApiResponse";
 import {api} from "../../services/api";
+import { Notify } from "../MessageService/ToastService";
 
-export const eliminarUsuario = async (dniUser: string) => {
-  try {
-    const res = await api(`/usuarios/${dniUser}`, { method: "DELETE" });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || "Error al eliminar usuario");
-    }
-  } catch (err) {
-    console.error("Error al eliminar usuario:", err);
-    throw err;
-  }
+export const eliminarUsuario = async (dniUser: string): Promise<IApiResponse<null>> => {
+    const res = await api<IApiResponse<null>>(`/usuarios/${dniUser}`, { method: "DELETE" });
+    Notify.success(res.message!);
+    return res;
 };

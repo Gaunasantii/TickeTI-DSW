@@ -1,11 +1,10 @@
+import { IApiResponse } from '../../responses/IApiResponse';
 import {api} from '../api'
+import { Notify } from '../MessageService/ToastService';
 
-export const resolverTicket = async (ticketId: number|string, solucion: string) => {
-    const response = await api(`/tickets/${ticketId}/resolve`, {method: 'PATCH', body: JSON.stringify({solucion:solucion})});
+export const resolverTicket = async (ticketId: number|string, solucion: string): Promise<IApiResponse<null>> => {
+    const response = await api<IApiResponse<null>>(`/tickets/${ticketId}/resolve`, {method: 'PATCH', body: JSON.stringify({solucion:solucion})});
 
-    if(!response.ok) {
-        throw new Error('Error al resolver el ticket');
-    }
-
-    return await response.json();
+    Notify.success(response.message!);
+    return response;
 }

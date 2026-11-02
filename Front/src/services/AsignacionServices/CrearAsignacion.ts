@@ -1,17 +1,13 @@
 import { api } from "../api";
-
+import type { IApiResponse } from "../../responses/IApiResponse";
 import { ICreateAsignacionRequest } from "../../requests/ICreateAsignacionRequest"; 
+import { Notify } from "../MessageService/ToastService";
 
-export const crearAsignacion = async (data: ICreateAsignacionRequest) => {
-  const res = await api("/asignaciones", {
+export const crearAsignacion = async (data: ICreateAsignacionRequest): Promise<IApiResponse<null>> => {
+  const res = await api<IApiResponse<null>>("/asignaciones", {
     method: "POST",
     body: JSON.stringify(data),
   });
-
-  if (!res.ok) {
-    const errorData = JSON.stringify(((await res.json()).errors));
-    throw new Error(errorData || "Error al crear la asignación");
-  }
-
-  return await res.json();
+  Notify.success(res.message!);
+  return res;
 };

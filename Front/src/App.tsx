@@ -16,54 +16,59 @@ import { EstadoCrudPage } from "./pages/Estado/EstadoCrudPage.js";
 import MisAsignacionesPage from "./pages/Asignaciones/MisAsignacionesPage.js";
 import DashboardLayout from "./components/Layout/DashboardLayout.js";
 import { GuestLayout } from "./components/Layout/GuestLayout.js";
+import { Toaster } from "sonner";
 
 export const App = () => {
   return (
-    <Routes>
-      {/* Públicas */}
-      <Route element={<GuestLayout></GuestLayout>}>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        {/* <Route path="/contact" element={<ContactPage />} /> */}
-      </Route>
+    <div> 
+      <Toaster richColors closeButton position="bottom-right"/>
+      <Routes>
+        {/* Públicas */}
+        <Route element={<GuestLayout></GuestLayout>}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          {/* <Route path="/contact" element={<ContactPage />} /> */}
+        </Route>
 
-      <Route element={<DashboardLayout></DashboardLayout>}>
-      {/* Rutas Super Admin */}
-      <Route element={<ProtectedRoute rolesPermitidos={["S_ADMIN"]} />}>
-        <Route path="/superadmin" element={<SuperAdminPage />} />
-      </Route>
+        <Route element={<DashboardLayout></DashboardLayout>}>
+        {/* Rutas Super Admin */}
+        <Route element={<ProtectedRoute rolesPermitidos={["S_ADMIN"]} />}>
+          <Route path="/superadmin" element={<SuperAdminPage />} />
+        </Route>
 
-      {/* Rutas compartidas Admin y Técnico */}
-      <Route element={<ProtectedRoute rolesPermitidos={["admin", "tecnico"]} />}>
-        <Route path="/usuarios" element={<UsuarioCrudPage />} />
-      </Route>
+        {/* Rutas compartidas Admin y Técnico */}
+        <Route element={<ProtectedRoute rolesPermitidos={["admin", "tecnico"]} />}>
+          <Route path="/usuarios" element={<UsuarioCrudPage />} />
+        </Route>
 
-      {/* Rutas exclusivas Administrador */}
-      <Route element={<ProtectedRoute rolesPermitidos={["admin"]} />}>
-        <Route path="/admin" element={<AdminPage />} />
-        <Route path="/Oficina" element={<OficinaPage />} />
-        <Route path="/categorias/crud" element={<CategoriasCrudPage />} />
-        <Route path="/prioridades/crud" element={<PrioridadCrudPage />} />
-        <Route path="/estados/crud" element={<EstadoCrudPage />} />
-      </Route>
+        {/* Rutas exclusivas Administrador */}
+        <Route element={<ProtectedRoute rolesPermitidos={["admin"]} />}>
+          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/Oficina" element={<OficinaPage />} />
+          <Route path="/categorias/crud" element={<CategoriasCrudPage />} />
+          <Route path="/prioridades/crud" element={<PrioridadCrudPage />} />
+          <Route path="/estados/crud" element={<EstadoCrudPage />} />
+        </Route>
 
-      {/* Rutas exclusivas Técnico */}
-      <Route element={<ProtectedRoute rolesPermitidos={["tecnico"]} />}>
-        <Route path="/tecnico" element={<TecnicoPage />} />
-        <Route path="/mis-asignaciones" element={<MisAsignacionesPage />} />
-      </Route>
+        {/* Rutas exclusivas Técnico */}
+        <Route element={<ProtectedRoute rolesPermitidos={["tecnico"]} />}>
+          <Route path="/tecnico" element={<TecnicoPage />} />
+          <Route path="/mis-asignaciones" element={<MisAsignacionesPage />} />
+        </Route>
 
-      {/* Rutas Solicitante / Usuario */}
-      <Route element={<ProtectedRoute rolesPermitidos={["user", "tecnico"]} />}>
-        <Route path="/Mis-tickets" element={<UserDashboardPage />} />
-      </Route>
-      </Route>
+        {/* Rutas Solicitante / Usuario */}
+        <Route element={<ProtectedRoute rolesPermitidos={["user", "tecnico"]} />}>
+          <Route path="/Mis-tickets" element={<UserDashboardPage />} />
+        </Route>
+        </Route>
       
-      {/* Ruta ajustes para todos los usuarios */}
-      <Route element={<ProtectedRoute rolesPermitidos={["user", "usuario", "solicitante", "cliente", "s_admin", "superadmin", "admin", "administrador", "tecnico"]} />}>
-        <Route path="/ajustes" element={<AjustesPage />} />
-      </Route>
-    </Routes>
+        
+        {/* Ruta ajustes para todos los usuarios */}
+        <Route element={<ProtectedRoute rolesPermitidos={["user", "usuario", "solicitante", "cliente", "s_admin", "superadmin", "admin", "administrador", "tecnico"]} />}>
+          <Route path="/ajustes" element={<AjustesPage />} />
+        </Route>
+      </Routes>
+    </div>
   );
 };
 

@@ -6,7 +6,10 @@ export const TicketOutSchema=zod.object({
   description:zod.string(),
   estado:zod.object({
     id:zod.number(),
-    nombre:zod.string()
+    nombre:zod.string(),
+    esEstadoFinal:zod.boolean(),
+    esEstadoInicial:zod.boolean(),
+    esEstadoBase:zod.boolean()
   }).nullable().transform((val)=>val?val:"Estado no asignado"),
   prioridad:zod.object({
     id:zod.number(),

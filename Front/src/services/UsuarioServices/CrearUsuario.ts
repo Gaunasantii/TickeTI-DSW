@@ -1,23 +1,21 @@
 import { api } from "../api";
 import type { ICreatePersonRequest } from "../../requests/ICreatePersonRequest";
+import type { IApiResponse } from "../../responses/IApiResponse";
+import { Notify } from "../MessageService/ToastService";
 
-export const crearUsuario = async (data: ICreatePersonRequest) => {
+export const crearUsuario = async (data: ICreatePersonRequest): Promise<IApiResponse<null>> => {
   const payload: any = {
     ...data,
     dni: String(data.dni).trim(),
     oficina: Number(data.oficina)
   };
 
-  const res = await api("/usuarios", {
+  const res = await api<IApiResponse<null>>("/usuarios", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
 
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.message || "Error al crear el usuario");
-  }
+  Notify.success(res.message!);
 
-  return await res.json();
+  return res;
 };
