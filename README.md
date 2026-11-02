@@ -20,7 +20,7 @@ TickeTI conecta a usuarios solicitantes, técnicos de soporte, administradores d
 - [Mapa de rutas y Endpoints](#-mapa-de-rutas-y-endpoints)
 - [Estructura del proyecto](#-estructura-del-proyecto)
 - [Manejo de errores](#-manejo-de-errores)
-- [Diagrama / DER](#-diagrama-der)
+- [Diagrama / DER](#-diagrama-/-der)
 
 ---
 ## 🛠 Tecnologías
