@@ -3,7 +3,7 @@ import { IPaginatedApiResponse } from "../../responses/IPaginatedApiResponse";
 import {api} from "../api";
 import type { estadoModel } from "../../models/estado.model";
 
-export const getEstadosPaginado= async(params:IPaginadoParams): Promise<IPaginatedApiResponse<estadoModel>>=>{
+export const getEstadosPaginado= async(params:IPaginadoParams): Promise<IPaginatedApiResponse<estadoModel>|undefined>=>{
     const urlParams= new URLSearchParams({
         page: params.pagina.toString(),
         cantPerPage: params.cantidad.toString()

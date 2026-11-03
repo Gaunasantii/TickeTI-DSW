@@ -29,8 +29,8 @@ export const TecnicoPage: React.FC = () => {
   });
 
   const cargarTickets = async (filters: IObtenerTicketsParams) => {
-    try {
       const lista = await obtenerTicketsPaginado(filters);
+      if(!lista)return;
       setTickets(lista.data || []);
       setMeta(lista.meta || {
         currentPage: 1,
@@ -39,36 +39,24 @@ export const TecnicoPage: React.FC = () => {
         totalPages: 1,
       });
       setCargando(false);
-    } catch (err) {
-      console.error("Error al cargar tickets:", err);
-    }
   };
 
   const cargarEstados = async () => {
-    try {
       const lista = await getAllEstados();
+      if(!lista)return;
       setEstados(lista.data || []);
-    } catch (err) {
-      console.error("Error al cargar estados de la empresa:", err);
-    }
   };
 
   const cargarCategorias = async () => {
-    try {
       const lista = await getAllCategorias();
+      if(!lista)return;
       setCategorias(lista.data || []);
-    } catch (err) {
-      console.error("Error al cargar categorías:", err);
-    }
   };
 
   const cargarPrioridades = async () => {
-    try {
       const lista = await getAllPrioridades();
+      if(!lista)return;
       setPrioridades(lista.data || []);
-    } catch (err) {
-      console.error("Error al cargar prioridades:", err);
-    }
   };
 
   useEffect(() => {
@@ -79,13 +67,8 @@ export const TecnicoPage: React.FC = () => {
   }, []);
 
   const handleTomarTicket = async (ticketId: number | string) => {
-    try {
       await crearAsignacion({ticket:ticketId});
       await cargarTickets({pagina:meta.currentPage, cantidad:meta.itemsPerPage});
-    } catch (err: any) {
-      console.error("Error al tomar ticket:", err);
-      alert(err.message || "Error al tomar el ticket");
-    }
   };
 
   return (

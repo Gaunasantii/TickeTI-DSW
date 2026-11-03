@@ -8,7 +8,8 @@ export const CambiarPassForm = () => {
         { id: "mayus", texto: "Al menos debe contener una mayúscula", cumple: (p: string) => /[A-Z]/.test(p) },
         { id: "minus", texto: "Una letra minúscula", cumple: (p: string) => /[a-z]/.test(p) },
         { id: "numero", texto: "Un número", cumple: (p: string) => /\d/.test(p) },
-        { id: "simbolo", texto: "Un símbolo (ej: ! @ # $ %)", cumple: (p: string) => /[^A-Za-z0-9]/.test(p) }
+        { id: "simbolo", texto: "Un símbolo (ej: ! @ # $ %)", cumple: (p: string) => /[^A-Za-z0-9]/.test(p) },
+        { id: "Igualdad", texto: "Las contraseñas deben coincidir", cumple: (p: string) => p === confirmar }
     ];
     
 
@@ -39,17 +40,17 @@ export const CambiarPassForm = () => {
         }
 
         setCargando(true);
-        try{
-            await cambiarPass({passwordActual: actual , passwordNueva: nueva});
-            setExito(true);
-            setActual("");
-            setNueva("");
-            setConfirmar("");
-        } catch (err: any) {
-            setError(err.message || "No se puede cambiar la contraseña");
-        } finally {
+        const response = await cambiarPass({passwordActual: actual , passwordNueva: nueva});
+        if (!response) {
+            setError("No se pudo cambiar la contraseña");
             setCargando(false);
+            return;
         }
+        setExito(true);
+        setActual("");
+        setNueva("");
+        setConfirmar("");
+        setCargando(false);
     };
 
     return (

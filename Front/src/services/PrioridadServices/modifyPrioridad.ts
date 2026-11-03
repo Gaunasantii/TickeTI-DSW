@@ -4,8 +4,8 @@ import { Notify } from "../MessageService/ToastService";
 import { IModifyPrioridadRequest } from "../../requests/IModifyPrioridadRequest";
 import { IApiResponse } from "../../responses/IApiResponse";
 
-export const modificarPrioridad = async (data: IModifyPrioridadRequest):Promise<IApiResponse<null>> => {
+export const modificarPrioridad = async (data: IModifyPrioridadRequest):Promise<IApiResponse<null>|undefined> => {
     const response = await api<IApiResponse<null>>(`/prioridad/${data.id}`, {method: "PUT", body: JSON.stringify({nombre: data.nombre, tiempoLimiteResolucion: Number(data.tiempoLimiteResolucion)})});
-    Notify.success(response.message!);
+    if(response)Notify.success(response.message!);
     return response;
 }

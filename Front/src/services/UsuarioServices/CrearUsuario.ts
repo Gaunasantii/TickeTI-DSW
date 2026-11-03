@@ -3,7 +3,7 @@ import type { ICreatePersonRequest } from "../../requests/ICreatePersonRequest";
 import type { IApiResponse } from "../../responses/IApiResponse";
 import { Notify } from "../MessageService/ToastService";
 
-export const crearUsuario = async (data: ICreatePersonRequest): Promise<IApiResponse<null>> => {
+export const crearUsuario = async (data: ICreatePersonRequest): Promise<IApiResponse<null>|undefined> => {
   const payload: any = {
     ...data,
     dni: String(data.dni).trim(),
@@ -15,7 +15,7 @@ export const crearUsuario = async (data: ICreatePersonRequest): Promise<IApiResp
     body: JSON.stringify(payload),
   });
 
-  Notify.success(res.message!);
+  if(res)Notify.success(res.message!);
 
   return res;
 };

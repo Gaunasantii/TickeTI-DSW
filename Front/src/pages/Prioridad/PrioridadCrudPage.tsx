@@ -30,16 +30,15 @@ export const PrioridadCrudPage: React.FC = () => {
   const [meta, setMeta] = useState<IMeta|null>(null);
 
   const cargarPrioridades = async () => {
-    try {
       setCargando(true);
       const list=await getPrioridadesPaginated(paginadoParams);
+      if(!list){
+        setCargando(false);
+        return;
+      }
       setPrioridades(list.data);
       setMeta(list.meta);
-    }catch(err){
-      console.error("Error al cargar las prioridades:", err);
-    } finally {
       setCargando(false);
-    }
   };
 
   useEffect(() => {
@@ -57,34 +56,20 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement|HTMLSelectElement>) 
 
   const handleNuevaPrioridad=async(e: React.FormEvent)=>{
         e.preventDefault();
-        try {
-          const res= await createPrioridad(prioridadNew!);
+          await createPrioridad(prioridadNew!);
           cargarPrioridades();
-        } catch (err) {
-          console.error("Error al manejar la nueva prioridad:", err);
-        }finally {
-          setPrioridadNew(null);
-        }
   }
 
   const handleEliminar = async (id: number) => {
     if (!window.confirm("¿Deseás eliminar esta prioridad?")) return;
-    try {
       await borrarPrioridad(id);
       cargarPrioridades();
-    } catch (err: any) {
-      alert(err.message || "Error al eliminar");
-    }
   };
 
   const handleActualizarPrioridad = async (e: React.FormEvent) => {
     e.preventDefault();
-    try{
       await modificarPrioridad(updatedPrioridad!);
       cargarPrioridades();
-    }catch(err){
-      console.error("Error al actualizar la prioridad:", err);
-    }
     setEditandoId(null);
     setUpdatedPrioridad(null);
   };

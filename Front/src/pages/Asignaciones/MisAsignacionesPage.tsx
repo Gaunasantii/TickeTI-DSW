@@ -25,66 +25,48 @@ const MisAsignacionesPage:React.FC=()=>{
 
     const cargarAsignaciones = async (params: IPaginadoParams) => {
         setCargando(true);
-        try {
             const response = await obtenerMisAsignaciones(params);
+            if(!response){
+                setCargando(false);
+                return;
+            }
             setAsignaciones(response.data);
             setMeta(response.meta);
-        } catch (error) {
-            console.error(error);
-            alert('Error al cargar las asignaciones: ' + error);
-        } finally {
-            setCargando(false);
-        }
+        setCargando(false);
     }
 
     const handleResolver = async (ticketId: number|string, solucion: string) => {
-        try {
             await resolverTicket(ticketId, solucion);
             cargarAsignaciones(paginadoParams);
-            alert("Ticket resuelto correctamente");
-        } catch (error) {
-            console.error(error);
-            alert('Error al resolver la asignación: ' + error);
-        }
     }
 
     const handleCambiarCategoria = async (ticketId: string | number, nuevaCategoriaId: number | string) => {
-          try {
             await CambiarCategoria(ticketId, nuevaCategoriaId);
             cargarAsignaciones(paginadoParams);
-          } catch (err: any) {
-            console.error("Error al cambiar categoría:", err);
-            alert(err.message || "Error al cambiar la categoría del ticket");
-          }
     };
 
     const handleAbandonar = async (asignacionId: number|string) => {
-        try {
             await abandonarAsignacion(asignacionId);
             cargarAsignaciones(paginadoParams);
             alert("Asignación abandonada correctamente");
-        } catch (error) {
-            console.error(error);
-            alert('Error al abandonar la asignación: ' + error);
-        }
     }
 
     const cargarEstados = async () => {
-        try {
           const lista = await getAllEstados();
+          if(!lista){
+            setEstados([]);
+            return;
+          }
           setEstados(filterIntermediateStates(lista.data) || []);
-        } catch (err) {
-          console.error("Error al cargar estados de la empresa:", err);
-        }
       };
     
       const cargarCategorias = async () => {
-        try {
           const lista = await getAllCategorias();
+          if(!lista){
+            setCategorias([]);
+            return;
+          }
           setCategorias(lista.data || []);
-        } catch (err) {
-          console.error("Error al cargar categorías:", err);
-        }
       };
 
     useEffect(() => {

@@ -3,7 +3,7 @@ import { IPaginatedApiResponse } from '../../responses/IPaginatedApiResponse';
 import { ticketPaginatedModel } from '../../models/ticket.model';
 import { IObtenerTicketsParams } from '../../interfaces/IObtenerTickets.params';
 
-export const obtenerTicketsPaginado = async (params: IObtenerTicketsParams): Promise<IPaginatedApiResponse<ticketPaginatedModel>> => {
+export const obtenerTicketsPaginado = async (params: IObtenerTicketsParams): Promise<IPaginatedApiResponse<ticketPaginatedModel>|undefined> => {
         const paramsUrl= new URLSearchParams({
             page: params.pagina.toString(),
             cantPerPage: params.cantidad.toString(),

@@ -27,6 +27,7 @@ export const LoginPage = () => {
 
   const onSubmit = async (formData: LoginValues) => {
       const resultado = await loginService(formData);
+      if(!resultado)return;
       login(resultado.data);
   };
 

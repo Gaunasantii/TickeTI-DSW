@@ -31,16 +31,15 @@ export const CategoriasCrudPage: React.FC = () => {
   const [meta, setMeta] = useState<IMeta|null>(null);
 
   const cargarCategorias = async () => {
-    try {
       setCargando(true);
       const list=await getCategoriaPaginated(paginadoParams);
+      if(!list){
+        setCargando(false);
+        return;
+      }
       setCategorias(list.data);
       setMeta(list.meta);
-    }catch(err){
-      console.error("Error al cargar las categorías:", err);
-    } finally {
       setCargando(false);
-    }
   };
 
   useEffect(() => {
@@ -58,32 +57,20 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement|HTMLSelectElement>) 
 
   const handleNuevaCategoria=async(e: React.FormEvent)=>{
         e.preventDefault();
-        try {
-          const res= await createCategoria(categoriaNew!);
+          await createCategoria(categoriaNew!);
           cargarCategorias();
-        } catch (err) {
-          console.error("Error al manejar la nueva categoría:", err);
-        }
   }
 
   const handleEliminar = async (id: number) => {
     if (!window.confirm("¿Deseás eliminar esta categoría?")) return;
-    try {
       await deleteCategoria(id);
       cargarCategorias();
-    } catch (err: any) {
-      alert(err.message || "Error al eliminar");
-    }
   };
 
   const handleActualizarCategoria = async (e: React.FormEvent) => {
     e.preventDefault();
-    try{
       await modifyCategoria(editandoId!,updatedCategoria!);
       cargarCategorias();
-    }catch(err){
-      console.error("Error al actualizar la categoría:", err);
-    }
     setEditandoId(null);
     setUpdatedCategoria(null);
   };

@@ -4,7 +4,7 @@ import { IApiResponse } from "../../responses/IApiResponse";
 import { Notify } from "../MessageService/ToastService";
 
 
-export const modificarUsuario = async (dni: string | number, data: IModifyUserRequest): Promise<IApiResponse<null>> => {
+export const modificarUsuario = async (dni: string | number, data: IModifyUserRequest): Promise<IApiResponse<null>|undefined> => {
 
   const payload = {...data,oficina:Number(data.oficina)}
 
@@ -12,7 +12,8 @@ export const modificarUsuario = async (dni: string | number, data: IModifyUserRe
     method: "PUT",
     body: JSON.stringify(payload),
   });
-  Notify.success(res.message!);
+
+  if(res)Notify.success(res.message!);
 
   return res;
 };

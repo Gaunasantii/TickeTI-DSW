@@ -4,8 +4,8 @@ import { Notify } from "../MessageService/ToastService";
 
 import { ICreateCategoriaRequest } from "../../requests/ICreateCategoriaRequest";
 
-export const createCategoria = async (categoriaData: ICreateCategoriaRequest): Promise<IApiResponse<null>> => {
+export const createCategoria = async (categoriaData: ICreateCategoriaRequest): Promise<IApiResponse<null>|undefined> => {
     const response = await api<IApiResponse<null>>("/categorias", {method: "POST", body: JSON.stringify(categoriaData)});
-    Notify.success(response.message!);
+    if(response)Notify.success(response.message!);
     return response;
 };

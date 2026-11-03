@@ -4,7 +4,7 @@ import type { IApiResponse } from "../../responses/IApiResponse";
 import { IPaginatedApiResponse } from '../../responses/IPaginatedApiResponse';
 import type { asignacionModel } from '../../models/asignacion.model';
 
-export const obtenerMisAsignaciones = async (params:IPaginadoParams):Promise<IPaginatedApiResponse<asignacionModel>> => {
+export const obtenerMisAsignaciones = async (params:IPaginadoParams):Promise<IPaginatedApiResponse<asignacionModel>|undefined> => {
     const queryParams=new URLSearchParams({
         page: params.pagina.toString(),
         cantPerPage: params.cantidad.toString()

@@ -3,7 +3,7 @@ import type { ICreateTicketRequest } from "../../requests/ICreateTicketRequest";
 import {Notify} from "../MessageService/ToastService";
 import type { IApiResponse } from "../../responses/IApiResponse";
 
-export const crearTicket = async (data: ICreateTicketRequest): Promise<IApiResponse<null>> => {
+export const crearTicket = async (data: ICreateTicketRequest): Promise<IApiResponse<null>|undefined> => {
   const payload = {
     title: data.title.trim(),
     description: data.description.trim(),
@@ -16,7 +16,7 @@ export const crearTicket = async (data: ICreateTicketRequest): Promise<IApiRespo
     body: JSON.stringify(payload),
   });
 
-  Notify.success(res.message!);
+  if(res)Notify.success(res.message!);
   
   return res;
 };

@@ -2,8 +2,8 @@ import { IApiResponse } from "../../responses/IApiResponse";
 import {api} from "../../services/api";
 import { Notify } from "../MessageService/ToastService";
 
-export const eliminarUsuario = async (dniUser: string): Promise<IApiResponse<null>> => {
+export const eliminarUsuario = async (dniUser: string): Promise<IApiResponse<null>|undefined> => {
     const res = await api<IApiResponse<null>>(`/usuarios/${dniUser}`, { method: "DELETE" });
-    Notify.success(res.message!);
+    if(res)Notify.success(res.message!);
     return res;
 };

@@ -40,6 +40,7 @@ export const UserDashboardPage: React.FC = () => {
 
   const cargarTickets = async (filters: IObtenerTicketsParams) => {
       const lista = await obtenerMisTickets(filters);
+      if(!lista)return;
       setTickets(lista.data || []);
       setMeta(lista.meta || {
         currentPage: 1,
@@ -52,16 +53,19 @@ export const UserDashboardPage: React.FC = () => {
 
   const cargarEstados = async () => {
       const lista = await getAllEstados();
+      if(!lista)return;
       setEstados(lista.data || []);
   };
 
   const cargarCategorias = async () => {
       const lista = await getAllCategorias();
+      if(!lista)return;
       setCategorias(lista.data || []);
   };
 
   const cargarPrioridades = async () => {
       const lista = await getAllPrioridades();
+      if(!lista)return;
       setPrioridades(lista.data || []);
   };
 

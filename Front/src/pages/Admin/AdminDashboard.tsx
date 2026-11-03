@@ -23,12 +23,12 @@ export const AdminPage: React.FC = () => {
   const [prioridades, setPrioridades] = useState<prioridadModel[]>([]);
 
   const cargarPrioridades = async () => {
-    try {
       const lista = await getAllPrioridades();
+      if(!lista){
+        setPrioridades([]);
+        return;
+      }
       setPrioridades(lista.data || []);
-    } catch (err) {
-      console.error("Error al cargar prioridades:", err);
-    }
   };
   
   const [estados,setEstados]=useState<estadoModel[]>([]);
@@ -41,27 +41,37 @@ export const AdminPage: React.FC = () => {
 
 
   const cargarEstados = async () => {
-          try {
             const lista= await getAllEstados();
+            if(!lista){
+              setEstados([]);
+              return;
+            }
             setEstados(lista.data || []);
-          } catch (err) {
-            console.error("Error al cargar estados de la empresa:", err);
-          }
     };
         
     const cargarCategorias = async () => {
-      try {
         const lista = await getAllCategorias();
-        setCategorias(lista.data || []);
-        } catch (err) {
-          console.error("Error al cargar categorías:", err);
+        if(!lista){
+          setCategorias([]);
+          return;
         }
+        setCategorias(lista.data || []);
       };
 
   const cargarTickets = async (filters:IObtenerTicketsParams) => {
-          try {
             console.log("Cargando tickets con filtros:", filters);
             const lista = await obtenerTicketsPaginado(filters);
+            if(!lista){
+              setTickets([]);
+              setMeta({
+                currentPage: 1,
+                itemsPerPage: 10,
+                totalItems: 0,
+                totalPages: 1,
+              });
+              setCargando(false);
+              return;
+            }
             setTickets(lista.data||[]);
             setMeta(lista.meta || {
               currentPage: 1,
@@ -70,9 +80,6 @@ export const AdminPage: React.FC = () => {
               totalPages: 1,
             });
             setCargando(false);
-          } catch (err) {
-            console.error("Error al cargar tickets:", err);
-          }
         };
      
 
@@ -83,30 +90,15 @@ export const AdminPage: React.FC = () => {
     cargarTickets({ pagina: 1, cantidad: 10 });
   }, []);
   const handleCambiarEstado = async (ticketId: string | number, nuevoEstadoId: number | string) => {
-    try {
       await cambiarEstadoTicket(ticketId, nuevoEstadoId);
-    } catch (err: any) {
-      console.error("Error al cambiar estado:", err);
-      alert(err.message || "Error al cambiar el estado del ticket");
-    }
   };
 
   const handleCambiarCategoria = async (ticketId: string | number, nuevaCategoriaId: number | string) => {
-    try {
       await CambiarCategoria(ticketId, nuevaCategoriaId);
-    } catch (err: any) {
-      console.error("Error al cambiar categoría:", err);
-      alert(err.message || "Error al cambiar la categoría del ticket");
-    }
   };
 
   const handleCambiarPrioridad = async (ticketId: string | number, nuevaPrioridadId: number | string) => {
-    try {
       await CambiarPrioridad(ticketId, nuevaPrioridadId);
-    } catch (err: any) {
-      console.error("Error al cambiar prioridad:", err);
-      alert(err.message || "Error al cambiar la prioridad del ticket");
-    }
   };
 
 

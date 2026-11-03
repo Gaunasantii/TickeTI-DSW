@@ -41,24 +41,18 @@ export const UsuarioCrudPage: React.FC = () => {
   const {isAdmin} = useAuth();
 
   const cargarUsuarios=async ()=>{
-    try {
-      const res= await obtenerUsuariosYTecnicosPaginado(paramsPaginado)
-      setUsuarios(res.data || [])
+      setCargando(true);
+      const res= await obtenerUsuariosYTecnicosPaginado(paramsPaginado);
+      if(!res)return;
+      setUsuarios(res.data || []);
       setMeta(res.meta || {});
-    } catch (err) {
-      console.error("Error al cargar usuarios:", err);
-    } finally {
-      setCargando(false);
-    }
+      setCargando(false)
   }
 
   const cargarOficinas = async () => {
-    try {
       const res = await ListarOficinas();
+      if(!res)return;
       setOficinas(res.data || []);
-    } catch (err) {
-      console.error("Error al cargar oficinas:", err);
-    }
   };
 
   useEffect(() => {
@@ -83,7 +77,6 @@ export const UsuarioCrudPage: React.FC = () => {
   const HandleUpdateSubmit=async(e:React.FormEvent) => {
     e.preventDefault();
     if(!isAdmin) return;
-    try {
       setGuardando(true);
       if (tipoFormulario === 'tecnico') {
         await modificarTecnico(editandoDni!, updatedUserData);
@@ -92,17 +85,11 @@ export const UsuarioCrudPage: React.FC = () => {
       };
       setMostrarModal(false);
       setEditandoDni(null);
-    } catch (err: any) {
-      console.error("Error al actualizar el usuario:", err);
-      alert(err.message || "Error al actualizar el usuario");
-    } finally {
       setGuardando(false);
-    }
   }
 
   const handleCreateSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try{
       setGuardando(true);
       if (tipoFormulario === 'tecnico') {
         await CreateTecnico(newUserData);
@@ -112,11 +99,7 @@ export const UsuarioCrudPage: React.FC = () => {
       setMostrarModal(false);
       setNewUserData({} as ICreatePersonRequest);
       cargarUsuarios();
-    }catch(err: any){
-      alert(err.message || "Error al crear el usuario");
-    }finally{
-      setGuardando(false);
-    }
+      setGuardando(false)
   }
 
   const handleNuevoUsuario = () => {
@@ -136,7 +119,6 @@ export const UsuarioCrudPage: React.FC = () => {
   const deleteUsuario = async (usuario:personaPaginatedModel) => {
     if(!isAdmin) return;
     const esTecnico=usuario.type.toLowerCase() === 'tecnico';
-    try {
       setGuardando(true);
       if (esTecnico) {
         await eliminarTecnico(usuario.dni);
@@ -144,11 +126,7 @@ export const UsuarioCrudPage: React.FC = () => {
         await eliminarUsuario(usuario.dni);
       }
       cargarUsuarios();
-    } catch (err: any) {
-      alert(err.message || "Error al eliminar el usuario");
-    } finally {
       setGuardando(false);
-    }
   };
 
   const handleEditar = (usuario: personaPaginatedModel) => {

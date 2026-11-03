@@ -29,17 +29,16 @@ export const EstadoCrudPage: React.FC = () => {
   const [meta, setMeta] = useState<IMeta|null>(null);
 
   const cargarEstados = async () => {
-    try {
       setCargando(true);
       console.log("Cargando estados con parámetros de paginado:", paginadoParams);
       const list=await getEstadosPaginado(paginadoParams);
+      if(!list){
+        setCargando(false);
+        return;
+      }
       setEstados(list.data);
       setMeta(list.meta);
-    }catch(err){
-      console.error("Error al cargar los estados:", err);
-    } finally {
       setCargando(false);
-    }
   };
 
   useEffect(() => {
@@ -57,32 +56,21 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement|HTMLSelectElement>) 
 
   const handleNuevaCategoria=async(e: React.FormEvent)=>{
         e.preventDefault();
-        try {
-          const res= await createEstado(estadoNew!);
+          await createEstado(estadoNew!);
           cargarEstados();
-        } catch (err) {
-          console.error("Error al manejar el nuevo estado:", err);
-        }
+          setEstadoNew({ nombre: "" ,descripcion: "" });
   }
 
   const handleEliminar = async (id: number) => {
     if (!window.confirm("¿Deseás eliminar este estado?")) return;
-    try {
       await deleteEstado(id);
       cargarEstados();
-    } catch (err: any) {
-      alert(err.message || "Error al eliminar");
-    }
   };
 
   const handleActualizarEstado = async (e: React.FormEvent) => {
     e.preventDefault();
-    try{
       await modifyEstado(editandoId!,updatedEstado!);
       cargarEstados();
-    }catch(err){
-      console.error("Error al actualizar el estado:", err);
-    }
     setEditandoId(null);
     setUpdatedEstado({ nombre: "" ,descripcion: "" });
   };

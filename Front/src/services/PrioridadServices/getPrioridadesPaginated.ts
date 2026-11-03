@@ -3,11 +3,11 @@ import { IPaginadoParams } from "../../interfaces/IPaginado.params"
 import { IPaginatedApiResponse } from "../../responses/IPaginatedApiResponse";
 import { prioridadModel } from "../../models/prioridad.model";
 
-export const getPrioridadesPaginated = async (params: IPaginadoParams):Promise<IPaginatedApiResponse<prioridadModel>> => {
+export const getPrioridadesPaginated = async (params: IPaginadoParams):Promise<IPaginatedApiResponse<prioridadModel>|undefined> => {
     const urlParams= new URLSearchParams({
         page: params.pagina.toString(),
         cantPerPage: params.cantidad.toString()
     });
     const response = await api<IPaginatedApiResponse<prioridadModel>>(`/prioridad/paginated?${urlParams.toString()}`,{method: 'GET'});
-    return await response
+    return response
 }

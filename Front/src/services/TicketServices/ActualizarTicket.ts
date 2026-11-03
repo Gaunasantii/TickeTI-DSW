@@ -6,6 +6,7 @@ export interface ActualizarTicketData {
   [key: string]: any;
 }
 
+//Sin utilizar
 export const actualizarTicket = async (id: string | number, data: ActualizarTicketData) => {
   try {
     const response = await api(`/tickets/${id}`, {

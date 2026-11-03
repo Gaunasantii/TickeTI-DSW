@@ -23,16 +23,15 @@ export const OficinaPage: React.FC = () => {
   const [meta, setMeta] = useState<IMeta|null>(null);
 
   const cargarOficinas = async () => {
-    try {
       setCargando(true);
       const list=await listarOficinasPaginado(paginadoParams);
+      if(!list){
+        setCargando(false);
+        return;
+      }
       setOficinas(list.data);
       setMeta(list.meta);
-    }catch(err){
-      console.error("Error al cargar las oficinas:", err);
-    } finally {
       setCargando(false);
-    }
   };
 
   useEffect(() => {
@@ -41,33 +40,21 @@ export const OficinaPage: React.FC = () => {
 
   const handleNuevaOficina=async(e: React.FormEvent)=>{
         e.preventDefault();
-        try {
-          const res= await crearOficina({ nombre });
+          await crearOficina({ nombre });
           setNombre("");
           cargarOficinas();
-        } catch (err) {
-          console.error("Error al manejar la nueva oficina:", err);
-        }
   }
 
   const handleEliminar = async (id: number) => {
     if (!window.confirm("¿Deseás eliminar esta oficina?")) return;
-    try {
       await eliminarOficina(id);
       cargarOficinas();
-    } catch (err: any) {
-      alert(err.message || "Error al eliminar");
-    }
   };
 
   const handleActualizarOficina = async (e: React.FormEvent) => {
     e.preventDefault();
-    try{
       await modificarOficina({ id: editandoId as number, nombre });
       cargarOficinas();
-    }catch(err){
-      console.error("Error al actualizar la oficina:", err);
-    }
     setEditandoId(null);
     setNombre("");
   };

@@ -2,7 +2,7 @@ import { api } from "../api";
 import type { IApiResponse } from '../../responses/IApiResponse';
 import { Notify } from '../MessageService/ToastService';
 
-export const cambiarEstadoTicket = async (ticketId: string | number, nuevoEstadoId: number | string): Promise<IApiResponse<null>> => {
+export const cambiarEstadoTicket = async (ticketId: string | number, nuevoEstadoId: number | string): Promise<IApiResponse<null>|undefined> => {
   const res = await api<IApiResponse<null>>(`/tickets/${ticketId}/state`, {
     method: "PATCH",
     body: JSON.stringify({
@@ -10,6 +10,6 @@ export const cambiarEstadoTicket = async (ticketId: string | number, nuevoEstado
     }),
   });
 
-  Notify.success(res.message!);
+  if(res)Notify.success(res.message!);
   return res;
 };

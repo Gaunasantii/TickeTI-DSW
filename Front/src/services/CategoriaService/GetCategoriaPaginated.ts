@@ -3,7 +3,7 @@ import { CategoriaModel } from '../../models/categoria.model';
 import { IPaginatedApiResponse } from '../../responses/IPaginatedApiResponse';
 import {api} from '../api';
 
-export const getCategoriaPaginated = async (params:IPaginadoParams):Promise<IPaginatedApiResponse<CategoriaModel>>=>{
+export const getCategoriaPaginated = async (params:IPaginadoParams):Promise<IPaginatedApiResponse<CategoriaModel>|undefined>=>{
     const query = new URLSearchParams({
         page: params.pagina.toString(),
         cantPerPage: params.cantidad.toString()

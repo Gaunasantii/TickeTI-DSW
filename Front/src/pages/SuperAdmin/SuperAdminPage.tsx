@@ -24,20 +24,15 @@ export const SuperAdminPage: React.FC = () => {
   const [meta, setMeta] = useState<IMeta|null>(null); 
 
   const cargarEmpresas = useCallback(async () => {
-    try {
       setCargando(true);
       const res: any = await ObtenerEmpresasPaginated({
         pagina: paginadoParams.pagina,
         cantidad: paginadoParams.cantidad,
       });
+      if(!res)return;
       setEmpresas(res.data);
       setMeta(res.meta);
-    } catch (err) {
-      console.error("Error al cargar empresas:", err);
-      setEmpresas([]);
-    } finally {
       setCargando(false);
-    }
   }, [paginadoParams]);
 
   useEffect(() => {
@@ -50,15 +45,11 @@ export const SuperAdminPage: React.FC = () => {
     );
     if (!confirmar) return;
 
-    try {
       let idAEliminar = empresa.id;
       await eliminarEmpresa(idAEliminar);
       setPaginadoParams({ ...paginadoParams, pagina: 1 });
       await cargarEmpresas();
       alert("Empresa eliminada correctamente.");
-    } catch (err: any) {
-      alert(err.message || "Error al eliminar la empresa");
-    }
   };
 
   const handleModificar = (empresa: EmpresaPaginatedModel) => {
@@ -71,20 +62,17 @@ export const SuperAdminPage: React.FC = () => {
   };
 
   const handleCreate=async (data: ICreateEmpresaRequest) => {
-    try {
       console.log("entro en creacion")
       await AgregarEmpresa(data);
       await cargarEmpresas();
-      alert("Empresa creada correctamente.");
       setNewEmpresa({ nombre: "", admin: { dni: "", name: "", surName: "", tele: "", pass: "" } });
-    } catch (err: any) {
-      alert(err.message || "Error al crear la empresa");
-    }
   };
 
   const handleChange= (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
 
+
+        //Mudar a un helper
         const updateState = (prevState: any) => {
           if (!prevState) return prevState;
 
@@ -110,16 +98,11 @@ export const SuperAdminPage: React.FC = () => {
   };
 
   const handleUpdate=async (data: IModifyEmpresaRequest) => {
-    try {
       console.log("entro en modificacion")
       await modificarEmpresa(data);
       await cargarEmpresas();
-      alert("Empresa modificada correctamente.");
       setMostrarModal(false);
       setEmpresaAEditar({ id: "", nombre: "", admin: { dni: "", name: "", surName: "", tele: "", pass: "" } });
-    } catch (err: any) {
-      alert(err.message || "Error al modificar la empresa");
-    }
   };
 
   return (
