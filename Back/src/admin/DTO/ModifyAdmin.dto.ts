@@ -1,5 +1,30 @@
 import zod from 'zod'
 
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     ModifyAdminDto:
+ *       type: object
+ *       properties:
+ *         nombre:
+ *           type: string
+ *           example: "Carlos"
+ *         apellido:
+ *           type: string
+ *           example: "Gómez"
+ *         email:
+ *           type: string
+ *           format: email
+ *           example: "admin@ejemplo.com"
+ *         telefono:
+ *           type: string
+ *           example: "3415559999"
+ *         oficinaId:
+ *           type: integer
+ *           example: 1
+ */
+
 export const ModifyAdminSchema=zod.object({
     body:zod.object({
         surName:zod.string().max(64),

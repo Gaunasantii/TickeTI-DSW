@@ -1,5 +1,44 @@
 import zod from 'zod';
 
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     CreateAdminDto:
+ *       type: object
+ *       required:
+ *         - dni
+ *         - nombre
+ *         - apellido
+ *         - email
+ *         - password
+ *         - oficinaId
+ *       properties:
+ *         dni:
+ *           type: string
+ *           example: "35123456"
+ *         nombre:
+ *           type: string
+ *           example: "Carlos"
+ *         apellido:
+ *           type: string
+ *           example: "Gómez"
+ *         email:
+ *           type: string
+ *           format: email
+ *           example: "admin@ejemplo.com"
+ *         password:
+ *           type: string
+ *           format: password
+ *           example: "AdminSeguro123!"
+ *         telefono:
+ *           type: string
+ *           example: "3415559999"
+ *         oficinaId:
+ *           type: integer
+ *           example: 1
+ */
+
 export const createAdminSchema=zod.object({
   body:zod.object({
     dni:zod.string().min(8).regex(/^\d+$/,"Solo se admiten numeros"),
