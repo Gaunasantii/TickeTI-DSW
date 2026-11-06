@@ -1,5 +1,23 @@
 import zod from 'zod'
 
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     CreateEmpresaDto:
+ *       type: object
+ *       required:
+ *         - razonSocial
+ *         - cuit
+ *       properties:
+ *         razonSocial:
+ *           type: string
+ *           example: "Tech Solutions S.A."
+ *         cuit:
+ *           type: string
+ *           example: "30-71234567-8"
+ */
+
 const AdminInputSchema=zod.object({
             dni:zod.string().min(8).regex(/^\d+$/,"Solo se admiten numeros"),
             surName:zod.string().max(64),

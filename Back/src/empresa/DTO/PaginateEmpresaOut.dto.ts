@@ -1,5 +1,30 @@
 import zod from 'zod'
 
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     PaginateEmpresaOutDto:
+ *       type: object
+ *       properties:
+ *         page:
+ *           type: integer
+ *           example: 1
+ *         cantPerPage:
+ *           type: integer
+ *           example: 10
+ *         totalItems:
+ *           type: integer
+ *           example: 25
+ *         totalPages:
+ *           type: integer
+ *           example: 3
+ *         data:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/EmpresaOutDto'
+ */
+
 export const PaginateEmpresaOutSchema=zod.object({
     id:zod.number(),
     nombre:zod.string(),
