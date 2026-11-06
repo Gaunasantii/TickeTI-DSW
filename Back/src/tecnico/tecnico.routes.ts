@@ -8,7 +8,165 @@ import { DeleteTecnicoSchema } from "./DTO/DeleteTecnico.dto.js";
 import { authenticateToken } from "../middlewares/auth.middleware.js";
 import { authorizeRoles } from "../middlewares/role.middleware.js";
 
+/**
+ * @openapi
+ * /tecnicos:
+ *   post:
+ *     tags:
+ *       - Técnicos
+ *     summary: Registrar un nuevo técnico
+ *     security:
+ *       - cookieAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreateTecnicoDto'
+ *     responses:
+ *       201:
+ *         description: Técnico registrado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/ApiResponseSucces'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       $ref: '#/components/schemas/TecnicoOutDto'
+ *       400:
+ *         $ref: '#/components/responses/InvalidDataResponse'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedResponse'
+ *       403:
+ *         $ref: '#/components/responses/ForbiddenResponse'
+ * 
+ *   get:
+ *     tags:
+ *       - Técnicos
+ *     summary: Obtener el listado completo de técnicos
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: Listado de técnicos obtenido exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/ApiResponseSucces'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/TecnicoOutDto'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedResponse'
+ *       403:
+ *         $ref: '#/components/responses/ForbiddenResponse'
+ */
+
 tecnicorouter.post("/tecnicos",authenticateToken,authorizeRoles('admin'),ValidationMiddleware(createTecnicoSchema), tecnicocontroller.createTecnico);
 tecnicorouter.get("/tecnicos",authenticateToken, tecnicocontroller.findAll);
+
+/**
+ * @openapi
+ * /tecnicos/{dni}:
+ *   get:
+ *     tags:
+ *       - Técnicos
+ *     summary: Obtener los datos de un técnico por DNI
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: dni
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: "40123456"
+ *     responses:
+ *       200:
+ *         description: Técnico encontrado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/ApiResponseSucces'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       $ref: '#/components/schemas/TecnicoOutDto'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedResponse'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundResponse'
+ * 
+ *   put:
+ *     tags:
+ *       - Técnicos
+ *     summary: Modificar datos de un técnico por DNI
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: dni
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: "40123456"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ModifyTecnicoDto'
+ *     responses:
+ *       200:
+ *         description: Técnico actualizado correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/ApiResponseSucces'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       $ref: '#/components/schemas/TecnicoOutDto'
+ *       400:
+ *         $ref: '#/components/responses/InvalidDataResponse'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedResponse'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundResponse'
+ * 
+ *   delete:
+ *     tags:
+ *       - Técnicos
+ *     summary: Eliminar un técnico por DNI
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: dni
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: "40123456"
+ *     responses:
+ *       200:
+ *         description: Técnico eliminado
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiResponseSucces'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedResponse'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundResponse'
+ */
+
 tecnicorouter.put("/tecnicos/:dni",authenticateToken,ValidationMiddleware(ModifyTecnicoSchema) ,tecnicocontroller.updateTecnico);
 tecnicorouter.delete("/tecnicos/:dni",authenticateToken,ValidationMiddleware(DeleteTecnicoSchema), tecnicocontroller.deleteTecnico);

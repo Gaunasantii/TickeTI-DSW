@@ -1,5 +1,30 @@
 import zod from 'zod'
 
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     ModifyTecnicoDto:
+ *       type: object
+ *       properties:
+ *         nombre:
+ *           type: string
+ *           example: "Juan"
+ *         apellido:
+ *           type: string
+ *           example: "Pérez"
+ *         email:
+ *           type: string
+ *           format: email
+ *           example: "tecnico@ejemplo.com"
+ *         telefono:
+ *           type: string
+ *           example: "3415551234"
+ *         oficinaId:
+ *           type: integer
+ *           example: 1
+ */
+
 export const ModifyTecnicoSchema=zod.object({
     body:zod.object({
         surName:zod.string().max(64),
