@@ -1,5 +1,29 @@
 import zod from "zod";
 
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     ChangePasswordDto:
+ *       type: object
+ *       required:
+ *         - dni
+ *         - currentPassword
+ *         - newPassword
+ *       properties:
+ *         dni:
+ *           type: string
+ *           example: "47107024"
+ *         currentPassword:
+ *           type: string
+ *           format: password
+ *           example: "PasswordActual123!"
+ *         newPassword:
+ *           type: string
+ *           format: password
+ *           example: "NuevaPassword456!"
+ */
+
 export const ChangePasswordSchema = zod.object ({
     body: zod.object({
         passwordActual: zod.string().min(1, "La contraseña actual es obligatoria"),
