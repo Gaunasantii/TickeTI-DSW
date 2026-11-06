@@ -1,5 +1,20 @@
 import zod from 'zod'
 
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     ModifyOficinaDto:
+ *       type: object
+ *       properties:
+ *         nombre:
+ *           type: string
+ *           example: "Infraestructura y Redes"
+ *         empresaId:
+ *           type: integer
+ *           example: 1
+ */
+
 export const ModifyOficinaSchema=zod.object({
     params:zod.object({
         id:zod.string().regex(/^\d+$/, "El ID debe ser numérico")

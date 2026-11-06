@@ -1,5 +1,44 @@
 import zod from 'zod'
 
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     CreateUsuarioDto:
+ *       type: object
+ *       required:
+ *         - dni
+ *         - nombre
+ *         - apellido
+ *         - email
+ *         - password
+ *         - oficinaId
+ *       properties:
+ *         dni:
+ *           type: string
+ *           example: "47107024"
+ *         nombre:
+ *           type: string
+ *           example: "Pablo"
+ *         apellido:
+ *           type: string
+ *           example: "Perez"
+ *         email:
+ *           type: string
+ *           format: email
+ *           example: "pablo@ejemplo.com"
+ *         password:
+ *           type: string
+ *           format: password
+ *           example: "ClaveSegura123!"
+ *         telefono:
+ *           type: string
+ *           example: "3411234567"
+ *         oficinaId:
+ *           type: integer
+ *           example: 1
+ */
+
 export const createUsuarioSchema=zod.object({
   body:zod.object({
     dni:zod.string().min(8).regex(/^\d+$/,"Solo se admiten numeros"),

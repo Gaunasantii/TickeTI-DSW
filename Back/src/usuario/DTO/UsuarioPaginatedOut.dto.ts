@@ -1,5 +1,30 @@
 import zod from 'zod'
 
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     UsuarioPaginatedOutDto:
+ *       type: object
+ *       properties:
+ *         page:
+ *           type: integer
+ *           example: 1
+ *         cantPerPage:
+ *           type: integer
+ *           example: 10
+ *         totalItems:
+ *           type: integer
+ *           example: 30
+ *         totalPages:
+ *           type: integer
+ *           example: 3
+ *         data:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/UsuarioOutDto'
+ */
+
 export const UserOutPaginatedSchema=zod.object({
     dni:zod.string(),
     surName: zod.string(),
