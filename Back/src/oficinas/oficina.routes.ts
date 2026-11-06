@@ -2,7 +2,7 @@ import { Router } from "express";
 export const oficinarouter:Router = Router();
 import { oficinacontroller } from "./oficina.controller.js";
 import { ValidationMiddleware } from "../middlewares/validateInput.middleware.js";
-import { CreateOficinaSchema } from "./DTO/CreateOficina.dto.ts.js";
+import { CreateOficinaSchema } from "./DTO/CreateOficina.dto.js";
 import { ModifyOficinaSchema } from "./DTO/ModifyOficina.dto.js";
 import { DeleteOficinaSchema } from "./DTO/DeleteOficina.dto.js";
 import { authenticateToken } from "../middlewares/auth.middleware.js";

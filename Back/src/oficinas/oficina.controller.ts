@@ -1,7 +1,7 @@
 import { type Request, type Response } from "express";
 import { OficinaService } from "./oficina.service.js";
 import { ApiPaginationResponse, ApiSuccessResponse } from "../utils/api.response.js";
-import type { CreateOficinaInDto } from "./DTO/CreateOficina.dto.ts.js";
+import type { CreateOficinaInDto } from "./DTO/CreateOficina.dto.js";
 import { OficinaOutSchema, type OficinaDto } from "./DTO/OficinaOut.dto.js";
 import { wrap } from '@mikro-orm/core'
 import type { ModifyOficinaInBodyDto, ModifyOficinaInParamsDto } from "./DTO/ModifyOficina.dto.js";
