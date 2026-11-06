@@ -1,5 +1,19 @@
 import zod from 'zod'
 
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     ChangeStateAsignacionDto:
+ *       type: object
+ *       required:
+ *         - estadoId
+ *       properties:
+ *         estadoId:
+ *           type: integer
+ *           example: 2
+ */
+
 export const ChangeStateAsignacionSchema=zod.object({
     body:zod.object({
         estado:zod.boolean(),

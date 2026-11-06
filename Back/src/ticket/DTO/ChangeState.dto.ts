@@ -1,5 +1,19 @@
 import zod from 'zod'
 
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     ChangeStateDto:
+ *       type: object
+ *       required:
+ *         - estadoId
+ *       properties:
+ *         estadoId:
+ *           type: integer
+ *           example: 3
+ */
+
 export const ChangeStateSchema=zod.object({
     body:zod.object({
         estado:zod.number().min(1)

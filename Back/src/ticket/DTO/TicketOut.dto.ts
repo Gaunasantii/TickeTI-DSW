@@ -1,5 +1,64 @@
 import zod from 'zod'
 
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     TicketOutDto:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           example: 10
+ *         titulo:
+ *           type: string
+ *           example: "Fallo de conexión a la impresora de red"
+ *         descripcion:
+ *           type: string
+ *           example: "La impresora de contabilidad no responde a los trabajos de impresión."
+ *         solucion:
+ *           type: string
+ *           nullable: true
+ *           example: "Se reinició el spooler de impresión."
+ *         categoria:
+ *           type: object
+ *           properties:
+ *             id:
+ *               type: integer
+ *               example: 1
+ *             nombre:
+ *               type: string
+ *               example: "Hardware"
+ *         prioridad:
+ *           type: object
+ *           properties:
+ *             id:
+ *               type: integer
+ *               example: 2
+ *             nombre:
+ *               type: string
+ *               example: "Alta"
+ *         estado:
+ *           type: object
+ *           properties:
+ *             id:
+ *               type: integer
+ *               example: 1
+ *             nombre:
+ *               type: string
+ *               example: "Abierto"
+ *         usuario:
+ *           $ref: '#/components/schemas/UsuarioOutDto'
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           example: "2026-03-29T14:30:00Z"
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           example: "2026-03-29T14:30:00Z"
+ */
+
 export const TicketOutSchema=zod.object({
   id:zod.number(),
   title:zod.string(),
