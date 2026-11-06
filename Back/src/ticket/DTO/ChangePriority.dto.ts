@@ -1,6 +1,20 @@
 import zod from 'zod'
 import { id } from 'zod/locales'
 
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     ChangePriorityDto:
+ *       type: object
+ *       required:
+ *         - prioridadId
+ *       properties:
+ *         prioridadId:
+ *           type: integer
+ *           example: 1
+ */
+
 export const ChangePrioritySchema=zod.object({
     body:zod.object({
         prioridad:zod.number().min(1)

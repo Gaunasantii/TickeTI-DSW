@@ -1,5 +1,19 @@
 import zod from 'zod'
 
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     ChangeCategoriaDto:
+ *       type: object
+ *       required:
+ *         - categoriaId
+ *       properties:
+ *         categoriaId:
+ *           type: integer
+ *           example: 2
+ */
+
 export const ChangeCategoriaSchema=zod.object({
     body:zod.object({
         categoria:zod.number().min(1)
