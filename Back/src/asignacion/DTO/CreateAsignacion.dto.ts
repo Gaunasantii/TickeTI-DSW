@@ -7,15 +7,18 @@ import zod from 'zod'
  *     CreateAsignacionDto:
  *       type: object
  *       required:
- *         - ticketId
- *         - tecnicoDni
+ *         - ticket
  *       properties:
- *         ticketId:
- *           type: integer
+ *         ticket:
+ *           type: number
+ *           minimum: 1
  *           example: 10
- *         tecnicoDni:
+ *         tecnico:
  *           type: string
+ *           minLength: 8
+ *           pattern: '^\d+$'
  *           example: "40123456"
+ *           description: DNI del técnico asignado; opcional.
  */
 
 export const CreateAsignacionSchema=zod.object({

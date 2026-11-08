@@ -7,6 +7,7 @@ import { ModifyTecnicoSchema } from "./DTO/ModifyTecnico.dto.js";
 import { DeleteTecnicoSchema } from "./DTO/DeleteTecnico.dto.js";
 import { authenticateToken } from "../middlewares/auth.middleware.js";
 import { authorizeRoles } from "../middlewares/role.middleware.js";
+import blockEndpoint from "../middlewares/block.middleware.js";
 
 /**
  * @openapi
@@ -66,44 +67,16 @@ import { authorizeRoles } from "../middlewares/role.middleware.js";
  *         $ref: '#/components/responses/UnauthorizedResponse'
  *       403:
  *         $ref: '#/components/responses/ForbiddenResponse'
+ *       405:
+ *         $ref: '#/components/responses/BlockedEndpointResponse'
  */
 
 tecnicorouter.post("/tecnicos",authenticateToken,authorizeRoles('admin'),ValidationMiddleware(createTecnicoSchema), tecnicocontroller.createTecnico);
-tecnicorouter.get("/tecnicos",authenticateToken, tecnicocontroller.findAll);
+tecnicorouter.get("/tecnicos",blockEndpoint, tecnicocontroller.findAll);
 
 /**
  * @openapi
  * /tecnicos/{dni}:
- *   get:
- *     tags:
- *       - Técnicos
- *     summary: Obtener los datos de un técnico por DNI
- *     security:
- *       - cookieAuth: []
- *     parameters:
- *       - in: path
- *         name: dni
- *         required: true
- *         schema:
- *           type: string
- *           example: "40123456"
- *     responses:
- *       200:
- *         description: Técnico encontrado
- *         content:
- *           application/json:
- *             schema:
- *               allOf:
- *                 - $ref: '#/components/schemas/ApiResponseSucces'
- *                 - type: object
- *                   properties:
- *                     data:
- *                       $ref: '#/components/schemas/TecnicoOutDto'
- *       401:
- *         $ref: '#/components/responses/UnauthorizedResponse'
- *       404:
- *         $ref: '#/components/responses/NotFoundResponse'
- * 
  *   put:
  *     tags:
  *       - Técnicos
@@ -168,5 +141,5 @@ tecnicorouter.get("/tecnicos",authenticateToken, tecnicocontroller.findAll);
  *         $ref: '#/components/responses/NotFoundResponse'
  */
 
-tecnicorouter.put("/tecnicos/:dni",authenticateToken,ValidationMiddleware(ModifyTecnicoSchema) ,tecnicocontroller.updateTecnico);
-tecnicorouter.delete("/tecnicos/:dni",authenticateToken,ValidationMiddleware(DeleteTecnicoSchema), tecnicocontroller.deleteTecnico);
+tecnicorouter.put("/tecnicos/:dni",authenticateToken,authorizeRoles('admin'),ValidationMiddleware(ModifyTecnicoSchema) ,tecnicocontroller.updateTecnico);
+tecnicorouter.delete("/tecnicos/:dni",authenticateToken,authorizeRoles('admin'),ValidationMiddleware(DeleteTecnicoSchema), tecnicocontroller.deleteTecnico);

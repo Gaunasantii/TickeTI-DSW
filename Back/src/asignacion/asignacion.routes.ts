@@ -7,6 +7,7 @@ import { FindOneAsignacionSchema } from "./DTO/DeleteAsignacion.js";
 import { PaginateAsignacionQuerySchema } from "./DTO/PaginateAsignacionQuery.dto.js";
 import { authenticateToken } from "../middlewares/auth.middleware.js";
 import { authorizeRoles } from "../middlewares/role.middleware.js";
+import blockEndpoint from "../middlewares/block.middleware.js";
 
 export const asignacionrouter:Router = Router();
 
@@ -95,7 +96,7 @@ asignacionrouter.get('/Mis-asignaciones/pendientes',authenticateToken,authorizeR
  *   get:
  *     tags:
  *       - Asignaciones
- *     summary: Obtener todas las asignaciones
+ *     summary: Obtener todas las asignaciones(Anulado/Endpoint Bloqueado/No Disponible)
  *     security:
  *       - cookieAuth: []
  *     responses:
@@ -147,7 +148,59 @@ asignacionrouter.get('/Mis-asignaciones/pendientes',authenticateToken,authorizeR
  *         $ref: '#/components/responses/ForbiddenResponse'
  */
 
-asignacionrouter.get('/asignaciones',authenticateToken,asignacioncontroller.findAll);
+asignacionrouter.get('/asignaciones',blockEndpoint,asignacioncontroller.findAll);
 asignacionrouter.post('/asignaciones',authenticateToken,authorizeRoles('admin','tecnico'),ValidationMiddleware(CreateAsignacionSchema),asignacioncontroller.createAsignacion);
-asignacionrouter.put('/asignaciones/:id',authenticateToken,ValidationMiddleware(ChangeStateAsignacionSchema),asignacioncontroller.ChangeStateAsignacion);
-asignacionrouter.delete('/asignaciones/:id',authenticateToken,ValidationMiddleware(FindOneAsignacionSchema),asignacioncontroller.deleteAsignacion);
+
+/**
+ * @openapi
+ * /asignaciones/{id}:
+ *   put:
+ *     tags:
+ *       - Asignaciones
+ *     summary: Cambiar el estado de una asignación
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ChangeStateAsignacionDto'
+ *     responses:
+ *       200:
+ *         description: Estado de la asignación actualizado
+ *       400:
+ *         $ref: '#/components/responses/InvalidDataResponse'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedResponse'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundResponse'
+ *
+ *   delete:
+ *     tags:
+ *       - Asignaciones
+ *     summary: Eliminar una asignación por ID (No utilizado / Endpoint Bloqueado)
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Asignación eliminada
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedResponse'
+ *       404:
+ *         $ref: '#/components/responses/NotFoundResponse'
+ */
+asignacionrouter.put('/asignaciones/:id',authenticateToken,authorizeRoles('admin'),ValidationMiddleware(ChangeStateAsignacionSchema),asignacioncontroller.ChangeStateAsignacion);
+asignacionrouter.delete('/asignaciones/:id',blockEndpoint,asignacioncontroller.deleteAsignacion);

@@ -8,14 +8,11 @@ import zod from 'zod'
  *       type: object
  *       required:
  *         - nombre
- *         - empresaId
  *       properties:
  *         nombre:
  *           type: string
+ *           minLength: 1
  *           example: "Soporte Técnico - Casa Central"
- *         empresaId:
- *           type: integer
- *           example: 1
  */
 
 export const CreateOficinaSchema=zod.object({

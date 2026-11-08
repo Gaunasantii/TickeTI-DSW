@@ -73,36 +73,6 @@ oficinarouter.post("/oficinas",authenticateToken,authorizeRoles('admin'),Validat
 /**
  * @openapi
  * /oficinas/{id}:
- *   get:
- *     tags:
- *       - Oficinas
- *     summary: Obtener una oficina por su ID
- *     security:
- *       - cookieAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *           example: 1
- *     responses:
- *       200:
- *         description: Oficina encontrada
- *         content:
- *           application/json:
- *             schema:
- *               allOf:
- *                 - $ref: '#/components/schemas/ApiResponseSucces'
- *                 - type: object
- *                   properties:
- *                     data:
- *                       $ref: '#/components/schemas/OficinaOutDto'
- *       401:
- *         $ref: '#/components/responses/UnauthorizedResponse'
- *       404:
- *         $ref: '#/components/responses/NotFoundResponse'
- * 
  *   put:
  *     tags:
  *       - Oficinas

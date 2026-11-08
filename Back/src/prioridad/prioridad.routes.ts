@@ -93,6 +93,7 @@ prioridadrouter.get("/prioridad",authenticateToken, prioridadcontroller.findAll)
  *         required: true
  *         schema:
  *           type: integer
+ *           example: 1
  *         description: ID de la prioridad a modificar
  *     requestBody:
  *       required: true
@@ -131,6 +132,7 @@ prioridadrouter.put("/prioridad/:id",authenticateToken,authorizeRoles('admin'),V
  *         required: true
  *         schema:
  *           type: integer
+ *           example: 1
  *         description: ID de la prioridad a eliminar
  *     responses:
  *       200:
@@ -169,12 +171,14 @@ prioridadrouter.delete("/prioridad/:id",authenticateToken,authorizeRoles('admin'
  *         required: true
  *         schema:
  *           type: integer
+ *           example: 1
  *         description: Número de página
  *       - in: query
- *         name: limit
+ *         name: cantPerPage
  *         required: true
  *         schema:
  *           type: integer
+ *           example: 10
  *         description: Cantidad de elementos por página
  *     responses:
  *       200:
@@ -197,4 +201,4 @@ prioridadrouter.delete("/prioridad/:id",authenticateToken,authorizeRoles('admin'
  *       403:
  *              $ref: '#/components/responses/ForbiddenResponse'
  */
-prioridadrouter.get("/prioridad/paginated",authenticateToken,ValidationMiddleware(PaginatedPrioridadQuerySchema), prioridadcontroller.findPaginatedPrioridades);
+prioridadrouter.get("/prioridad/paginated",authenticateToken,authorizeRoles('admin'),ValidationMiddleware(PaginatedPrioridadQuerySchema), prioridadcontroller.findPaginatedPrioridades);

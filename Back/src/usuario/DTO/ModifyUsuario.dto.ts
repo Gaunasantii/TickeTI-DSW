@@ -6,22 +6,28 @@ import zod from 'zod'
  *   schemas:
  *     ModifyUsuarioDto:
  *       type: object
+ *       required:
+ *         - surName
+ *         - name
+ *         - tele
+ *         - oficina
  *       properties:
- *         nombre:
+ *         surName:
  *           type: string
- *           example: "Pablo"
- *         apellido:
- *           type: string
+ *           maxLength: 64
  *           example: "Perez"
- *         email:
+ *         name:
  *           type: string
- *           format: email
- *           example: "pablo@ejemplo.com"
- *         telefono:
+ *           maxLength: 64
+ *           example: "Pablo"
+ *         tele:
  *           type: string
- *           example: "3411234567"
- *         oficinaId:
- *           type: integer
+ *           pattern: '^\+?[1-9]\d{1,14}$'
+ *           example: "+543411234567"
+ *         oficina:
+ *           type: number
+ *           minimum: 0
+ *           exclusiveMinimum: true
  *           example: 1
  */
 

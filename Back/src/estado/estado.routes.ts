@@ -26,11 +26,13 @@ export const estadoRouter:Router = Router();
  *         required: true
  *         schema:
  *           type: integer
+ *           example: 1
  *       - in: query
  *         name: cantPerPage
  *         required: true
  *         schema:
  *           type: integer
+ *           example: 10
  *     responses:
  *       200:
  *         description: Lista de estados paginado
@@ -52,7 +54,7 @@ export const estadoRouter:Router = Router();
  *       400:
  *         $ref: '#/components/responses/InvalidDataResponse'
  */
-estadoRouter.get('/estados/paginated',authenticateToken,ValidationMiddleware(PaginateEstadoQuerySchema),estadoController.getPaginated);
+estadoRouter.get('/estados/paginated',authenticateToken,authorizeRoles('admin'),ValidationMiddleware(PaginateEstadoQuerySchema),estadoController.getPaginated);
 
 /** 
  * @openapi
@@ -136,6 +138,7 @@ estadoRouter.get('/estados',authenticateToken,estadoController.findAll)
  *         required: true
  *         schema:
  *           type: integer
+ *           example: 1
  *         description: ID del estado a obtener
  *     responses:
  *       200:
@@ -173,6 +176,7 @@ estadoRouter.get('/estados/:id',authenticateToken,ValidationMiddleware(FindOneEs
  *         required: true
  *         schema:
  *           type: integer
+ *           example: 1
  *         description: ID del estado a eliminar
  *     responses:
  *       200:
@@ -213,6 +217,7 @@ estadoRouter.delete('/estados/:id',authenticateToken,authorizeRoles('admin'),Val
  *         required: true
  *         schema:
  *           type: integer
+ *           example: 1
  *         description: ID del estado a actualizar
  *     requestBody:
  *       required: true

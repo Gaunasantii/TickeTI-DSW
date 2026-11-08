@@ -91,13 +91,12 @@ categoriarouter.get("/categorias",authenticateToken, Categoriacontroller.findAll
  *          security:
  *           - cookieAuth: []
  *          parameters:
- *              - in:
- *                name: id
- *                required: true
- *                description: El Id de la categoria que voy a mdoficar
- *                schema:
- *                  type: integer
- *                  example: 1
+ *             - in: path
+ *               name: id
+ *               required: true
+ *               schema:
+ *                 type: integer
+ *                 example: 1
  *          requestBody:
  *              required: true
  *              content:
@@ -127,7 +126,7 @@ categoriarouter.get("/categorias",authenticateToken, Categoriacontroller.findAll
  *                  $ref: '#/components/responses/InvalidDataResponse'
  * 
  */
-categoriarouter.put("/categorias/:id",authenticateToken,ValidationMiddleware(ModifyCategoriaSchema), Categoriacontroller.updateCategoria);
+categoriarouter.put("/categorias/:id",authenticateToken,authorizeRoles('admin'),ValidationMiddleware(ModifyCategoriaSchema), Categoriacontroller.updateCategoria);
 
 
 
@@ -141,12 +140,13 @@ categoriarouter.put("/categorias/:id",authenticateToken,ValidationMiddleware(Mod
  *          security:
  *           - cookieAuth: []
  *          parameters:
- *              - in:
+ *              - in: path
  *                name: id
  *                required: true
  *                description: El Id de la categoria que voy a eliminar
  *                schema:
  *                  type: integer
+ *                  example: 1
  *          responses:
  *              200:
  *                  description: Categoria eliminada exitosamente
@@ -169,7 +169,7 @@ categoriarouter.put("/categorias/:id",authenticateToken,ValidationMiddleware(Mod
  *              400:
  *                  $ref: '#/components/responses/InvalidDataResponse'
  */
-categoriarouter.delete("/categorias/:id",authenticateToken,ValidationMiddleware(DeleteCategoriaSchema), Categoriacontroller.deleteCategoria);
+categoriarouter.delete("/categorias/:id",authenticateToken,authorizeRoles('admin'),ValidationMiddleware(DeleteCategoriaSchema), Categoriacontroller.deleteCategoria);
 
 
 /**
@@ -217,5 +217,5 @@ categoriarouter.delete("/categorias/:id",authenticateToken,ValidationMiddleware(
  *              400:
  *                  $ref: '#/components/responses/InvalidDataResponse'
  */
-categoriarouter.get("/categorias/paginated",authenticateToken,ValidationMiddleware(PaginateCategoriaSchema), Categoriacontroller.getCategoriasPaginated);
+categoriarouter.get("/categorias/paginated",authenticateToken,authorizeRoles('admin'),ValidationMiddleware(PaginateCategoriaSchema), Categoriacontroller.getCategoriasPaginated);
 

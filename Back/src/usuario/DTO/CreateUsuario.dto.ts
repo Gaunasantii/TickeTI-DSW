@@ -8,35 +8,38 @@ import zod from 'zod'
  *       type: object
  *       required:
  *         - dni
- *         - nombre
- *         - apellido
- *         - email
- *         - password
- *         - oficinaId
+ *         - surName
+ *         - name
+ *         - tele
+ *         - pass
+ *         - oficina
  *       properties:
  *         dni:
  *           type: string
+ *           minLength: 8
+ *           pattern: '^\d+$'
  *           example: "47107024"
- *         nombre:
+ *         surName:
  *           type: string
- *           example: "Pablo"
- *         apellido:
- *           type: string
+ *           maxLength: 64
  *           example: "Perez"
- *         email:
+ *         name:
  *           type: string
- *           format: email
- *           example: "pablo@ejemplo.com"
- *         password:
+ *           maxLength: 64
+ *           example: "Pablo"
+ *         tele:
+ *           type: string
+ *           pattern: '^\+?[1-9]\d{1,14}$'
+ *           example: "+543411234567"
+ *         pass:
  *           type: string
  *           format: password
+ *           minLength: 6
  *           example: "ClaveSegura123!"
- *         telefono:
- *           type: string
- *           example: "3411234567"
- *         oficinaId:
+ *         oficina:
  *           type: integer
  *           example: 1
+ *           minimum: 1
  */
 
 export const createUsuarioSchema=zod.object({

@@ -8,34 +8,37 @@ import zod from 'zod';
  *       type: object
  *       required:
  *         - dni
- *         - nombre
- *         - apellido
- *         - email
- *         - password
- *         - oficinaId
+ *         - surName
+ *         - name
+ *         - tele
+ *         - pass
+ *         - empresa
  *       properties:
  *         dni:
  *           type: string
+ *           minLength: 8
+ *           pattern: '^\d+$'
  *           example: "35123456"
- *         nombre:
+ *         surName:
  *           type: string
- *           example: "Carlos"
- *         apellido:
- *           type: string
+ *           maxLength: 64
  *           example: "Gómez"
- *         email:
+ *         name:
  *           type: string
- *           format: email
- *           example: "admin@ejemplo.com"
- *         password:
+ *           maxLength: 64
+ *           example: "Carlos"
+ *         tele:
+ *           type: string
+ *           pattern: '^\+?[1-9]\d{1,14}$'
+ *           example: "+541155559999"
+ *         pass:
  *           type: string
  *           format: password
+ *           minLength: 6
  *           example: "AdminSeguro123!"
- *         telefono:
- *           type: string
- *           example: "3415559999"
- *         oficinaId:
- *           type: integer
+ *         empresa:
+ *           type: number
+ *           minimum: 1
  *           example: 1
  */
 
@@ -51,7 +54,5 @@ export const createAdminSchema=zod.object({
 })
 
 export type createAdminInDto=zod.infer<typeof createAdminSchema>["body"]
-
-
 
 

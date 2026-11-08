@@ -6,13 +6,13 @@ import zod from 'zod'
  *   schemas:
  *     ModifyOficinaDto:
  *       type: object
+ *       required:
+ *         - nombre
  *       properties:
  *         nombre:
  *           type: string
+ *           minLength: 1
  *           example: "Infraestructura y Redes"
- *         empresaId:
- *           type: integer
- *           example: 1
  */
 
 export const ModifyOficinaSchema=zod.object({

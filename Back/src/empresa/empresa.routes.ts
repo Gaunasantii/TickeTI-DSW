@@ -43,30 +43,7 @@ export const empresarouter:Router = Router();
  *         $ref: '#/components/responses/UnauthorizedResponse'
  *       403:
  *         $ref: '#/components/responses/ForbiddenResponse'
- * 
- *   get:
- *     tags:
- *       - Empresas
- *     summary: Obtener el listado completo de empresas
- *     security:
- *       - cookieAuth: []
- *     responses:
- *       200:
- *         description: Listado de empresas obtenido con éxito
- *         content:
- *           application/json:
- *             schema:
- *               allOf:
- *                 - $ref: '#/components/schemas/ApiResponseSucces'
- *                 - type: object
- *                   properties:
- *                     data:
- *                       type: array
- *                       items:
- *                         $ref: '#/components/schemas/EmpresaOutDto'
- *       401:
- *         $ref: '#/components/responses/UnauthorizedResponse'
- */
+*/
 
 empresarouter.post("/empresas",authenticateToken,authorizeRoles('S_ADMIN'),ValidationMiddleware(CreateEmpresaSchema), empresacontroller.createEmpresa);
 
@@ -116,23 +93,16 @@ empresarouter.get("/empresas/paginated",authenticateToken,authorizeRoles('S_ADMI
 
 /**
  * @openapi
- * /empresas/{id}:
+ * /empresas:
  *   get:
  *     tags:
  *       - Empresas
- *     summary: Obtener una empresa por su ID
+ *     summary: Obtiene el listado completo de empresas
  *     security:
  *       - cookieAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *           example: 1
  *     responses:
  *       200:
- *         description: Empresa encontrada
+ *         description: Listado de empresas
  *         content:
  *           application/json:
  *             schema:
@@ -141,12 +111,19 @@ empresarouter.get("/empresas/paginated",authenticateToken,authorizeRoles('S_ADMI
  *                 - type: object
  *                   properties:
  *                     data:
- *                       $ref: '#/components/schemas/EmpresaOutDto'
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/EmpresaOutDto'
  *       401:
  *         $ref: '#/components/responses/UnauthorizedResponse'
  *       404:
  *         $ref: '#/components/responses/NotFoundResponse'
- * 
+ */
+empresarouter.get("/empresas",authorizeRoles('S_ADMIN'), authenticateToken,empresacontroller.findAll);
+
+/**
+ * @openapi
+ * /empresas/{id}:
  *   put:
  *     tags:
  *       - Empresas
@@ -165,7 +142,7 @@ empresarouter.get("/empresas/paginated",authenticateToken,authorizeRoles('S_ADMI
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/UpdateEmpresaDto'
+ *             $ref: '#/components/schemas/ModifyEmpresaDto'
  *     responses:
  *       200:
  *         description: Empresa actualizada exitosamente
@@ -184,7 +161,12 @@ empresarouter.get("/empresas/paginated",authenticateToken,authorizeRoles('S_ADMI
  *         $ref: '#/components/responses/UnauthorizedResponse'
  *       404:
  *         $ref: '#/components/responses/NotFoundResponse'
- * 
+*/
+empresarouter.put("/empresas/:id",authenticateToken,authorizeRoles('S_ADMIN'),ValidationMiddleware(ModifyEmpresaSchema) ,empresacontroller.updateEmpresa);
+
+/**
+ * @openapi
+ * /empresas/{id}:
  *   delete:
  *     tags:
  *       - Empresas
@@ -209,8 +191,5 @@ empresarouter.get("/empresas/paginated",authenticateToken,authorizeRoles('S_ADMI
  *         $ref: '#/components/responses/UnauthorizedResponse'
  *       404:
  *         $ref: '#/components/responses/NotFoundResponse'
- */
-
-empresarouter.get("/empresas", authenticateToken,empresacontroller.findAll);
-empresarouter.put("/empresas/:id",authenticateToken,ValidationMiddleware(ModifyEmpresaSchema) ,empresacontroller.updateEmpresa);
-empresarouter.delete("/empresas/:id",authenticateToken,ValidationMiddleware(DeleteEmpresaSchema), empresacontroller.deleteEmpresa);
+*/
+empresarouter.delete("/empresas/:id",authenticateToken,authorizeRoles('S_ADMIN'),ValidationMiddleware(DeleteEmpresaSchema), empresacontroller.deleteEmpresa);

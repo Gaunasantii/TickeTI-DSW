@@ -9,11 +9,10 @@ import zod from "zod";
  *       properties:
  *         nombre:
  *           type: string
+ *           example: "derivado"
  *         descripcion:
  *           type: string
- *       required:
- *         - nombre
- *         - descripcion
+ *           example: "Estado derivado Modificado"
  */
 export const UpdateEstadoSchema = zod.object({
     body: zod.object({

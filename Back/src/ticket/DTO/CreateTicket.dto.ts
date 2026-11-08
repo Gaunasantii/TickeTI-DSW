@@ -7,23 +7,25 @@ import zod from 'zod'
  *     CreateTicketDto:
  *       type: object
  *       required:
- *         - titulo
- *         - descripcion
- *         - categoriaId
- *         - prioridadId
+ *         - title
+ *         - description
+ *         - prioridad
+ *         - categoria
  *       properties:
- *         titulo:
+ *         title:
  *           type: string
  *           example: "Fallo de conexión a la impresora de red"
- *         descripcion:
+ *         description:
  *           type: string
  *           example: "La impresora de contabilidad no responde a los trabajos de impresión desde la terminal 4."
- *         categoriaId:
- *           type: integer
- *           example: 1
- *         prioridadId:
- *           type: integer
+ *         prioridad:
+ *           type: number
+ *           minimum: 1
  *           example: 2
+ *         categoria:
+ *           type: number
+ *           minimum: 1
+ *           example: 1
  */
 
 export const CreateTicketSchema=zod.object({

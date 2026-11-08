@@ -7,20 +7,19 @@ import zod from "zod";
  *     ChangePasswordDto:
  *       type: object
  *       required:
- *         - dni
- *         - currentPassword
- *         - newPassword
+ *         - passwordActual
+ *         - passwordNueva
  *       properties:
- *         dni:
- *           type: string
- *           example: "47107024"
- *         currentPassword:
+ *         passwordActual:
  *           type: string
  *           format: password
- *           example: "PasswordActual123!"
- *         newPassword:
+ *           minLength: 1
+ *           example: "ClaveActual123!"
+ *         passwordNueva:
  *           type: string
  *           format: password
+ *           minLength: 8
+ *           pattern: '^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$'
  *           example: "NuevaPassword456!"
  */
 

@@ -10,7 +10,7 @@ import { authorizeRoles } from "../middlewares/role.middleware.js";
 
 /**
  * @openapi
- * /persona/paginated:
+ * /persons/paginate:
  *   get:
  *     tags:
  *       - Personas
@@ -58,7 +58,7 @@ PersonController.PaginateUserAndTecnicos);
 /**
  * @openapi
  * /persona/cambiar-password:
- *   patch:
+ *   put:
  *     tags:
  *       - Personas
  *     summary: Cambiar la contraseña de una persona

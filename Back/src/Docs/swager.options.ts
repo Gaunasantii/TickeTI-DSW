@@ -26,6 +26,7 @@ export const swaggerOptions: swaggerJsdoc.Options = {
   },
   apis: [
   './src/*/*.controller.ts',
+  './src/app.ts',
   
   
   './src/*/*route*.ts',
@@ -38,7 +39,9 @@ export const swaggerOptions: swaggerJsdoc.Options = {
    './src/Docs/swagger.unauthorized.ts',
    './src/Docs/swagger.forbidden.ts',
    './src/Docs/swagger.notFound.ts',
-   './src/Docs/swagger.InvalidData.ts'
+   './src/Docs/swagger.InvalidData.ts',
+   './src/Docs/swagger.Blocked.ts'
+   
  ], 
    
 };

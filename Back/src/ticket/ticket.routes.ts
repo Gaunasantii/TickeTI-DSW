@@ -11,6 +11,7 @@ import { PaginatedTicket } from "./DTO/PaginatedTicket.dto.js";
 import { ChangePrioritySchema } from "./DTO/ChangePriority.dto.js";
 import { ChangeCategoriaSchema } from "./DTO/ChangeCategoria.dto.js";
 import { ChangeStateSchema } from "./DTO/ChangeState.dto.js";
+import blockEndpoint from "../middlewares/block.middleware.js";
 
 /**
  * @openapi
@@ -74,40 +75,10 @@ ticketrouter.get("/tickets",authenticateToken, ticketcontroller.findAll);
 /**
  * @openapi
  * /tickets/{id}:
- *   get:
- *     tags:
- *       - Tickets
- *     summary: Obtener un ticket por ID
- *     security:
- *       - cookieAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: integer
- *           example: 10
- *     responses:
- *       200:
- *         description: Ticket encontrado
- *         content:
- *           application/json:
- *             schema:
- *               allOf:
- *                 - $ref: '#/components/schemas/ApiResponseSucces'
- *                 - type: object
- *                   properties:
- *                     data:
- *                       $ref: '#/components/schemas/TicketOutDto'
- *       401:
- *         $ref: '#/components/responses/UnauthorizedResponse'
- *       404:
- *         $ref: '#/components/responses/NotFoundResponse'
- * 
  *   put:
  *     tags:
  *       - Tickets
- *     summary: Modificar datos de un ticket
+ *     summary: Modificar datos de un ticket(Bloqueado, Sin utilizar)
  *     security:
  *       - cookieAuth: []
  *     parameters:
@@ -142,6 +113,7 @@ ticketrouter.get("/tickets",authenticateToken, ticketcontroller.findAll);
  *       404:
  *         $ref: '#/components/responses/NotFoundResponse'
  * 
+ * /My-tickets/{id}:
  *   delete:
  *     tags:
  *       - Tickets
@@ -166,9 +138,11 @@ ticketrouter.get("/tickets",authenticateToken, ticketcontroller.findAll);
  *         $ref: '#/components/responses/UnauthorizedResponse'
  *       404:
  *         $ref: '#/components/responses/NotFoundResponse'
+ *       405:
+ *         $ref: '#/components/responses/BlockedEndpointResponse'
  */
 
-ticketrouter.put("/tickets/:id",authenticateToken,ValidationMiddleware(ModifyTicketSchema), ticketcontroller.updateTicket);
+ticketrouter.put("/tickets/:id",blockEndpoint, ticketcontroller.updateTicket);
 ticketrouter.patch("/tickets/:id/resolve",authenticateToken,authorizeRoles('tecnico'),ValidationMiddleware(ResolveTicketSchema), ticketcontroller.resolveTicket);
 
 /**
@@ -194,20 +168,17 @@ ticketrouter.patch("/tickets/:id/resolve",authenticateToken,authorizeRoles('tecn
  *           type: string
  *           example: "10"
  *       - in: query
- *         name: estadoId
+ *         name: estado
  *         required: false
  *         schema:
- *           type: integer
+ *           type: string
+ *           example: "1"
  *       - in: query
- *         name: categoriaId
+ *         name: categoria
  *         required: false
  *         schema:
- *           type: integer
- *       - in: query
- *         name: prioridadId
- *         required: false
- *         schema:
- *           type: integer
+ *           type: string
+ *           example: "1"
  *     responses:
  *       200:
  *         description: Lista paginada de tickets recuperada
@@ -228,7 +199,7 @@ ticketrouter.patch("/tickets/:id/resolve",authenticateToken,authorizeRoles('tecn
  *         $ref: '#/components/responses/UnauthorizedResponse'
  */
 
-ticketrouter.get("/tickets/paginated",authenticateToken,ValidationMiddleware(PaginatedTicket),ticketcontroller.GetAllPaginated)
+ticketrouter.get("/tickets/paginated",authenticateToken,authorizeRoles('admin','tecnico'),ValidationMiddleware(PaginatedTicket),ticketcontroller.GetAllPaginated)
 
 /**
  * @openapi
@@ -262,7 +233,7 @@ ticketrouter.get("/tickets/paginated",authenticateToken,ValidationMiddleware(Pag
  *       404:
  *         $ref: '#/components/responses/NotFoundResponse'
  * 
- * /tickets/{id}/prioridad:
+ * /tickets/{id}/priority:
  *   patch:
  *     tags:
  *       - Tickets
@@ -292,7 +263,7 @@ ticketrouter.get("/tickets/paginated",authenticateToken,ValidationMiddleware(Pag
  *       404:
  *         $ref: '#/components/responses/NotFoundResponse'
  * 
- * /tickets/{id}/estado:
+ * /tickets/{id}/state:
  *   patch:
  *     tags:
  *       - Tickets
@@ -322,7 +293,7 @@ ticketrouter.get("/tickets/paginated",authenticateToken,ValidationMiddleware(Pag
  *       404:
  *         $ref: '#/components/responses/NotFoundResponse'
  * 
- * /tickets/{id}/resolver:
+ * /tickets/{id}/resolve:
  *   patch:
  *     tags:
  *       - Tickets
@@ -356,5 +327,47 @@ ticketrouter.get("/tickets/paginated",authenticateToken,ValidationMiddleware(Pag
 ticketrouter.patch("/tickets/:id/priority",authenticateToken,authorizeRoles('admin'),ValidationMiddleware(ChangePrioritySchema),ticketcontroller.ChangePriority);
 ticketrouter.patch("/tickets/:id/categoria",authenticateToken,authorizeRoles('admin','tecnico'),ValidationMiddleware(ChangeCategoriaSchema),ticketcontroller.ChangeCategoria);
 ticketrouter.patch("/tickets/:id/state",authenticateToken,authorizeRoles('admin','tecnico'),ValidationMiddleware(ChangeStateSchema),ticketcontroller.ChangeState);
+
+/**
+ * @openapi
+ * /My-tickets/paginated:
+ *   get:
+ *     tags:
+ *       - Tickets
+ *     summary: Obtener los tickets propios con paginación
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: "1"
+ *       - in: query
+ *         name: cantPerPage
+ *         required: true
+ *         schema:
+ *           type: string
+ *           example: "10"
+ *     responses:
+ *       200:
+ *         description: Listado paginado de tickets propios
+ *         content:
+ *           application/json:
+ *             schema:
+ *               allOf:
+ *                 - $ref: '#/components/schemas/ApiResponsePagination'
+ *                 - type: object
+ *                   properties:
+ *                     data:
+ *                       type: array
+ *                       items:
+ *                         $ref: '#/components/schemas/TicketOutDto'
+ *       400:
+ *         $ref: '#/components/responses/InvalidDataResponse'
+ *       401:
+ *         $ref: '#/components/responses/UnauthorizedResponse'
+ */
 ticketrouter.delete("/My-tickets/:id",authenticateToken,authorizeRoles('user','tecnico'),ticketcontroller.deleteMyTicket);
-ticketrouter.get("/My-tickets/paginated",authenticateToken,ValidationMiddleware(PaginatedTicket),ticketcontroller.getMyTickets);
+ticketrouter.get("/My-tickets/paginated",authenticateToken,authorizeRoles('user','tecnico'),ValidationMiddleware(PaginatedTicket),ticketcontroller.getMyTickets);

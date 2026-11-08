@@ -12,10 +12,12 @@ import zod from 'zod'
  *       properties:
  *         nombre:
  *           type: string
+ *           minLength: 1
  *           description: El nuevo nombre de la prioridad
  *           example: Alta
  *         tiempoLimiteResolucion:
- *           type: integer
+ *           type: number
+ *           minimum: 1
  *           description: El nuevo tiempo límite de resolución en horas
  *           example: 24
  */

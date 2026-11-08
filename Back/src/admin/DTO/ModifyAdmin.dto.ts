@@ -6,23 +6,23 @@ import zod from 'zod'
  *   schemas:
  *     ModifyAdminDto:
  *       type: object
+ *       required:
+ *         - surName
+ *         - name
+ *         - tele
  *       properties:
- *         nombre:
+ *         surName:
  *           type: string
- *           example: "Carlos"
- *         apellido:
- *           type: string
+ *           maxLength: 64
  *           example: "Gómez"
- *         email:
+ *         name:
  *           type: string
- *           format: email
- *           example: "admin@ejemplo.com"
- *         telefono:
+ *           maxLength: 64
+ *           example: "Carlos"
+ *         tele:
  *           type: string
- *           example: "3415559999"
- *         oficinaId:
- *           type: integer
- *           example: 1
+ *           pattern: '^\+?[1-9]\d{1,14}$'
+ *           example: "+541155559999"
  */
 
 export const ModifyAdminSchema=zod.object({

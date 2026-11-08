@@ -9,8 +9,13 @@ import zod from 'zod'
  *       properties:
  *         nombre:
  *           type: string
+ *           minLength: 1
+ *           example: "derivado"
  *         descripcion:
  *           type: string
+ *           minLength: 1
+ *           maxLength: 200
+ *           example: "Estado derivado"
  *       required:
  *         - nombre
  *         - descripcion

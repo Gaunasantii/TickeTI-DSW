@@ -6,13 +6,44 @@ import zod from 'zod'
  *   schemas:
  *     ModifyEmpresaDto:
  *       type: object
+ *       required:
+ *         - nombre
  *       properties:
- *         razonSocial:
+ *         nombre:
  *           type: string
- *           example: "Tech Solutions S.R.L."
- *         cuit:
- *           type: string
- *           example: "30-71234567-8"
+ *           minLength: 1
+ *           example: 'Empresa S.A.'
+ *         admin:
+ *           type: object
+ *           properties:
+ *             dni:
+ *               type: string
+ *               minLength: 8
+ *               pattern: '^\d+$'
+ *               example: '12345678'
+ *             surName:
+ *               type: string
+ *               maxLength: 64
+ *               example: 'Doe'
+ *             name:
+ *               type: string
+ *               maxLength: 64
+ *               example: 'John'
+ *             tele:
+ *               type: string
+ *               pattern: '^\+?[1-9]\d{1,14}$'
+ *               example: '+1234567890'
+ *             pass:
+ *               type: string
+ *               format: password
+ *               minLength: 6
+ *               example: 'password123'
+ *           required:
+ *             - dni
+ *             - surName
+ *             - name
+ *             - tele
+ *             - pass
  */
 
 const AdminInputSchema=zod.object({

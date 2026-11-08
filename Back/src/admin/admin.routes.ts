@@ -8,12 +8,13 @@ import { DeleteAdminSchema } from "./DTO/AdminDelete.dto.js";
 import { authenticateToken } from "../middlewares/auth.middleware.js";
 import { authorizeRoles } from "../middlewares/role.middleware.js";
 
+import blockEndpoint from "../middlewares/block.middleware.js";
 /**
  * @openapi
  * /admins:
  *   post:
  *     tags:
- *       - Administradores
+ *       - Administradores (Endpoints muertos)
  *     summary: Registrar un nuevo administrador
  *     security:
  *       - cookieAuth: []
@@ -41,10 +42,12 @@ import { authorizeRoles } from "../middlewares/role.middleware.js";
  *         $ref: '#/components/responses/UnauthorizedResponse'
  *       403:
  *         $ref: '#/components/responses/ForbiddenResponse'
+ *       405:
+ *         $ref: '#/components/responses/BlockedEndpointResponse'
  * 
  *   get:
  *     tags:
- *       - Administradores
+ *       - Administradores (Endpoints muertos)
  *     summary: Obtener el listado completo de administradores
  *     security:
  *       - cookieAuth: []
@@ -66,47 +69,19 @@ import { authorizeRoles } from "../middlewares/role.middleware.js";
  *         $ref: '#/components/responses/UnauthorizedResponse'
  *       403:
  *         $ref: '#/components/responses/ForbiddenResponse'
+ *       405:
+ *         $ref: '#/components/responses/BlockedEndpointResponse'
  */
 
-adminrouter.post("/admins",authenticateToken,authorizeRoles('S_ADMIN'), ValidationMiddleware(createAdminSchema),admincontroller.createAdmin);
-adminrouter.get("/admins",authenticateToken,admincontroller.findAll);
+adminrouter.post("/admins", blockEndpoint, admincontroller.createAdmin);
+adminrouter.get("/admins", blockEndpoint, admincontroller.findAll);
 
 /**
  * @openapi
  * /admins/{dni}:
- *   get:
- *     tags:
- *       - Administradores
- *     summary: Obtener los datos de un administrador por DNI
- *     security:
- *       - cookieAuth: []
- *     parameters:
- *       - in: path
- *         name: dni
- *         required: true
- *         schema:
- *           type: string
- *           example: "35123456"
- *     responses:
- *       200:
- *         description: Administrador encontrado
- *         content:
- *           application/json:
- *             schema:
- *               allOf:
- *                 - $ref: '#/components/schemas/ApiResponseSucces'
- *                 - type: object
- *                   properties:
- *                     data:
- *                       $ref: '#/components/schemas/AdminOutDto'
- *       401:
- *         $ref: '#/components/responses/UnauthorizedResponse'
- *       404:
- *         $ref: '#/components/responses/NotFoundResponse'
- * 
  *   put:
  *     tags:
- *       - Administradores
+ *       - Administradores (Endpoints muertos)
  *     summary: Modificar datos de un administrador por DNI
  *     security:
  *       - cookieAuth: []
@@ -139,12 +114,16 @@ adminrouter.get("/admins",authenticateToken,admincontroller.findAll);
  *         $ref: '#/components/responses/InvalidDataResponse'
  *       401:
  *         $ref: '#/components/responses/UnauthorizedResponse'
+ *       403:
+ *         $ref: '#/components/responses/ForbiddenResponse'
+ *       405:
+ *         $ref: '#/components/responses/BlockedEndpointResponse'
  *       404:
  *         $ref: '#/components/responses/NotFoundResponse'
  * 
  *   delete:
  *     tags:
- *       - Administradores
+ *       - Administradores (Endpoints muertos)
  *     summary: Eliminar un administrador por DNI
  *     security:
  *       - cookieAuth: []
@@ -166,7 +145,9 @@ adminrouter.get("/admins",authenticateToken,admincontroller.findAll);
  *         $ref: '#/components/responses/UnauthorizedResponse'
  *       404:
  *         $ref: '#/components/responses/NotFoundResponse'
+ *       405:
+ *         $ref: '#/components/responses/BlockedEndpointResponse'
  */
 
-adminrouter.put("/admins/:dni",authenticateToken,ValidationMiddleware(ModifyAdminSchema), admincontroller.updateAdmin);
-adminrouter.delete("/admins/:dni",authenticateToken,ValidationMiddleware(DeleteAdminSchema), admincontroller.deleteAdmin);
+adminrouter.put("/admins/:dni", blockEndpoint, ValidationMiddleware(ModifyAdminSchema), admincontroller.updateAdmin);
+adminrouter.delete("/admins/:dni", blockEndpoint, ValidationMiddleware(DeleteAdminSchema), admincontroller.deleteAdmin);

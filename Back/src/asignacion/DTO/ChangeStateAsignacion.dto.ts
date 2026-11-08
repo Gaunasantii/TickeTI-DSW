@@ -7,11 +7,11 @@ import zod from 'zod'
  *     ChangeStateAsignacionDto:
  *       type: object
  *       required:
- *         - estadoId
+ *         - estado
  *       properties:
- *         estadoId:
- *           type: integer
- *           example: 2
+ *         estado:
+ *           type: boolean
+ *           example: true
  */
 
 export const ChangeStateAsignacionSchema=zod.object({

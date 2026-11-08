@@ -12,6 +12,7 @@ import zod from 'zod'
  *              properties:
  *                  email:
  *                      type: string
+ *                      format: email
  *                      description: Es el email del usuario que ingresara
  *                      example: "user@example.com"
  *                  pass:

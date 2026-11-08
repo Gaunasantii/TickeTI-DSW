@@ -7,10 +7,11 @@ import zod from 'zod'
  *     ChangeStateDto:
  *       type: object
  *       required:
- *         - estadoId
+ *         - estado
  *       properties:
- *         estadoId:
- *           type: integer
+ *         estado:
+ *           type: number
+ *           minimum: 1
  *           example: 3
  */
 

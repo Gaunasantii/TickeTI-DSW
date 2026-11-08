@@ -6,23 +6,23 @@ import zod from 'zod'
  *   schemas:
  *     ModifyTecnicoDto:
  *       type: object
+ *       required:
+ *         - surName
+ *         - name
+ *         - tele
  *       properties:
- *         nombre:
+ *         surName:
  *           type: string
- *           example: "Juan"
- *         apellido:
- *           type: string
+ *           maxLength: 64
  *           example: "Pérez"
- *         email:
+ *         name:
  *           type: string
- *           format: email
- *           example: "tecnico@ejemplo.com"
- *         telefono:
+ *           maxLength: 64
+ *           example: "Juan"
+ *         tele:
  *           type: string
- *           example: "3415551234"
- *         oficinaId:
- *           type: integer
- *           example: 1
+ *           pattern: '^\+?[1-9]\d{1,14}$'
+ *           example: "+543415551234"
  */
 
 export const ModifyTecnicoSchema=zod.object({

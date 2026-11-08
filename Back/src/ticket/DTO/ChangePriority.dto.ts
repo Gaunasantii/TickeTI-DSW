@@ -8,10 +8,11 @@ import { id } from 'zod/locales'
  *     ChangePriorityDto:
  *       type: object
  *       required:
- *         - prioridadId
+ *         - prioridad
  *       properties:
- *         prioridadId:
- *           type: integer
+ *         prioridad:
+ *           type: number
+ *           minimum: 1
  *           example: 1
  */
 

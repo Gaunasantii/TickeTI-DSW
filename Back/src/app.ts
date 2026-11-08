@@ -67,6 +67,28 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(ErrorHander);
 
 // Ruta de prueba (la podés dejar o sacar)
+/**
+ * @openapi
+ * /status:
+ *   get:
+ *     tags:
+ *       - Sistema
+ *     summary: Consultar el estado de la API
+ *     responses:
+ *       200:
+ *         description: API disponible
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: online
+ *                 message:
+ *                   type: string
+ *                   example: API funcionando
+ */
 app.get('/api/status', (req, res) => {
     res.json({ status: "online", message: "API funcionando" });
 });

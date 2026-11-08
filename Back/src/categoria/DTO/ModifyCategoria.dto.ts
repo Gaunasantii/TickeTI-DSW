@@ -12,6 +12,7 @@ import zod from 'zod'
  *          properties:
  *              nombre:
  *                  type: string
+ *                  minLength: 1
  *                  description: El nuevo nombre de la categoria
  *                  example: Hardware
  * 

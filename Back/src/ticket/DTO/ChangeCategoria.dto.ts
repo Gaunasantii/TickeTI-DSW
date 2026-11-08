@@ -7,10 +7,11 @@ import zod from 'zod'
  *     ChangeCategoriaDto:
  *       type: object
  *       required:
- *         - categoriaId
+ *         - categoria
  *       properties:
- *         categoriaId:
- *           type: integer
+ *         categoria:
+ *           type: number
+ *           minimum: 1
  *           example: 2
  */
 

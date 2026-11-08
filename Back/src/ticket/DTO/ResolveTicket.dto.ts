@@ -11,6 +11,7 @@ import zod from 'zod'
  *       properties:
  *         solucion:
  *           type: string
+ *           minLength: 1
  *           example: "Se reinició el spooler de impresión y se reemplazó el cable Ethernet defectuoso."
  */
 

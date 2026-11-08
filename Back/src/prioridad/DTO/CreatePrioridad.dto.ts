@@ -15,7 +15,8 @@ import zod from 'zod'
  *           description: El nombre de la prioridad
  *           example: Alta
  *         tiempoLimiteResolucion:
- *           type: integer
+ *           type: number
+ *           minimum: 1
  *           description: El tiempo límite de resolución en horas
  *           example: 24
  */

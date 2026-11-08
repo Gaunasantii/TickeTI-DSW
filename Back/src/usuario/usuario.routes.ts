@@ -8,6 +8,7 @@ import { createUsuarioSchema } from "./DTO/CreateUsuario.dto.js";
 import { ModifyUsuarioSchema } from "./DTO/ModifyUsuario.dto.js";
 import { DeleteUsuarioSchema } from "./DTO/DeleteUsuario.dto.js";
 import { PaginatedUserSchema } from "./DTO/PaginatedUser.dto.js";
+import blockEndpoint from "../middlewares/block.middleware.js";
 
 /**
  * @openapi
@@ -67,45 +68,17 @@ import { PaginatedUserSchema } from "./DTO/PaginatedUser.dto.js";
  *         $ref: '#/components/responses/UnauthorizedResponse'
  *       403:
  *         $ref: '#/components/responses/ForbiddenResponse'
+ *       405:
+ *         $ref: '#/components/responses/BlockedEndpointResponse'
  */
 
 // Solo un administrador autenticado puede listar o crear usuarios
 userrouter.post("/usuarios", authenticateToken, authorizeRoles("admin"),ValidationMiddleware(createUsuarioSchema), usercontroller.createUser);
-userrouter.get("/usuarios", authenticateToken, authorizeRoles("admin"), usercontroller.findAll);
+userrouter.get("/usuarios", blockEndpoint, usercontroller.findAll);
 
 /**
  * @openapi
  * /usuarios/{dni}:
- *   get:
- *     tags:
- *       - Usuarios
- *     summary: Obtener los datos de un usuario por su DNI
- *     security:
- *       - cookieAuth: []
- *     parameters:
- *       - in: path
- *         name: dni
- *         required: true
- *         schema:
- *           type: string
- *           example: "47107024"
- *     responses:
- *       200:
- *         description: Usuario encontrado
- *         content:
- *           application/json:
- *             schema:
- *               allOf:
- *                 - $ref: '#/components/schemas/ApiResponseSucces'
- *                 - type: object
- *                   properties:
- *                     data:
- *                       $ref: '#/components/schemas/UsuarioOutDto'
- *       401:
- *         $ref: '#/components/responses/UnauthorizedResponse'
- *       404:
- *         $ref: '#/components/responses/NotFoundResponse'
- * 
  *   put:
  *     tags:
  *       - Usuarios
@@ -166,6 +139,8 @@ userrouter.get("/usuarios", authenticateToken, authorizeRoles("admin"), usercont
  *               $ref: '#/components/schemas/ApiResponseSucces'
  *       401:
  *         $ref: '#/components/responses/UnauthorizedResponse'
+ *       403:
+ *         $ref: '#/components/responses/ForbiddenResponse'
  *       404:
  *         $ref: '#/components/responses/NotFoundResponse'
  */
@@ -212,6 +187,8 @@ userrouter.delete("/usuarios/:dni", authenticateToken, authorizeRoles("admin"),V
  *         $ref: '#/components/responses/InvalidDataResponse'
  *       401:
  *         $ref: '#/components/responses/UnauthorizedResponse'
+ *       405:
+ *         $ref: '#/components/responses/BlockedEndpointResponse'
  */
 
-userrouter.get("/usuarios/paginated",authenticateToken,ValidationMiddleware(PaginatedUserSchema),usercontroller.paginatedUsers);
+userrouter.get("/usuarios/paginated", blockEndpoint, usercontroller.paginatedUsers);
