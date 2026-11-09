@@ -9,8 +9,7 @@ export const TecnicoSchema = defineEntity({
     extends:PersonSchema,
     discriminatorValue:'tecnico',
     properties:{
-        asignaciones:()=>p.oneToMany(asignacionSchema).mappedBy('tecnico'),
-        empresa:()=> p.manyToOne(EmpresaSchema)
+        asignaciones:()=>p.oneToMany(asignacionSchema).mappedBy('tecnico')
     }
 })
 
