@@ -10,7 +10,7 @@
     "build": "tsc",
     "start:dev": "cross-env NODE_ENV=development node --env-file .env.development dist/app.js",
     "start:prod": "cross-env NODE_ENV=production node --env-file .env.production dist/app.js",
-    "poblar": "mikro-orm seeder:run --config ./src/config/DataBase/db.config.ts"
+    "poblar": "cross-env NODE_ENV=development mikro-orm seeder:run --config ./src/config/DataBase/db.config.ts"
   },
   "keywords": [],
   "author": "",
@@ -19,7 +19,9 @@
     "@mikro-orm/core": "7.0.11",
     "@mikro-orm/mysql": "7.0.11",
     "@mikro-orm/seeder": "7.0.11",
+    "@types/bcryptjs": "3.0.0",
     "@types/cors": "2.8.19",
+    "bcryptjs": "3.0.3",
     "cookie-parser": "1.4.7",
     "cors": "2.8.6",
     "dotenv": "17.3.1",

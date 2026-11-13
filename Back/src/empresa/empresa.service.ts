@@ -7,6 +7,7 @@ import { categoriaDAO } from "../categoria/categoria.DAO.js";
 import type { CreateEmpresaInDto } from "./DTO/CreateEmpresa.dto.js";
 import { adminDAO } from "../admin/admin.DAO.js";
 import type { ModifyEmpresaSchemaInBodyDto } from "./DTO/ModifyEmpresa.dto.js";
+import { hashPassword } from "../utils/password.js";
 export class EmpresaService {
   static async createEmpresa(empresaInput: CreateEmpresaInDto) {
 
@@ -43,12 +44,12 @@ export class EmpresaService {
     if(!empresaInput.admin) return await empresaDAO.updateEmpresa({nombre: empresaInput.nombre}, empresafound);
     
     if (!adminFound) {
-      await adminDAO.createAdmin(adminData);
+      await adminDAO.createAdmin({...adminData,pass: await hashPassword(adminData.pass!)});
     } else if (adminFound.dni === empresaInput.admin.dni) {
-      await adminDAO.updateAdmin(adminData, adminFound);
+      await adminDAO.updateAdmin({...adminData,pass: await hashPassword(adminData.pass!)}, adminFound);
     } else {
       await adminDAO.deleteAdmin(adminFound);
-      await adminDAO.createAdmin(adminData);
+      await adminDAO.createAdmin({...adminData,pass: await hashPassword(adminData.pass!)});
     }
     
     return await empresaDAO.updateEmpresa({nombre: empresaInput.nombre}, empresafound);

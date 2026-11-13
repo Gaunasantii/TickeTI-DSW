@@ -17,7 +17,12 @@ import { PersonSchema } from "../../persona/person.entity.js";
 import { asignacionSchema } from "../../asignacion/asignacion.entity.js";
 import { SeedManager } from "@mikro-orm/seeder";
 
-dotenv.config();
+import { config } from 'dotenv';
+import { defineConfig } from '@mikro-orm/core';
+
+
+const envFile = process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development';
+config({ path: envFile });
 
 const options:Options={
       entities: [PersonSchema, UserSchema, adminSchema, TicketSchema,
