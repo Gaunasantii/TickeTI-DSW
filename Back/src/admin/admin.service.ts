@@ -3,10 +3,12 @@ import { adminDAO } from "./admin.DAO.js";
 import { type createAdminInDto } from "./DTO/CreateAdmin.dto.js";
 import { NotFoundError } from "../utils/base.error.js";
 import type { ModifyAdminBodyDTO } from "./DTO/ModifyAdmin.dto.js";
+import { hashPassword } from "../utils/password.js";
 
 export class adminService {
   static async createAdmin(adminInput: createAdminInDto) {
-    return await adminDAO.createAdmin(adminInput);
+    const adminHash = { ...adminInput, pass: await hashPassword(adminInput.pass)};
+    return await adminDAO.createAdmin(adminHash);
   }
 
   static async getAllAdmins() {

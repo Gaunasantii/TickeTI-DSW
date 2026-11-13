@@ -1,10 +1,12 @@
 import type { EntityType } from "@mikro-orm/core";
 import { NotFoundError } from "../utils/base.error.js";
 import { tecnicoDAO } from "./tecnico.DAO.js";
+import { hashPassword } from "../utils/password.js";
 
 export class TecnicoService {
   static async createTecnico(tecnicoInput: any) {
-    return await tecnicoDAO.createTecnico(tecnicoInput);
+    const tecnicoHash = { ...tecnicoInput, pass: await hashPassword(tecnicoInput.pass)}; 
+    return await tecnicoDAO.createTecnico(tecnicoHash);
   }
 
   static async getAllTecnicos() {

@@ -1,6 +1,7 @@
 import { Seeder } from "@mikro-orm/seeder";
 import { EntityManager } from "@mikro-orm/mysql";
 import { PersonSchema } from "../../../persona/person.entity.js";
+import { hashPassword } from "../../../utils/password.js";
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -21,7 +22,7 @@ export class SuperAdminSeeder extends Seeder {
                 name: 'Super',
                 surName: 'Administrador',
                 tele:'0000000000',
-                pass:process.env.S_ADMIN_PASS as string,
+                pass:await hashPassword(process.env.S_ADMIN_PASS as string),
                 mail:process.env.S_ADMIN_MAIL as string,
                 type:"S_ADMIN"}).execute();
         } else {

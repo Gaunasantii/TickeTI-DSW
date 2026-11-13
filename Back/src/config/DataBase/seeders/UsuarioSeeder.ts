@@ -3,6 +3,7 @@ import { EntityManager } from "@mikro-orm/mysql";
 import { EmpresaSchema } from "../../../empresa/empresa.entity.js";
 import { UserSchema } from "../../../usuario/usuario.entity.js";
 import { OficinaSchema } from "../../../oficinas/oficina.entity.js";
+import { hashPassword } from "../../../utils/password.js";
 
 export class UsuarioSeeder extends Seeder{
     async run(em:EntityManager){
@@ -16,7 +17,7 @@ export class UsuarioSeeder extends Seeder{
                     name: "Carlos",
                     tele: "+5493512223344",
                     mail: "",
-                    pass: "pass",
+                    pass: await hashPassword("pass"),
                     type: "user",
                     empresa:e.id,
                     oficina:o.id

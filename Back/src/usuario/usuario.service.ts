@@ -2,6 +2,7 @@ import { ConflictError, NotFoundError } from "../utils/base.error.js";
 import { userDAO } from "./user.DAO.js";
 import { type CreateUsuarioInDto} from "./DTO/CreateUsuario.dto.js";
 import { oficinaDAO } from "../oficinas/oficina.DAO.js";
+import { hashPassword } from "../utils/password.js";
 
 export class UsuarioService {
   static async createUsuario(usuarioInput: CreateUsuarioInDto) {
@@ -9,7 +10,8 @@ export class UsuarioService {
     if(userFound)throw new ConflictError("Usuario ya existente");
     const OficinaFound= await oficinaDAO.findOne({id:usuarioInput.oficina})
     if(!OficinaFound)throw new NotFoundError("Oficina Inexistente");
-    return await userDAO.createUser(usuarioInput);
+    const usuarioHash = { ...usuarioInput, pass: await hashPassword(usuarioInput.pass)}; 
+    return await userDAO.createUser(usuarioHash);
   }
 
   static async getAllUsuarios() {
